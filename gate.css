@@ -23,7 +23,7 @@ html.gate-unlocked #passcode-gate { display: none; }
 
 .lock-eyebrow {
   font-family: 'EB Garamond', Georgia, serif; font-style: italic;
-  font-size: 13px; letter-spacing: 0.24em; color: #b04a3a;
+  font-size: 13px; letter-spacing: 0.24em; color: #000000;
   text-transform: uppercase; display: block;
   text-align: center; margin-bottom: 20px;
 }
@@ -35,7 +35,7 @@ html.gate-unlocked #passcode-gate { display: none; }
   opacity: 0.92;
 }
 
-.lock-rule { width: 36px; height: 1px; background: #c9a87a; margin: 22px auto 30px; }
+.lock-rule { width: 36px; height: 1px; background: #c9a87a; margin: 5px auto 30px; }
 
 .lock-prompt {
   font-family: 'EB Garamond', Georgia, serif; font-style: italic;
@@ -64,7 +64,7 @@ html.gate-unlocked #passcode-gate { display: none; }
   transition: border-color 0.2s;
 }
 .pw-input::placeholder { color: #d8c5a8; letter-spacing: 0.08em; font-size: 18px; }
-.pw-input:focus { border-bottom-color: #1a1a18; }
+.pw-input:focus { border-bottom-color: #c9a87a; }
 
 .pw-submit {
   font-family: 'EB Garamond', Georgia, serif;
@@ -80,7 +80,7 @@ html.gate-unlocked #passcode-gate { display: none; }
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
 }
-.pw-submit:hover { border-color: #6b8e4e; color: #6b8e4e; }
+.pw-submit:hover { border-color: #c9a87a; color: #c9a87a; }
 .pw-submit:active { transform: scale(0.97); }
 
 .error-msg {
