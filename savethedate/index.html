@@ -268,9 +268,7 @@
           We likely will not be able to attend
         </button>
       </div>
-      <p class="rsvp-confirmation invisible" aria-live="polite">
-        Thank you — your response has been noted.
-      </p>
+      <p class="rsvp-confirmation invisible" aria-live="polite"></p>
     </div>
   </section>
 </div>
@@ -348,11 +346,23 @@
   (function () {
     const RSVP_KEY  = 'wedding_rsvp_v1';
     const NAME_KEY  = 'wedding_visitor_name';
+    const MESSAGES = {
+      intends: 'We are so excited at the thought of celebrating together in Italy. We cannot wait to share more details with you soon.',
+      not_attending: 'Thank you so much for letting us know at this stage. We completely understand and are so grateful for your love and support.'
+    };
 
     function init() {
       const buttons = document.querySelectorAll('.rsvp-button');
       const confirmation = document.querySelector('.rsvp-confirmation');
       if (!buttons.length) return;
+
+      function showMessage(value) {
+        if (!confirmation) return;
+        const msg = MESSAGES[value];
+        if (!msg) return;
+        confirmation.textContent = msg;
+        confirmation.classList.remove('invisible');
+      }
 
       // Restore previously-selected response on revisits.
       try {
@@ -363,7 +373,7 @@
             b.classList.toggle('selected', isSelected);
             b.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
           });
-          if (confirmation) confirmation.classList.remove('invisible');
+          showMessage(saved);
         }
       } catch (e) {}
 
@@ -386,7 +396,7 @@
             window.weddingLog({ type: 'rsvp', name: name, rsvp: value });
           }
 
-          if (confirmation) confirmation.classList.remove('invisible');
+          showMessage(value);
         });
       });
     }
