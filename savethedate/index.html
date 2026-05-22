@@ -39,10 +39,19 @@
     .screen {
       min-height:100vh; display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:52px 24px;
-      position:absolute; inset:0;
       transition:opacity 0.85s ease, transform 0.85s ease;
     }
     .screen.hidden { opacity:0; pointer-events:none; transform:translateY(10px); }
+
+    /* Splash overlays everything until the arrow is clicked. */
+    #splash-screen {
+      position: fixed; inset: 0; z-index: 10; background: #faf4ec;
+    }
+
+    /* Landing + RSVP live in normal scroll flow under the splash. */
+    #landing-screen, #rsvp-section {
+      position: relative;
+    }
 
     .landing-wrap, .splash-wrap {
       width:100%; max-width:460px;
@@ -55,6 +64,66 @@
 
     #grandparent-img { transition: opacity 0.85s ease; }
     #grandparent-img.fading { opacity: 0; }
+
+    /* ── RSVP ── */
+    #rsvp-section {
+      min-height: 100vh;
+      padding: clamp(72px, 12vh, 140px) 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-top: 0.5px solid rgba(124, 110, 90, 0.18);
+    }
+    .rsvp-inner {
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+    .rsvp-text {
+      font-family: 'Caveat', cursive;
+      font-weight: 400;
+      font-size: clamp(22px, 2.6vw, 26px);
+      line-height: 1.55;
+      color: #4a3f33;
+      margin: 0 0 26px;
+      text-wrap: pretty;
+    }
+    .rsvp-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-top: 48px;
+    }
+    .rsvp-button {
+      font-family: 'Caveat', cursive;
+      font-weight: 400;
+      font-size: clamp(20px, 2.4vw, 24px);
+      color: #4a3f33;
+      background: transparent;
+      border: 1px solid #c9a87a;
+      border-radius: 0;
+      padding: 18px 28px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.3;
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .rsvp-button:hover { border-color: #4a3f33; }
+    .rsvp-button:active { transform: scale(0.98); }
+    .rsvp-button.selected {
+      background: #4a3f33;
+      color: #faf4ec;
+      border-color: #4a3f33;
+    }
+    .rsvp-confirmation {
+      margin-top: 36px;
+      font-family: 'Caveat', cursive;
+      font-size: 22px;
+      color: #6b8e4e;
+      transition: opacity 0.5s;
+    }
+    .rsvp-confirmation.invisible { opacity: 0; }
 
     .splash-next {
       margin-top: 56px;
@@ -80,6 +149,37 @@
     .splash-next:active { transform: scale(0.96); }
     .splash-next .arrow { display: inline-block; transition: transform 0.3s; }
     .splash-next:hover .arrow { transform: translateX(3px); }
+
+    /* ── Landing scroll cue (down arrow → RSVP) ── */
+    #landing-scroll-cue {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      background: transparent;
+      border: none;
+      padding: 12px 16px;
+      cursor: pointer;
+      color: #6b5a47;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 0);
+      transition: opacity 0.85s ease, color 0.3s;
+    }
+    #landing-scroll-cue.visible {
+      opacity: 1;
+      pointer-events: auto;
+      animation: scroll-bob 2.4s ease-in-out infinite;
+    }
+    #landing-scroll-cue.dismissed {
+      opacity: 0;
+      pointer-events: none;
+      animation: none;
+    }
+    #landing-scroll-cue:hover { color: #3a2a1f; }
+    @keyframes scroll-bob {
+      0%, 100% { transform: translate(-50%, 0); }
+      50%      { transform: translate(-50%, 6px); }
+    }
   </style>
 </head>
 <body>
@@ -88,9 +188,14 @@
   <span class="lock-eyebrow">A private invitation</span>
   <!-- <img class="lock-names-img" src="../names.png" alt="Devin &amp; Samantha"/> -->
   <div class="lock-rule"></div>
-  <p class="lock-prompt">Enter password</p>
   <div class="text-input-wrap">
-    <input class="pw-input" type="password" placeholder="password" autocomplete="off" spellcheck="false"/>
+    <div class="field-group">
+      <input class="name-input" id="name-input" type="text" placeholder="Your name" autocomplete="name" spellcheck="false" maxlength="80"/>
+    </div>
+    <div class="field-group">
+      <p class="lock-prompt">Enter password</p>
+      <input class="pw-input" type="password" placeholder="password" autocomplete="off" spellcheck="false"/>
+    </div>
     <button class="pw-submit">Enter</button>
   </div>
   <p class="error-msg invisible">Try again</p>
@@ -111,12 +216,42 @@
     </div>
   </div>
 
-  <div id="landing-screen" class="screen hidden">
+  <div id="landing-screen" class="screen">
     <div class="landing-wrap">
       <img class="hw-image" id="grandparent-img"
-           alt="You are invited — Devin &amp; Samantha, June 1–4 2027, Umbria Italy"/>
+           alt="You are invited — Samantha &amp; Devin, June 1–4 2027, Umbria Italy"/>
     </div>
+    <button id="landing-scroll-cue" type="button" aria-label="Scroll for more">
+      <svg viewBox="0 0 24 48" width="18" height="32" fill="none"
+           stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M12.6 4 C 11.8 14, 13.1 28, 12 42"/>
+        <path d="M6 33.5 C 8.6 37, 10.6 40, 12 42 C 13.6 40, 15.8 37, 18.4 33.8"/>
+      </svg>
+    </button>
   </div>
+
+  <section id="rsvp-section">
+    <div class="rsvp-inner">
+      <p class="rsvp-text">
+        As we begin planning our celebration in Italy, we would love to get an early sense of attendance due to limited venue capacity.
+      </p>
+      <p class="rsvp-text">
+        While this is not the official RSVP, we would appreciate you sharing whether you currently anticipate being able to celebrate with us.
+      </p>
+      <div class="rsvp-buttons">
+        <button class="rsvp-button" type="button" data-rsvp="intends" aria-pressed="false">
+          We fully intend to celebrate with you in Italy
+        </button>
+        <button class="rsvp-button" type="button" data-rsvp="not_attending" aria-pressed="false">
+          We likely will not be able to attend
+        </button>
+      </div>
+      <p class="rsvp-confirmation invisible" aria-live="polite">
+        Thank you — your response has been noted.
+      </p>
+    </div>
+  </section>
 </div>
 
 <script src="../gate.js" defer></script>
@@ -144,7 +279,6 @@
         const initial = GRANDPARENT_IMAGES[Math.floor(Math.random() * GRANDPARENT_IMAGES.length)];
         gImg.src = initial;
         sScreen.classList.add('hidden');
-        lScreen.classList.remove('hidden');
         startCycle(gImg, initial);
       }, { once: true });
     }
@@ -185,6 +319,106 @@
       onReady(startSequence);
     } else {
       document.addEventListener('gate:unlocking', startSequence);
+    }
+  })();
+</script>
+
+<script>
+  (function () {
+    const RSVP_KEY  = 'wedding_rsvp_v1';
+    const NAME_KEY  = 'wedding_visitor_name';
+
+    function init() {
+      const buttons = document.querySelectorAll('.rsvp-button');
+      const confirmation = document.querySelector('.rsvp-confirmation');
+      if (!buttons.length) return;
+
+      // Restore previously-selected response on revisits.
+      try {
+        const saved = localStorage.getItem(RSVP_KEY);
+        if (saved) {
+          buttons.forEach(b => {
+            const isSelected = b.dataset.rsvp === saved;
+            b.classList.toggle('selected', isSelected);
+            b.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          });
+          if (confirmation) confirmation.classList.remove('invisible');
+        }
+      } catch (e) {}
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const value = btn.dataset.rsvp;
+
+          buttons.forEach(b => {
+            const isSelected = b === btn;
+            b.classList.toggle('selected', isSelected);
+            b.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          });
+
+          try { localStorage.setItem(RSVP_KEY, value); } catch (e) {}
+
+          let name = '';
+          try { name = localStorage.getItem(NAME_KEY) || ''; } catch (e) {}
+
+          if (typeof window.weddingLog === 'function') {
+            window.weddingLog({ type: 'rsvp', name: name, rsvp: value });
+          }
+
+          if (confirmation) confirmation.classList.remove('invisible');
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<script>
+  (function () {
+    const SCROLL_CUE_DELAY_MS = 4500;
+
+    function init() {
+      const cue        = document.getElementById('landing-scroll-cue');
+      const rsvp       = document.getElementById('rsvp-section');
+      const splashNext = document.getElementById('splash-next');
+      if (!cue) return;
+
+      let dismissed = false;
+      function dismiss() {
+        if (dismissed) return;
+        dismissed = true;
+        cue.classList.add('dismissed');
+      }
+
+      cue.addEventListener('click', () => {
+        if (rsvp) rsvp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        dismiss();
+      });
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) dismiss();
+      }, { passive: true });
+
+      if (splashNext) {
+        splashNext.addEventListener('click', () => {
+          setTimeout(() => {
+            if (!dismissed && window.scrollY < 80) {
+              cue.classList.add('visible');
+            }
+          }, SCROLL_CUE_DELAY_MS);
+        }, { once: true });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
     }
   })();
 </script>
