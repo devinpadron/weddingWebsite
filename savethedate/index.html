@@ -401,10 +401,26 @@
 
 <script>
   (function () {
-    const NUDGE_DELAY_MS       = 4000;
-    const AUTO_SCROLL_DELAY_MS = 12000;
-    const NUDGE_PIXELS         = 100;
-    const DISMISS_THRESHOLD    = 260;
+    const NUDGE_DELAY_MS    = 4000;
+    const NUDGE_PIXELS      = 100;
+    const NUDGE_DURATION_MS = 1800;
+    const DISMISS_THRESHOLD = 260;
+
+    function easeInOutSine(t) {
+      return -(Math.cos(Math.PI * t) - 1) / 2;
+    }
+
+    function gentleNudge(distance, duration) {
+      const startY  = window.scrollY;
+      const startMs = performance.now();
+      function step(now) {
+        const elapsed = now - startMs;
+        const t = Math.min(1, elapsed / duration);
+        window.scrollTo(0, startY + distance * easeInOutSine(t));
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
 
     function init() {
       const cue        = document.getElementById('landing-scroll-cue');
@@ -433,16 +449,8 @@
           setTimeout(() => {
             if (dismissed || window.scrollY > DISMISS_THRESHOLD) return;
             cue.classList.add('visible');
-            window.scrollBy({ top: NUDGE_PIXELS, behavior: 'smooth' });
+            gentleNudge(NUDGE_PIXELS, NUDGE_DURATION_MS);
           }, NUDGE_DELAY_MS);
-
-          setTimeout(() => {
-            if (dismissed || window.scrollY > DISMISS_THRESHOLD) return;
-            if (rsvp) {
-              rsvp.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              dismiss();
-            }
-          }, AUTO_SCROLL_DELAY_MS);
         }, { once: true });
       }
     }
