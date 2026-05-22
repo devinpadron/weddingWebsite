@@ -37,7 +37,9 @@
     html, body { height:100%; background:#faf4ec; -webkit-font-smoothing:antialiased; }
 
     .screen {
-      min-height:100vh; display:flex; flex-direction:column;
+      min-height:100vh;
+      min-height:100dvh;
+      display:flex; flex-direction:column;
       align-items:center; justify-content:center; padding:52px 24px;
       transition:opacity 0.85s ease, transform 0.85s ease;
     }
@@ -68,6 +70,7 @@
     /* ── RSVP ── */
     #rsvp-section {
       min-height: 100vh;
+      min-height: 100dvh;
       padding: clamp(72px, 12vh, 140px) 24px;
       display: flex;
       flex-direction: column;
@@ -96,9 +99,10 @@
       margin-top: 48px;
     }
     .rsvp-button {
-      font-family: 'Caveat', cursive;
+      font-family: 'EB Garamond', Georgia, serif;
       font-weight: 400;
-      font-size: clamp(20px, 2.4vw, 24px);
+      font-size: clamp(16px, 1.9vw, 18px);
+      letter-spacing: 0.02em;
       color: #4a3f33;
       background: transparent;
       border: 1px solid #c9a87a;
@@ -193,12 +197,16 @@
     }
     @media (max-width: 640px) {
       #landing-scroll-cue {
-        bottom: 24px;
+        position: fixed;
+        bottom: max(20px, env(safe-area-inset-bottom, 20px));
         padding: 10px 14px;
+        z-index: 5;
       }
       #landing-scroll-cue .scroll-cue-label {
         font-size: 16px;
       }
+      /* Hide once user has scrolled to RSVP so it doesn't overlap content. */
+      #landing-scroll-cue.dismissed { display: none; }
     }
   </style>
 </head>
@@ -401,7 +409,8 @@
 
 <script>
   (function () {
-    const SCROLL_CUE_DELAY_MS = 4500;
+    const SCROLL_CUE_DELAY_MS  = 4500;
+    const AUTO_SCROLL_DELAY_MS = 10000;
 
     function init() {
       const cue        = document.getElementById('landing-scroll-cue');
@@ -432,6 +441,13 @@
               cue.classList.add('visible');
             }
           }, SCROLL_CUE_DELAY_MS);
+
+          setTimeout(() => {
+            if (!dismissed && window.scrollY < 80 && rsvp) {
+              rsvp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              dismiss();
+            }
+          }, AUTO_SCROLL_DELAY_MS);
         }, { once: true });
       }
     }
