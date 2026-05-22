@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap');
 
 /* Locked: gate visible, page hidden. Unlocked: gate hidden, page visible. */
 html:not(.gate-unlocked):not(.gate-unlocking) #page-content { display: none; }
@@ -12,82 +12,101 @@ html.gate-unlocked #passcode-gate { display: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 52px 24px;
+  padding: 60px 24px;
   background: #faf4ec;
   opacity: 1;
   transition: opacity 0.85s ease, transform 0.85s ease;
-  font-family: 'EB Garamond', Georgia, serif;
   -webkit-font-smoothing: antialiased;
 }
 #passcode-gate.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
+/* ── Title: "A private invitation" ── */
 .lock-eyebrow {
-  font-family: 'EB Garamond', Georgia, serif; font-style: italic;
-  font-size: 13px; letter-spacing: 0.24em; color: #000000;
-  text-transform: uppercase; display: block;
-  text-align: center; margin-bottom: 20px;
-}
-
-.lock-names-img {
-  width: min(320px, 84vw);
+  background: url("title.png") no-repeat center / contain;
+  width: min(360px, 78vw);
+  height: 60px;
   display: block;
-  margin: 0 auto;
-  opacity: 0.92;
+  margin: 0 auto clamp(70px, 11vh, 110px);
+  text-indent: -9999px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.lock-rule { width: 36px; height: 1px; background: #c9a87a; margin: 5px auto 30px; }
+.lock-names-img { display: none; }
+.lock-rule      { display: none; }
 
+/* ── Prompt: "Enter password" ── */
 .lock-prompt {
-  font-family: 'EB Garamond', Georgia, serif; font-style: italic;
-  font-size: 13px; letter-spacing: 0.22em; color: #9a7f6a;
-  text-transform: uppercase; margin-bottom: 20px; text-align: center;
+  background: url("label.png") no-repeat center / contain;
+  width: min(300px, 72vw);
+  height: 52px;
+  margin: 0 auto 30px;
+  padding: 0;
+  text-indent: -9999px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .text-input-wrap {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 14px; width: 100%; max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(40px, 7vh, 64px);
+  width: 100%;
+  max-width: 320px;
 }
 
+/* ── Input: placeholder.png (visible when empty) + underline.png (always) ── */
 .pw-input {
   width: 100%;
+  height: 64px;
   border: none;
-  border-bottom: 1px solid #e3d3b8;
   outline: none;
-  background: transparent;
-  font-family: 'EB Garamond', Georgia, serif;
-  font-style: italic;
-  font-size: 22px;
-  color: #3a2a1f;
+  background:
+    url("placeholder.png") no-repeat center 8px / 160px auto,
+    url("underline.png")  no-repeat center bottom / 100% auto;
+  font-family: 'Caveat', cursive;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 28px;
+  color: #4a3f33;
   text-align: center;
-  letter-spacing: 0.12em;
-  padding: 6px 0 8px;
-  transition: border-color 0.2s;
+  letter-spacing: 0;
+  padding: 0 0 18px;
 }
-.pw-input::placeholder { color: #d8c5a8; letter-spacing: 0.08em; font-size: 18px; }
-.pw-input:focus { border-bottom-color: #c9a87a; }
+.pw-input:not(:placeholder-shown) {
+  background: url("underline.png") no-repeat center bottom / 100% auto;
+}
+.pw-input::placeholder { color: transparent; }
+.pw-input:focus { outline: none; }
 
+/* ── Submit: hand-drawn rectangle + "Enter" baked in ── */
 .pw-submit {
-  font-family: 'EB Garamond', Georgia, serif;
-  font-style: italic;
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #8a6f5e;
-  background: transparent;
-  border: 1px solid #d4bf9c;
-  border-radius: 40px;
-  padding: 9px 28px;
+  background: url("enter-button.png") no-repeat center / contain;
+  width: 200px;
+  height: 72px;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  font-size: 0;        /* hide visible text; screen readers still read it */
+  color: transparent;
+  transition: opacity 0.2s, transform 0.15s;
 }
-.pw-submit:hover { border-color: #c9a87a; color: #c9a87a; }
+.pw-submit:hover  { opacity: 0.7; }
 .pw-submit:active { transform: scale(0.97); }
 
+/* ── Error (kept in Caveat to match the handwritten ink) ── */
 .error-msg {
-  margin-top: 12px;
-  font-family: 'EB Garamond', Georgia, serif; font-style: italic;
-  font-size: 14px; color: #b04a3a; text-align: center;
-  min-height: 20px; transition: opacity .3s; letter-spacing: 0.04em;
+  margin-top: 18px;
+  font-family: 'Caveat', cursive;
+  font-style: normal;
+  font-size: 22px;
+  color: #b04a3a;
+  text-align: center;
+  min-height: 24px;
+  transition: opacity .3s;
+  letter-spacing: 0;
 }
 .error-msg.invisible { opacity: 0; }
 

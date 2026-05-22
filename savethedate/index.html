@@ -33,6 +33,9 @@
     @keyframes riseIn { to { opacity:1; transform:translateY(0); } }
     .hw-image { width:100%; max-width:460px; display:block; }
 
+    #grandparent-img { transition: opacity 0.85s ease; }
+    #grandparent-img.fading { opacity: 0; }
+
     .splash-next {
       margin-top: 56px;
       background: transparent;
@@ -62,15 +65,15 @@
 <body>
 
 <div id="passcode-gate">
-  <span class="lock-eyebrow">a private invitation</span>
+  <span class="lock-eyebrow">A private invitation</span>
   <!-- <img class="lock-names-img" src="../names.png" alt="Devin &amp; Samantha"/> -->
   <div class="lock-rule"></div>
-  <p class="lock-prompt">enter password</p>
+  <p class="lock-prompt">Enter password</p>
   <div class="text-input-wrap">
     <input class="pw-input" type="password" placeholder="password" autocomplete="off" spellcheck="false"/>
-    <button class="pw-submit">enter</button>
+    <button class="pw-submit">Enter</button>
   </div>
-  <p class="error-msg invisible">try again</p>
+  <p class="error-msg invisible">Try again</p>
 </div>
 
 <div id="page-content">
@@ -100,7 +103,12 @@
 <script>
   (function () {
     const GRANDPARENT_IMAGES = ['Gentile.png', 'Heffernan.png'];
-    const NEXT_REVEAL_MS = 2000;
+    const NEXT_REVEAL_MS  = 2000;
+    const LETTER_HOLD_MS  = 6000;
+    const FADE_MS         = 850;
+
+    // Preload so cross-fading doesn't flash blank while the src swaps.
+    GRANDPARENT_IMAGES.forEach(src => { const i = new Image(); i.src = src; });
 
     function startSequence() {
       const sScreen  = document.getElementById('splash-screen');
@@ -113,11 +121,36 @@
       setTimeout(() => nextBtn.classList.add('visible'), NEXT_REVEAL_MS);
 
       nextBtn.addEventListener('click', () => {
-        const pick = GRANDPARENT_IMAGES[Math.floor(Math.random() * GRANDPARENT_IMAGES.length)];
-        gImg.src = pick;
+        const initial = GRANDPARENT_IMAGES[Math.floor(Math.random() * GRANDPARENT_IMAGES.length)];
+        gImg.src = initial;
         sScreen.classList.add('hidden');
         lScreen.classList.remove('hidden');
+        startCycle(gImg, initial);
       }, { once: true });
+    }
+
+    function startCycle(img, initialSrc) {
+      const others = GRANDPARENT_IMAGES.filter(s => s !== initialSrc);
+      const sequence = [...others, initialSrc];
+      let idx = 0;
+
+      function tick() {
+        setTimeout(() => {
+          const target = sequence[idx % sequence.length];
+          idx++;
+          fadeSwap(img, target, tick);
+        }, LETTER_HOLD_MS);
+      }
+      tick();
+    }
+
+    function fadeSwap(img, newSrc, done) {
+      img.classList.add('fading');
+      setTimeout(() => {
+        img.src = newSrc;
+        img.classList.remove('fading');
+        setTimeout(done, FADE_MS);
+      }, FADE_MS);
     }
 
     function onReady(fn) {
