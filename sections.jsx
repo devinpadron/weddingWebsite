@@ -29,9 +29,9 @@ function useReveal(threshold = 0.15) {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Monogram — flexible: "D & S", "DS", "D · S"
+   Monogram — flexible: "S & D", "SD", "S · D"
 ─────────────────────────────────────────────────────────────────*/
-function Monogram({ style = 'D & S', size = 52, color = 'var(--espresso)' }) {
+function Monogram({ style = 'S & D', size = 52, color = 'var(--espresso)' }) {
   return (
     <span
       className="serif"
@@ -65,10 +65,8 @@ function Nav({ monogram, onRSVP }) {
   }, []);
 
   const links = [
-    { href: '#story', label: 'Our Story' },
     { href: '#schedule', label: 'Schedule' },
-    { href: '#travel', label: 'Travel' },
-    { href: '#stay', label: 'Stay' },
+    { href: '#travel', label: 'Travel & Stay' },
     { href: '#registry', label: 'Registry' },
   ];
 
@@ -328,9 +326,9 @@ function Hero({ monogram, heroCrop, italicAccents }) {
             textShadow: '0 2px 32px rgba(20,14,8,0.45)',
           }}
         >
-          Devin
-          <span className="serif" style={{ fontStyle: 'italic', opacity: 0.85, margin: '0 0.18em' }}>&amp;</span>
           Samantha
+          <span className="serif" style={{ fontStyle: 'italic', opacity: 0.85, margin: '0 0.18em' }}>&amp;</span>
+          Devin
         </h1>
         <div className="reveal reveal-delay-2" style={{ marginTop: 30, display: 'flex', alignItems: 'center', gap: 18 }}>
           <span style={{ width: 36, height: 0.5, background: 'rgba(245,240,232,0.6)' }}></span>
@@ -408,98 +406,10 @@ function InvitationNote({ italicAccents }) {
   );
 }
 
-/* ────────────────────────────────────────────────────────────────
-   StoryTeaser — image + story snippet
-─────────────────────────────────────────────────────────────────*/
-function StoryTeaser({ italicAccents }) {
-  const ref = useReveal();
-  return (
-    <section
-      id="story"
-      ref={ref}
-      style={{
-        background: 'var(--parchment-deep)',
-        padding: '120px 0',
-        position: 'relative',
-      }}
-    >
-      <div
-        className="container"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 80,
-          alignItems: 'center',
-        }}
-      >
-        <div className="reveal" style={{ aspectRatio: '3 / 4' }}>
-          <image-slot
-            id="story-photo"
-            shape="rect"
-            placeholder="Devin & Samantha · candid film portrait"
-            style={{ width: '100%', height: '100%' }}
-          ></image-slot>
-        </div>
-        <div>
-          <p className="micro reveal" style={{ marginBottom: 22 }}>II · Our Story</p>
-          <h2
-            className="serif reveal reveal-delay-1"
-            style={{
-              fontSize: 'clamp(40px, 5vw, 64px)',
-              margin: 0,
-              lineHeight: 1.05,
-              fontWeight: 300,
-              fontStyle: italicAccents ? 'italic' : 'normal',
-              textWrap: 'balance',
-            }}
-          >
-            Eight years,<br />two continents,<br />one long table.
-          </h2>
-          <div className="reveal reveal-delay-2" style={{ marginTop: 36, maxWidth: 460 }}>
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: 'var(--umber)', margin: 0 }}>
-              We met in line for an espresso in a downpour, argued about the
-              correct ratio of olive oil to lemon, and somewhere between
-              that morning and this June, decided to make a life of it.
-            </p>
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: 'var(--umber)', marginTop: 18 }}>
-              The full story — the meet-cute, the long-distance years, the
-              proposal that involved a forgotten ring and a very patient
-              waiter — is waiting inside.
-            </p>
-          </div>
-          <a
-            href="#"
-            className="small-caps reveal reveal-delay-3"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 14,
-              marginTop: 44,
-              color: 'var(--espresso)',
-              borderBottom: '0.5px solid var(--travertine)',
-              paddingBottom: 6,
-            }}
-          >
-            Read the full story
-            <span style={{ fontSize: 16, lineHeight: 1 }}>→</span>
-          </a>
-        </div>
-      </div>
-
-      <style>{`
-        @media (max-width: 840px) {
-          #story .container { grid-template-columns: 1fr !important; gap: 48px !important; }
-        }
-      `}</style>
-    </section>
-  );
-}
-
 Object.assign(window, {
   useReveal,
   Monogram,
   Nav,
   Hero,
   InvitationNote,
-  StoryTeaser,
 });

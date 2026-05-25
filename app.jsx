@@ -1,4 +1,4 @@
-// App entry — composes all sections + Tweaks panel
+// App entry — composes all sections
 
 const { useState: useStateApp, useEffect: useEffectApp } = React;
 
@@ -38,8 +38,7 @@ function applyPalette(name) {
 }
 
 function App() {
-  const defaults = window.__TWEAKS__ || {};
-  const [t, setTweak] = useTweaks(defaults);
+  const t = window.__TWEAKS__ || {};
   const [rsvpOpen, setRsvpOpen] = useStateApp(false);
 
   useEffectApp(() => {
@@ -88,7 +87,6 @@ function App() {
           italicAccents={t.italicAccents}
         />
         <InvitationNote italicAccents={t.italicAccents} />
-        <StoryTeaser italicAccents={t.italicAccents} />
         <ScheduleSection />
         <TravelSection />
         <RegistryTeaser />
@@ -99,62 +97,6 @@ function App() {
       <MonogramWatermark show={t.showWatermark} monogram={t.monogram} />
 
       <RSVPModal open={rsvpOpen} onClose={() => setRsvpOpen(false)} />
-
-      <TweaksPanel title="Tweaks">
-        <TweakSection title="Palette">
-          <TweakSelect
-            label="Colourway"
-            value={t.palette}
-            onChange={(v) => setTweak('palette', v)}
-            options={[
-              { value: 'parchment', label: 'Parchment & Espresso' },
-              { value: 'olive', label: 'Olive Grove' },
-              { value: 'terracotta', label: 'Terracotta' },
-            ]}
-          />
-          <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-            {Object.values(PALETTES[t.palette] || PALETTES.parchment).slice(0, 5).map((c, i) => (
-              <span key={i} style={{ width: 22, height: 22, borderRadius: '50%', background: c, border: '0.5px solid rgba(0,0,0,0.15)' }}></span>
-            ))}
-          </div>
-        </TweakSection>
-
-        <TweakSection title="Monogram">
-          <TweakRadio
-            label="Style"
-            value={t.monogram}
-            onChange={(v) => setTweak('monogram', v)}
-            options={[
-              { value: 'D & S', label: 'D & S' },
-              { value: 'DS', label: 'DS' },
-              { value: 'D · S', label: 'D · S' },
-            ]}
-          />
-          <TweakToggle
-            label="Corner watermark"
-            value={t.showWatermark}
-            onChange={(v) => setTweak('showWatermark', v)}
-          />
-        </TweakSection>
-
-        <TweakSection title="Composition">
-          <TweakRadio
-            label="Hero height"
-            value={t.heroCrop}
-            onChange={(v) => setTweak('heroCrop', v)}
-            options={[
-              { value: 'tall', label: 'Tall' },
-              { value: 'standard', label: 'Standard' },
-              { value: 'wide', label: 'Wide' },
-            ]}
-          />
-          <TweakToggle
-            label="Italicise headlines"
-            value={t.italicAccents}
-            onChange={(v) => setTweak('italicAccents', v)}
-          />
-        </TweakSection>
-      </TweaksPanel>
     </>
   );
 }

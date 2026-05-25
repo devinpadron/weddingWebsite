@@ -47,7 +47,7 @@ function ScheduleSection() {
     >
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: 80 }}>
-          <p className="micro reveal" style={{ marginBottom: 22 }}>III · The Weekend</p>
+          <p className="micro reveal" style={{ marginBottom: 22 }}>II · The Weekend</p>
           <h2
             className="serif reveal reveal-delay-1"
             style={{
@@ -157,7 +157,7 @@ function TravelSection() {
     >
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: 72 }}>
-          <p className="micro reveal" style={{ marginBottom: 22 }}>IV · Getting There</p>
+          <p className="micro reveal" style={{ marginBottom: 22 }}>III · Getting There</p>
           <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(40px, 5vw, 64px)', margin: 0, fontWeight: 300 }}>
             Plan your <em style={{ fontWeight: 300 }}>passage</em>
           </h2>
@@ -259,7 +259,7 @@ function RegistryTeaser() {
       style={{ padding: '120px 0', textAlign: 'center', background: 'var(--parchment)' }}
     >
       <div className="container-narrow">
-        <p className="micro reveal" style={{ marginBottom: 22 }}>V · Registry</p>
+        <p className="micro reveal" style={{ marginBottom: 22 }}>IV · Registry</p>
         <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', margin: 0, fontWeight: 300, textWrap: 'balance' }}>
           Your presence is the gift. <em style={{ fontWeight: 300 }}>Truly.</em>
         </h2>
@@ -354,7 +354,7 @@ function RSVPModal({ open, onClose }) {
 
         {submitted ? (
           <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <Monogram style="D & S" size={56} />
+            <Monogram style="S & D" size={56} />
             <p className="serif-italic" style={{ fontSize: 36, marginTop: 36, marginBottom: 18, lineHeight: 1.2 }}>
               {data.attending === 'yes' ? 'We can\u2019t wait to see you.' : 'We\u2019ll miss you dearly.'}
             </p>
@@ -379,7 +379,7 @@ function RSVPModal({ open, onClose }) {
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p className="micro" style={{ marginBottom: 14 }}>VII · RSVP</p>
+              <p className="micro" style={{ marginBottom: 14 }}>V · RSVP</p>
               <h3 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 46px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
                 Kindly reply by 1 March 2027
               </h3>
@@ -643,7 +643,7 @@ function RSVPCallout({ onOpen }) {
       }}
     >
       <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>VI · The Favour of Your Reply</p>
+        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>V · The Favour of Your Reply</p>
         <h2
           className="serif reveal reveal-delay-1"
           style={{
@@ -689,7 +689,7 @@ function RSVPCallout({ onOpen }) {
           fontWeight: 300,
         }}
       >
-        D&amp;S
+        S&amp;D
       </span>
     </section>
   );
@@ -735,10 +735,10 @@ function Footer({ monogram }) {
           paddingTop: 28, flexWrap: 'wrap', gap: 18,
         }}>
           <span className="micro" style={{ color: 'var(--umber)' }}>
-            With love from D &amp; S
+            With love from S &amp; D
           </span>
           <span className="micro" style={{ color: 'var(--umber)' }}>
-            Questions? hello@devinandsamantha.com
+            Questions? hello@samanthaanddevin.com
           </span>
         </div>
       </div>
