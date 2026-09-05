@@ -360,9 +360,6 @@ function TravelSection() {
                 </li>
               ))}
             </ul>
-            <a href="#" className="small-caps" style={{ display: 'inline-block', marginTop: 36, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
-              Full travel guide →
-            </a>
           </div>
         </div>
       </div>
