@@ -89,7 +89,6 @@ function App() {
         <InvitationNote italicAccents={t.italicAccents} />
         <ScheduleSection />
         <TravelSection />
-        <RegistryTeaser />
         <RSVPCallout onOpen={() => setRsvpOpen(true)} />
         <Footer monogram={t.monogram} />
       </main>

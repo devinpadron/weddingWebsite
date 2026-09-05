@@ -1,5 +1,9 @@
 (function () {
-  const PASSCODE_HASH = 'ebaa43867e8df5f72ccc6ad4a83b841df1d92eed05475f4c21f3bc65cd9d876b';
+  // Password lives in Supabase (public.site_access), checked server-side via the
+  // check_site_password RPC so the password is never sent to the browser. The
+  // publishable key below is safe to embed in client code by design.
+  const SUPABASE_URL = 'https://yiuglondgjbgyqfoqunz.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2';
   const STORAGE_KEY   = 'wedding_invited_v1';
   const NAME_KEY      = 'wedding_visitor_name';
 
@@ -24,11 +28,18 @@
     if (stored && nameInput) nameInput.value = stored;
   } catch (e) {}
 
-  async function sha256Hex(text) {
-    const buf = new TextEncoder().encode(text);
-    const hashBuf = await crypto.subtle.digest('SHA-256', buf);
-    return Array.from(new Uint8Array(hashBuf))
-      .map(b => b.toString(16).padStart(2, '0')).join('');
+  async function passwordMatches(pw) {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/check_site_password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+      },
+      body: JSON.stringify({ attempt: pw }),
+    });
+    if (!res.ok) throw new Error('rpc ' + res.status);
+    return await res.json() === true;
   }
 
   function shake(el) {
@@ -55,9 +66,16 @@
     });
   }
 
+  function reject() {
+    errMsg.classList.remove('invisible');
+    shake(pwInput);
+    pwInput.value = '';
+    setTimeout(() => errMsg.classList.add('invisible'), 2000);
+  }
+
   async function tryUnlock() {
     const name = (nameInput.value || '').trim().slice(0, 80);
-    const pw   = (pwInput.value   || '').trim().toLowerCase();
+    const pw   = (pwInput.value   || '').trim();
 
     if (!name) {
       shake(nameInput);
@@ -65,12 +83,15 @@
       return;
     }
 
-    const hash = await sha256Hex(pw);
-    if (hash !== PASSCODE_HASH) {
-      errMsg.classList.remove('invisible');
-      shake(pwInput);
-      pwInput.value = '';
-      setTimeout(() => errMsg.classList.add('invisible'), 2000);
+    let ok = false;
+    try {
+      ok = await passwordMatches(pw);
+    } catch (e) {
+      reject();  // network/RPC error → treat as failed attempt
+      return;
+    }
+    if (!ok) {
+      reject();
       return;
     }
 

@@ -57,7 +57,7 @@ function ScheduleSection() {
               lineHeight: 1.05,
             }}
           >
-            Four days in <em style={{ fontWeight: 300 }}>Campania</em>
+            Four days in <em style={{ fontWeight: 300 }}>Umbria</em>
           </h2>
           <p
             className="reveal reveal-delay-2"
@@ -149,6 +149,39 @@ function ScheduleSection() {
 ─────────────────────────────────────────────────────────────────*/
 function TravelSection() {
   const ref = useReveal();
+  const [accomCode, setAccomCode] = useState2('');
+  const [accomState, setAccomState] = useState2('idle'); // idle | loading | found | not_found | error
+  const [accomData, setAccomData] = useState2(null);
+
+  const lookupCode = async () => {
+    const trimmed = accomCode.trim();
+    if (!trimmed) return;
+    setAccomState('loading');
+    try {
+      const res = await fetch(
+        'https://yiuglondgjbgyqfoqunz.supabase.co/rest/v1/rpc/lookup_accommodation',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
+            'Authorization': 'Bearer sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
+          },
+          body: JSON.stringify({ guest_code: trimmed }),
+        }
+      );
+      const rows = await res.json();
+      if (Array.isArray(rows) && rows.length > 0) {
+        setAccomData(rows[0]);
+        setAccomState('found');
+      } else {
+        setAccomState('not_found');
+      }
+    } catch (e) {
+      setAccomState('error');
+    }
+  };
+
   return (
     <section
       id="travel"
@@ -177,29 +210,130 @@ function TravelSection() {
           <div id="stay" className="reveal" style={{ padding: '56px 56px 64px', borderRight: '0.5px solid var(--hairline)' }}>
             <p className="micro" style={{ marginBottom: 18 }}>Accommodations</p>
             <h3 className="serif" style={{ fontSize: 38, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
-              Staying at SPAO
+              Where you&rsquo;re staying
             </h3>
             <p style={{ marginTop: 22, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-              We&rsquo;ve reserved every room on the estate for the weekend — 24
-              rooms across the main villa and the converted stables. Booking
-              opens for guests on <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>15 October 2026</strong> using
-              the code you&rsquo;ll receive with your invitation.
+              We&rsquo;ve arranged accommodations for every guest — some at the
+              villa, others at a nearby hotel. Enter the code from your invitation
+              to see your details.
             </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '32px 0 0', display: 'grid', gap: 14 }}>
-              {[
-                ['Casa Madre', 'Main villa · 12 rooms · €380/night'],
-                ['Le Stalle', 'Stables wing · 8 rooms · €280/night'],
-                ['I Giardini', 'Garden cottages · 4 suites · €440/night'],
-              ].map(([k, v]) => (
-                <li key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '0.5px dashed var(--hairline-soft)', paddingBottom: 10 }}>
-                  <span className="serif-italic" style={{ fontSize: 18, color: 'var(--espresso)' }}>{k}</span>
-                  <span className="small-caps" style={{ color: 'var(--umber)' }}>{v}</span>
-                </li>
-              ))}
-            </ul>
-            <a href="#" className="small-caps reveal reveal-delay-2" style={{ display: 'inline-block', marginTop: 36, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
-              Booking details →
-            </a>
+
+            {accomState !== 'found' && (
+              <div style={{ marginTop: 36 }}>
+                <label style={{ display: 'block' }}>
+                  <span className="micro" style={{ display: 'block', marginBottom: 12 }}>Invitation code</span>
+                  <input
+                    type="text"
+                    value={accomCode}
+                    onChange={(e) => { setAccomCode(e.target.value); setAccomState('idle'); }}
+                    onKeyDown={(e) => e.key === 'Enter' && lookupCode()}
+                    placeholder="Enter your code"
+                    style={{
+                      width: '100%',
+                      padding: '14px 0',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '0.5px solid var(--hairline)',
+                      fontFamily: 'Cormorant Garamond, serif',
+                      fontSize: 22,
+                      fontStyle: 'italic',
+                      fontWeight: 300,
+                      color: 'var(--espresso)',
+                      outline: 'none',
+                    }}
+                  />
+                </label>
+                {accomState === 'not_found' && (
+                  <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                    Code not found — double-check your invitation and try again.
+                  </p>
+                )}
+                {accomState === 'error' && (
+                  <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                    Something went wrong — please try again.
+                  </p>
+                )}
+                <button
+                  onClick={lookupCode}
+                  disabled={accomState === 'loading' || !accomCode.trim()}
+                  className="small-caps"
+                  style={{
+                    marginTop: 22,
+                    background: 'var(--espresso)',
+                    color: 'var(--parchment)',
+                    border: 'none',
+                    padding: '12px 28px',
+                    letterSpacing: '0.28em',
+                    opacity: (accomState === 'loading' || !accomCode.trim()) ? 0.5 : 1,
+                    cursor: (accomState === 'loading' || !accomCode.trim()) ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {accomState === 'loading' ? 'Looking up…' : 'Look up →'}
+                </button>
+              </div>
+            )}
+
+            {accomState === 'found' && accomData && (
+              <div style={{ marginTop: 36 }}>
+                <div style={{ padding: '28px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)' }}>
+                  <p className="micro" style={{ marginBottom: 10 }}>
+                    {accomData.accommodation_type === 'villa' ? 'Villa · SPAO' : 'Hotel'}
+                  </p>
+                  <p className="serif-italic" style={{ fontSize: 26, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>
+                    {accomData.property_name}
+                  </p>
+                  {accomData.room_detail && (
+                    <p className="small-caps" style={{ marginTop: 8, color: 'var(--umber)', fontSize: 11 }}>
+                      {accomData.room_detail}
+                    </p>
+                  )}
+                  {(accomData.check_in || accomData.check_out) && (
+                    <p style={{ marginTop: 16, fontSize: 13, color: 'var(--umber)', lineHeight: 1.6 }}>
+                      {accomData.check_in && (
+                        <>Check-in: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_in}</strong></>
+                      )}
+                      {accomData.check_in && accomData.check_out && ' · '}
+                      {accomData.check_out && (
+                        <>Check-out: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_out}</strong></>
+                      )}
+                    </p>
+                  )}
+                  {accomData.notes && (
+                    <p style={{ marginTop: 14, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>
+                      {accomData.notes}
+                    </p>
+                  )}
+                </div>
+                {accomData.booking_url && (
+                  <a
+                    href={accomData.booking_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="small-caps"
+                    style={{ display: 'inline-block', marginTop: 22, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}
+                  >
+                    Booking details →
+                  </a>
+                )}
+                <button
+                  onClick={() => { setAccomState('idle'); setAccomCode(''); setAccomData(null); }}
+                  className="small-caps"
+                  style={{
+                    display: 'block',
+                    marginTop: accomData.booking_url ? 12 : 22,
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--umber)',
+                    letterSpacing: '0.2em',
+                    padding: 0,
+                    cursor: 'pointer',
+                    fontSize: 10,
+                  }}
+                >
+                  Use a different code
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Travel card */}
@@ -209,16 +343,16 @@ function TravelSection() {
               Finding the villa
             </h3>
             <p style={{ marginTop: 22, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-              The closest airport is <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>Naples (NAP)</strong>, an hour
-              south of the villa by car. Rome (FCO) is a beautiful three-hour
-              train ride if you&rsquo;d like a slower entrance.
+              The nearest airport is <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>Rome Fiumicino (FCO)</strong>, about
+              90 minutes north by car. From there, the A1 south takes you straight
+              to the Orvieto exit, then a short drive into the hills.
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: '32px 0 0', display: 'grid', gap: 14 }}>
               {[
-                ['By Air', 'Fly into NAP · 60 min transfer'],
-                ['By Rail', 'Frecciarossa to Salerno · 30 min onward'],
-                ['By Car', 'A3 south from Naples · 70 km'],
-                ['Shuttle', 'Complimentary from NAP, 1 & 2 June'],
+                ['By Air', 'Fly into FCO · 90 min transfer'],
+                ['By Rail', 'Trenitalia to Orvieto · 20 min onward'],
+                ['By Car', 'A1 south from Rome · exit Orvieto'],
+                ['Shuttle', 'Complimentary from FCO, 1 & 2 June'],
               ].map(([k, v]) => (
                 <li key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '0.5px dashed var(--hairline-soft)', paddingBottom: 10 }}>
                   <span className="serif-italic" style={{ fontSize: 18, color: 'var(--espresso)' }}>{k}</span>
@@ -248,44 +382,17 @@ function TravelSection() {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   RegistryTeaser — small section linking to registry
-─────────────────────────────────────────────────────────────────*/
-function RegistryTeaser() {
-  const ref = useReveal();
-  return (
-    <section
-      id="registry"
-      ref={ref}
-      style={{ padding: '120px 0', textAlign: 'center', background: 'var(--parchment)' }}
-    >
-      <div className="container-narrow">
-        <p className="micro reveal" style={{ marginBottom: 22 }}>IV · Registry</p>
-        <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', margin: 0, fontWeight: 300, textWrap: 'balance' }}>
-          Your presence is the gift. <em style={{ fontWeight: 300 }}>Truly.</em>
-        </h2>
-        <p className="reveal reveal-delay-2" style={{ marginTop: 24, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)', maxWidth: 540, margin: '24px auto 0' }}>
-          But if you&rsquo;d like to send us off with something for the new house,
-          we&rsquo;ve curated a small registry — a few favourite linens, a
-          ridiculous pasta maker, a contribution to the honeymoon in Puglia.
-        </p>
-        <a href="#" className="small-caps reveal reveal-delay-3" style={{ display: 'inline-block', marginTop: 40, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
-          Visit the registry →
-        </a>
-      </div>
-    </section>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────────
    RSVPModal — elegant form with multi-step feel
 ─────────────────────────────────────────────────────────────────*/
 function RSVPModal({ open, onClose }) {
   const [step, setStep] = useState2(0);
   const [data, setData] = useState2({
-    name: '', party: 1, attending: null,
+    name: '', email: '', party: 1, attending: null,
     diet: [], song: '', message: '',
   });
   const [submitted, setSubmitted] = useState2(false);
+  const [submitting, setSubmitting] = useState2(false);
+  const [submitError, setSubmitError] = useState2(null);
 
   useEffect2(() => {
     if (!open) return;
@@ -297,6 +404,7 @@ function RSVPModal({ open, onClose }) {
     if (open) {
       setStep(0);
       setSubmitted(false);
+      setSubmitError(null);
     }
   }, [open]);
 
@@ -311,8 +419,41 @@ function RSVPModal({ open, onClose }) {
 
   const dietOptions = ['Vegetarian', 'Vegan', 'Gluten-free', 'Pescatarian', 'No shellfish', 'Nut allergy'];
 
-  const submit = () => {
-    setSubmitted(true);
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
+  const step0Valid = data.name.trim() && emailValid && data.attending;
+
+  const submit = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch(
+        'https://yiuglondgjbgyqfoqunz.supabase.co/rest/v1/rsvps',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
+            'Authorization': 'Bearer sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email.trim(),
+            party_size: data.party,
+            attending: data.attending,
+            diet: data.diet,
+            song: data.song || null,
+            message: data.message || null,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error(`${res.status}`);
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError('Something went wrong — please try again or email hello@samanthaanddevin.com.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -360,7 +501,7 @@ function RSVPModal({ open, onClose }) {
             </p>
             <p style={{ color: 'var(--umber)', fontSize: 15, lineHeight: 1.7, maxWidth: 380, margin: '0 auto' }}>
               {data.attending === 'yes'
-                ? 'Confirmation and booking code are on their way to your inbox. Pack linen.'
+                ? 'A confirmation is on its way to your inbox. Pack linen.'
                 : 'Thank you for letting us know. We\u2019ll raise a glass for you on June 2.'}
             </p>
             <button
@@ -379,7 +520,7 @@ function RSVPModal({ open, onClose }) {
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p className="micro" style={{ marginBottom: 14 }}>V · RSVP</p>
+              <p className="micro" style={{ marginBottom: 14 }}>IV · RSVP</p>
               <h3 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 46px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
                 Kindly reply by 1 March 2027
               </h3>
@@ -408,6 +549,16 @@ function RSVPModal({ open, onClose }) {
                     value={data.name}
                     onChange={(e) => setField('name', e.target.value)}
                     placeholder="As it appears on your invitation"
+                    style={inputStyle}
+                  />
+                </Field>
+                <Field label="Email address">
+                  <input
+                    type="email"
+                    value={data.email}
+                    onChange={(e) => setField('email', e.target.value)}
+                    placeholder="So we can send your confirmation"
+                    autoComplete="email"
                     style={inputStyle}
                   />
                 </Field>
@@ -470,15 +621,15 @@ function RSVPModal({ open, onClose }) {
                 </Field>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
                   <button
-                    disabled={!data.name || !data.attending}
+                    disabled={!step0Valid}
                     onClick={() => setStep(data.attending === 'yes' ? 1 : 2)}
                     className="small-caps"
                     style={{
                       background: 'var(--espresso)', color: 'var(--parchment)',
                       border: 'none', padding: '14px 32px',
                       letterSpacing: '0.28em',
-                      opacity: (!data.name || !data.attending) ? 0.4 : 1,
-                      cursor: (!data.name || !data.attending) ? 'not-allowed' : 'pointer',
+                      opacity: !step0Valid ? 0.4 : 1,
+                      cursor: !step0Valid ? 'not-allowed' : 'pointer',
                     }}
                   >
                     Continue →
@@ -568,24 +719,33 @@ function RSVPModal({ open, onClose }) {
                     {data.attending === 'yes' ? 'joining us' : 'unable to join'}
                   </p>
                 </div>
+                {submitError && (
+                  <p style={{ color: '#9B3A3A', fontSize: 13, lineHeight: 1.6, margin: '0 0 4px' }}>
+                    {submitError}
+                  </p>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
                   <button
                     onClick={() => setStep(data.attending === 'yes' ? 1 : 0)}
                     className="small-caps"
                     style={{ background: 'transparent', border: 'none', color: 'var(--umber)', letterSpacing: '0.2em' }}
+                    disabled={submitting}
                   >
                     ← Back
                   </button>
                   <button
                     onClick={submit}
                     className="small-caps"
+                    disabled={submitting}
                     style={{
                       background: 'var(--gold)', color: 'var(--espresso)',
                       border: 'none', padding: '14px 32px',
                       letterSpacing: '0.28em',
+                      opacity: submitting ? 0.6 : 1,
+                      cursor: submitting ? 'wait' : 'pointer',
                     }}
                   >
-                    Send reply
+                    {submitting ? 'Sending…' : 'Send reply'}
                   </button>
                 </div>
               </div>
@@ -643,7 +803,7 @@ function RSVPCallout({ onOpen }) {
       }}
     >
       <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>V · The Favour of Your Reply</p>
+        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>IV · The Favour of Your Reply</p>
         <h2
           className="serif reveal reveal-delay-1"
           style={{
@@ -725,7 +885,7 @@ function Footer({ monogram }) {
           <div style={{ textAlign: 'right' }}>
             <p className="micro" style={{ marginBottom: 8 }}>The Place</p>
             <p className="serif-italic" style={{ fontSize: 22, margin: 0, color: 'var(--espresso)' }}>
-              SPAO, Campania
+              SPAO, Umbria
             </p>
           </div>
         </div>
@@ -738,7 +898,7 @@ function Footer({ monogram }) {
             With love from S &amp; D
           </span>
           <span className="micro" style={{ color: 'var(--umber)' }}>
-            Questions? hello@samanthaanddevin.com
+            Questions? samanthaanddevin2027@gmail.com
           </span>
         </div>
       </div>
@@ -782,7 +942,6 @@ function MonogramWatermark({ show, monogram }) {
 Object.assign(window, {
   ScheduleSection,
   TravelSection,
-  RegistryTeaser,
   RSVPModal,
   RSVPCallout,
   Footer,

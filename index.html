@@ -3,49 +3,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Samantha &amp; Devin · Save the Date</title>
-<link rel="canonical" href="https://www.samanthaanddevin.com/savethedate/">
+<title>Samantha &amp; Devin · June 2027 · SPAO, Italy</title>
+<link rel="canonical" href="https://www.samanthaanddevin.com/">
 <meta name="description" content="1 — 4 June 2027 · Umbria, Italy">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Samantha &amp; Devin">
-<meta property="og:title" content="Samantha &amp; Devin · Save the Date">
+<meta property="og:title" content="Samantha &amp; Devin · June 2027 · SPAO, Italy">
 <meta property="og:description" content="1 — 4 June 2027 · Umbria, Italy">
-<meta property="og:url" content="https://www.samanthaanddevin.com/savethedate/">
+<meta property="og:url" content="https://www.samanthaanddevin.com/">
 <meta property="og:image" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
 <meta property="og:image:secure_url" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Samantha &amp; Devin — Save the Date">
+<meta property="og:image:alt" content="Samantha &amp; Devin — June 2027">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Samantha &amp; Devin · Save the Date">
+<meta name="twitter:title" content="Samantha &amp; Devin · June 2027 · SPAO, Italy">
 <meta name="twitter:description" content="1 — 4 June 2027 · Umbria, Italy">
 <meta name="twitter:image" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
 
-<meta http-equiv="refresh" content="0; url=savethedate/">
-<script>location.replace('savethedate/');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Passcode gate: hide the page before paint if already unlocked (no flash). -->
+<link rel="stylesheet" href="gate.css">
+<script>
+  try {
+    if (localStorage.getItem('wedding_invited_v1') === '1') {
+      document.documentElement.classList.add('gate-unlocked');
+    }
+  } catch (e) {}
+</script>
 <style>
+  :root {
+    --parchment: #F5F0E8;
+    --parchment-deep: #ECE5D6;
+    --espresso: #2C2A25;
+    --travertine: #B8A98C;
+    --umber: #7A6E5A;
+    --gold: #C8B89A;
+    --hairline: rgba(124, 110, 90, 0.28);
+    --hairline-soft: rgba(124, 110, 90, 0.16);
+  }
+  * { box-sizing: border-box; }
   html, body {
-    margin: 0; padding: 0; height: 100%;
-    background: #F5F0E8; color: #2C2A25;
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-style: italic;
-    display: flex; align-items: center; justify-content: center;
+    margin: 0;
+    padding: 0;
+    background: var(--parchment);
+    color: var(--espresso);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  a {
-    color: inherit;
-    border-bottom: 0.5px solid rgba(124, 110, 90, 0.5);
-    text-decoration: none;
-    padding-bottom: 2px;
+  body { overflow-x: hidden; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* Type scale */
+  .serif { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+  .serif-italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; }
+  .micro {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--umber);
   }
+  .small-caps {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* Layout helpers */
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+  .container-narrow { max-width: 880px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px) {
+    .container, .container-narrow { padding: 0 22px; }
+  }
+
+  .hairline { border: 0; border-top: 0.5px solid var(--hairline); }
+  .hairline-v { width: 0.5px; background: var(--hairline); }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1.1s cubic-bezier(.2,.6,.2,1), transform 1.1s cubic-bezier(.2,.6,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  /* Placeholder imagery (subtle, editorial) */
+  image-slot.editorial::part(placeholder),
+  image-slot.editorial[data-empty] {
+    background:
+      repeating-linear-gradient(135deg, rgba(124,110,90,0.06) 0 1px, transparent 1px 14px),
+      linear-gradient(180deg, #E8DFCC 0%, #D9CDB2 100%);
+  }
+  .ph {
+    position: relative;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(135deg, rgba(124,110,90,0.07) 0 1px, transparent 1px 16px),
+      linear-gradient(180deg, #E8DFCC 0%, #D2C3A4 100%);
+  }
+  .ph::after {
+    content: attr(data-label);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: rgba(44, 42, 37, 0.5);
+    pointer-events: none;
+  }
+
+  /* Selection */
+  ::selection { background: var(--gold); color: var(--espresso); }
 </style>
+
+<!-- Tweak defaults (persisted by host) -->
+<script>
+  window.__TWEAKS__ = /*EDITMODE-BEGIN*/{
+    "palette": "parchment",
+    "monogram": "S & D",
+    "showWatermark": true,
+    "heroCrop": "tall",
+    "italicAccents": true
+  }/*EDITMODE-END*/;
+</script>
 </head>
 <body>
-<noscript>
-  <p>Continue to the <a href="savethedate/">save-the-date</a>.</p>
-</noscript>
+
+<div id="passcode-gate">
+  <span class="lock-eyebrow">A private invitation</span>
+  <div class="lock-rule"></div>
+  <div class="text-input-wrap">
+    <div class="field-group">
+      <input class="name-input" id="name-input" type="text" placeholder="Your name" autocomplete="name" spellcheck="false" maxlength="80"/>
+    </div>
+    <div class="field-group">
+      <p class="lock-prompt">Enter password</p>
+      <input class="pw-input" type="password" placeholder="password" autocomplete="off" spellcheck="false"/>
+    </div>
+    <button class="pw-submit">Enter</button>
+  </div>
+  <p class="error-msg invisible">Try again</p>
+</div>
+
+<div id="page-content">
+<div id="root"></div>
+</div>
+
+<script src="gate.js" defer></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="image-slot.js"></script>
+
+<script type="text/babel" src="sections.jsx"></script>
+<script type="text/babel" src="sections2.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+
 </body>
 </html>

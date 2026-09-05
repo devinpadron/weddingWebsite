@@ -67,7 +67,6 @@ function Nav({ monogram, onRSVP }) {
   const links = [
     { href: '#schedule', label: 'Schedule' },
     { href: '#travel', label: 'Travel & Stay' },
-    { href: '#registry', label: 'Registry' },
   ];
 
   const scrollTo = (href) => (e) => {
@@ -83,11 +82,16 @@ function Nav({ monogram, onRSVP }) {
         position: 'fixed',
         top: 0, left: 0, right: 0,
         zIndex: 50,
-        background: scrolled ? 'rgba(245, 240, 232, 0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'saturate(140%) blur(14px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'saturate(140%) blur(14px)' : 'none',
-        borderBottom: scrolled ? '0.5px solid var(--hairline)' : '0.5px solid transparent',
-        transition: 'background 0.4s ease, border-color 0.4s ease, padding 0.4s ease',
+        background: scrolled
+          ? 'rgba(245, 240, 232, 0.92)'
+          : 'linear-gradient(to bottom, rgba(20,14,8,0.30) 0%, rgba(20,14,8,0.24) 30%, rgba(20,14,8,0.15) 55%, rgba(20,14,8,0.06) 80%, rgba(20,14,8,0.015) 92%, rgba(20,14,8,0) 100%)',
+        backdropFilter: 'saturate(140%) blur(14px)',
+        WebkitBackdropFilter: 'saturate(140%) blur(14px)',
+        borderBottom: scrolled ? '0.5px solid var(--hairline)' : 'none',
+        maskImage: scrolled ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
+        WebkitMaskImage: scrolled ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
+        paddingBottom: scrolled ? 0 : 56,
+        transition: 'background 0.4s ease, border-color 0.4s ease, padding 0.4s ease, mask-image 0.4s ease',
       }}
     >
       <div
@@ -108,13 +112,13 @@ function Nav({ monogram, onRSVP }) {
           <Monogram
             style={monogram}
             size={scrolled ? 22 : 26}
-            color={scrolled ? 'var(--espresso)' : 'var(--espresso)'}
+            color={scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.95)'}
           />
           <span
             className="micro"
             style={{
               display: scrolled ? 'none' : 'inline',
-              color: 'var(--umber)',
+              color: 'rgba(245,240,232,0.75)',
             }}
           >
             01 · VI · 27
@@ -132,7 +136,7 @@ function Nav({ monogram, onRSVP }) {
               href={l.href}
               onClick={scrollTo(l.href)}
               className="small-caps"
-              style={{ color: 'var(--espresso)', opacity: 0.85 }}
+              style={{ color: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', opacity: 0.85 }}
             >
               {l.label}
             </a>
@@ -141,11 +145,12 @@ function Nav({ monogram, onRSVP }) {
             onClick={onRSVP}
             className="small-caps"
             style={{
-              background: 'var(--espresso)',
-              color: 'var(--parchment)',
-              border: 'none',
+              background: scrolled ? 'var(--espresso)' : 'transparent',
+              color: scrolled ? 'var(--parchment)' : 'rgba(245,240,232,0.9)',
+              border: scrolled ? 'none' : '0.5px solid rgba(245,240,232,0.6)',
               padding: '10px 22px',
               letterSpacing: '0.28em',
+              transition: 'background 0.4s ease, color 0.4s ease, border-color 0.4s ease',
             }}
           >
             RSVP
@@ -164,8 +169,8 @@ function Nav({ monogram, onRSVP }) {
             padding: 8,
           }}
         >
-          <span style={{ display: 'block', width: 22, height: 0.5, background: 'var(--espresso)', marginBottom: 6 }}></span>
-          <span style={{ display: 'block', width: 22, height: 0.5, background: 'var(--espresso)' }}></span>
+          <span style={{ display: 'block', width: 22, height: 0.5, background: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', marginBottom: 6 }}></span>
+          <span style={{ display: 'block', width: 22, height: 0.5, background: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)' }}></span>
         </button>
       </div>
 
@@ -296,7 +301,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
         padding: '14px 0',
         color: 'var(--parchment)',
       }} className="hero-frame-top">
-        <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}>N 40° 45′ · E 14° 36′</span>
+        <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}>N 42° 49′ · E 11° 59′</span>
         <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}>Vol. I — Invitation</span>
       </div>
 
@@ -346,7 +351,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
             fontWeight: 300,
           }}
         >
-          SPAO · Campania, Italy
+          SPAO · Umbria, Italy
         </p>
       </div>
 
@@ -393,7 +398,7 @@ function InvitationNote({ italicAccents }) {
           textWrap: 'pretty',
         }}
       >
-        Come spend four slow days with us beneath a Campanian sun —
+        Come spend four slow days with us beneath an Umbrian sun —
         share a long table, pour another glass, and watch two of your
         favourite people promise the rest of it to one another.
       </p>
