@@ -67,6 +67,7 @@ function Nav({ monogram, onRSVP }) {
   const links = [
     { href: '#schedule', label: 'Schedule' },
     { href: '#travel', label: 'Travel & Stay' },
+    { href: '#faq', label: 'FAQ' },
   ];
 
   const scrollTo = (href) => (e) => {

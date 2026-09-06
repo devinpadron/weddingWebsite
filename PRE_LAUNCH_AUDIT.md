@@ -33,7 +33,7 @@ The RSVP modal looks complete but submissions go nowhere. The `submit()` functio
 `sections2.jsx:222` — "Complimentary from NAP, 1 & 2 June" is listed as a concrete fact. Needs to be confirmed and arranged with a transport company before the site goes live, or softened to "TBC" until confirmed.
 
 ### Contact email needs to be set up
-`sections2.jsx:742` — Footer lists `hello@samanthaanddevin.com`. This address needs to exist and be monitored before any guests land on the page.
+`sections2.jsx:742` — Footer lists `samanthaanddevin2027@gmail.com`. This address needs to exist and be monitored before any guests land on the page.
 **Fixed**
 
 ---

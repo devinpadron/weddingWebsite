@@ -10,12 +10,12 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 //   WEBHOOK_SECRET   must match the secret in the DB trigger
 // Optional env:
 //   RSVP_FROM        e.g. "Samantha & Devin <rsvp@samanthaanddevin.com>"
-//   RSVP_REPLY_TO    e.g. "hello@samanthaanddevin.com"
+//   RSVP_REPLY_TO    e.g. "samanthaanddevin2027@gmail.com"
 
 const WEBHOOK_SECRET = Deno.env.get("WEBHOOK_SECRET") ?? "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FROM = Deno.env.get("RSVP_FROM") ?? "Samantha & Devin <rsvp@samanthaanddevin.com>";
-const REPLY_TO = Deno.env.get("RSVP_REPLY_TO") ?? "hello@samanthaanddevin.com";
+const REPLY_TO = Deno.env.get("RSVP_REPLY_TO") ?? "samanthaanddevin2027@gmail.com";
 
 const esc = (s: string) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>

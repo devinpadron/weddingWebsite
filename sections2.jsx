@@ -379,6 +379,48 @@ function TravelSection() {
 }
 
 /* ────────────────────────────────────────────────────────────────
+   FAQTeaser — preview a few questions, link to the full FAQ page
+─────────────────────────────────────────────────────────────────*/
+function FAQTeaser() {
+  const ref = useReveal();
+  const preview = [
+    'What should I pack for early June in Umbria?',
+    'Do I need a car, or will there be transport?',
+    'How does tipping work in Italy?',
+    'What are the dining hours — and when is everything closed?',
+  ];
+  return (
+    <section
+      id="faq"
+      ref={ref}
+      style={{ padding: '120px 0', textAlign: 'center', background: 'var(--parchment)' }}
+    >
+      <div className="container-narrow">
+        <p className="micro reveal" style={{ marginBottom: 22 }}>IV · Before You Go</p>
+        <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', margin: 0, fontWeight: 300, textWrap: 'balance' }}>
+          Questions, <em style={{ fontWeight: 300 }}>answered</em>
+        </h2>
+        <p className="reveal reveal-delay-2" style={{ marginTop: 24, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)', maxWidth: 560, margin: '24px auto 0' }}>
+          Travelling to a wedding abroad brings a hundred small questions — from
+          airport transfers to how to order a coffee like a local. We&rsquo;ve
+          gathered everything in one place.
+        </p>
+        <ul className="reveal reveal-delay-3" style={{ listStyle: 'none', padding: 0, margin: '40px auto 0', maxWidth: 520, display: 'grid', gap: 14, textAlign: 'left' }}>
+          {preview.map((q) => (
+            <li key={q} className="serif-italic" style={{ fontSize: 19, color: 'var(--espresso)', borderBottom: '0.5px dashed var(--hairline-soft)', paddingBottom: 14 }}>
+              {q}
+            </li>
+          ))}
+        </ul>
+        <a href="/faq/" className="small-caps reveal reveal-delay-4" style={{ display: 'inline-block', marginTop: 44, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
+          Read the full guide →
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────
    RSVPModal — elegant form with multi-step feel
 ─────────────────────────────────────────────────────────────────*/
 function RSVPModal({ open, onClose }) {
@@ -447,7 +489,7 @@ function RSVPModal({ open, onClose }) {
       if (!res.ok) throw new Error(`${res.status}`);
       setSubmitted(true);
     } catch (err) {
-      setSubmitError('Something went wrong — please try again or email hello@samanthaanddevin.com.');
+      setSubmitError('Something went wrong — please try again or email samanthaanddevin2027@gmail.com.');
     } finally {
       setSubmitting(false);
     }
@@ -517,7 +559,7 @@ function RSVPModal({ open, onClose }) {
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p className="micro" style={{ marginBottom: 14 }}>IV · RSVP</p>
+              <p className="micro" style={{ marginBottom: 14 }}>V · RSVP</p>
               <h3 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 46px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
                 Kindly reply by 1 March 2027
               </h3>
@@ -800,7 +842,7 @@ function RSVPCallout({ onOpen }) {
       }}
     >
       <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>IV · The Favour of Your Reply</p>
+        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>V · The Favour of Your Reply</p>
         <h2
           className="serif reveal reveal-delay-1"
           style={{
@@ -939,6 +981,7 @@ function MonogramWatermark({ show, monogram }) {
 Object.assign(window, {
   ScheduleSection,
   TravelSection,
+  FAQTeaser,
   RSVPModal,
   RSVPCallout,
   Footer,
