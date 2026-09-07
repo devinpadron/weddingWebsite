@@ -9,135 +9,141 @@ function ScheduleSection() {
   const ref = useReveal();
   const days = [
     {
-      num: 'I', date: 'Tuesday · 1 June',
+      num: 'I', day: 'Tuesday', date: '1 June',
       title: 'Arrival & Pizza Party',
       time: 'from 17:00',
       attire: 'Casual',
-      note: 'Check-in closes at 19:00. Welcome night under string-lights in the lower garden — wood-fired pizza, a bottomless aperitivo cart, no speeches.',
+      note: 'Drop your bags, pour a drink, and find us in the lower garden. A welcome night under string-lights — wood-fired pizza straight from the oven, a bottomless aperitivo cart, and absolutely no speeches.',
+      highlights: ['Check-in closes 19:00', 'Wood-fired pizza', 'Aperitivo cart'],
     },
     {
-      num: 'II', date: 'Wednesday · 2 June',
+      num: 'II', day: 'Wednesday', date: '2 June',
       title: 'The Wedding',
       time: '16:00 ceremony',
       attire: 'Formal · garden-suitable',
-      note: 'Ceremony in the olive grove, followed by cocktails on the terrace and a long-table dinner in the orangery. Dancing until the cicadas stop.',
+      note: 'The reason we’re all here. A ceremony among the olive trees at golden hour, cocktails on the terrace as the valley turns amber, then a long-table dinner in the orangery. Dancing until the cicadas give up.',
+      highlights: ['Olive-grove ceremony', 'Terrace cocktails', 'Long-table dinner'],
       featured: true,
     },
     {
-      num: 'III', date: 'Thursday · 3 June',
+      num: 'III', day: 'Thursday', date: '3 June',
       title: 'Day-After BBQ',
-      time: '13:00',
+      time: 'from 13:00',
       attire: 'Linen & sandals',
-      note: 'Lazy lunch by the pool. Bring a swimsuit, leave your watch. Espresso martinis return at sunset for anyone who can stand them.',
+      note: 'A slow, sun-drunk lunch by the pool. Bring a swimsuit and leave your watch behind. Espresso martinis reappear at sunset for anyone still standing after the night before.',
+      highlights: ['Poolside lunch', 'Bring a swimsuit', 'Sunset espresso martinis'],
     },
     {
-      num: 'IV', date: 'Friday · 4 June',
+      num: 'IV', day: 'Friday', date: '4 June',
       title: 'Farewell Breakfast',
       time: 'until 11:00',
       attire: 'Whatever you slept in',
-      note: 'Coffee, cornetti, slow goodbyes on the loggia. Check-out by eleven; please don\u2019t leave without a hug.',
+      note: 'Coffee and warm cornetti on the loggia, and the slow business of saying goodbye. Check-out is at eleven — but please don’t leave without finding us for a hug.',
+      highlights: ['Coffee & cornetti', 'On the loggia', 'Check-out by 11:00'],
     },
   ];
 
   return (
-    <section
-      id="schedule"
-      ref={ref}
-      style={{ padding: '140px 0 120px', background: 'var(--parchment)' }}
-    >
-      <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: 80 }}>
-          <p className="micro reveal" style={{ marginBottom: 22 }}>II · The Weekend</p>
-          <h2
-            className="serif reveal reveal-delay-1"
-            style={{
-              fontSize: 'clamp(44px, 5.5vw, 72px)',
-              margin: 0,
-              fontWeight: 300,
-              lineHeight: 1.05,
-            }}
-          >
+    <section id="schedule" ref={ref} style={{ background: 'var(--parchment)' }}>
+      {/* Header band */}
+      <div style={{ background: 'var(--parchment-deep)', borderBottom: '0.5px solid var(--hairline)', padding: '150px 0 96px', textAlign: 'center' }}>
+        <div className="container-narrow">
+          <p className="micro reveal" style={{ marginBottom: 26 }}>The Weekend</p>
+          <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
             Four days in <em style={{ fontWeight: 300 }}>Umbria</em>
-          </h2>
-          <p
-            className="reveal reveal-delay-2"
+          </h1>
+          <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
+            We&rsquo;ve built the weekend like a good Italian meal &mdash; slow,
+            generous, and with plenty of time between courses. Come for the wedding;
+            stay for the long lunches.
+          </p>
+          <div className="reveal reveal-delay-3" style={{ marginTop: 44, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
+            <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>1 &mdash; 4 June 2027 &middot; SPAO, Umbria</span>
+            <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Vertical timeline */}
+      <div className="container-narrow" style={{ padding: '20px 32px 40px' }}>
+        {days.map((d) => (
+          <article
+            key={d.num}
+            className="day-row reveal"
             style={{
-              maxWidth: 540, margin: '24px auto 0',
-              fontSize: 15, lineHeight: 1.7, color: 'var(--umber)',
+              display: 'grid',
+              gridTemplateColumns: '220px 1fr',
+              gap: 48,
+              padding: '64px 0',
+              borderBottom: '0.5px solid var(--hairline)',
             }}
           >
-            We&rsquo;ve built the weekend like a good Italian meal — slow,
-            generous, with plenty of time between courses.
-          </p>
-        </div>
+            <aside className="day-aside">
+              <div className="serif" style={{ fontSize: 84, fontStyle: 'italic', lineHeight: 0.9, color: d.featured ? 'var(--espresso)' : 'var(--travertine)', fontWeight: 300 }}>
+                {d.num}
+              </div>
+              <p className="serif-italic" style={{ fontSize: 24, margin: '18px 0 0', color: 'var(--espresso)' }}>{d.day}</p>
+              <p className="micro" style={{ marginTop: 6 }}>{d.date}</p>
+              <div style={{ marginTop: 24, display: 'grid', gap: 10 }}>
+                <div>
+                  <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 4 }}>Time</p>
+                  <p className="small-caps" style={{ color: 'var(--espresso)' }}>{d.time}</p>
+                </div>
+                <div>
+                  <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 4 }}>Attire</p>
+                  <p className="small-caps" style={{ color: 'var(--umber)' }}>{d.attire}</p>
+                </div>
+              </div>
+            </aside>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 0,
-            borderTop: '0.5px solid var(--hairline)',
-            borderBottom: '0.5px solid var(--hairline)',
-          }}
-          className="schedule-grid"
-        >
-          {days.map((d, i) => (
-            <div
-              key={d.num}
-              className={`reveal reveal-delay-${Math.min(i + 1, 4)}`}
-              style={{
-                padding: '40px 28px 44px',
-                borderRight: i < days.length - 1 ? '0.5px solid var(--hairline)' : 'none',
-                background: d.featured ? 'rgba(200, 184, 154, 0.18)' : 'transparent',
-                position: 'relative',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 28 }}>
-                <span className="serif" style={{ fontSize: 32, fontStyle: 'italic', color: 'var(--travertine)', fontWeight: 300 }}>
-                  {d.num}
+            <div className="day-body">
+              {d.featured && (
+                <span className="small-caps" style={{ display: 'inline-block', marginBottom: 18, padding: '6px 16px', background: 'rgba(200, 184, 154, 0.28)', color: 'var(--espresso)', letterSpacing: '0.24em' }}>
+                  The main event
                 </span>
-                <span className="micro" style={{ color: 'var(--umber)' }}>{d.date}</span>
-              </div>
-              <h3
-                className="serif"
-                style={{
-                  fontSize: 30,
-                  margin: 0,
-                  fontWeight: 300,
-                  lineHeight: 1.15,
-                  textWrap: 'balance',
-                }}
-              >
+              )}
+              <h2 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 48px)', margin: 0, fontWeight: 300, lineHeight: 1.1, textWrap: 'balance' }}>
                 {d.title}
-              </h3>
-              <div style={{ marginTop: 22, display: 'flex', gap: 18, flexWrap: 'wrap' }}>
-                <span className="small-caps" style={{ color: 'var(--espresso)' }}>{d.time}</span>
-                <span style={{ width: 0.5, background: 'var(--hairline)' }}></span>
-                <span className="small-caps" style={{ color: 'var(--umber)' }}>{d.attire}</span>
-              </div>
-              <p style={{
-                marginTop: 24,
-                fontSize: 14,
-                lineHeight: 1.75,
-                color: 'var(--umber)',
-              }}>
+              </h2>
+              <p style={{ marginTop: 22, fontSize: 16, lineHeight: 1.85, color: 'var(--umber)', maxWidth: 540 }}>
                 {d.note}
               </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '30px 0 0', display: 'flex', flexWrap: 'wrap', gap: '10px 12px' }}>
+                {d.highlights.map((h) => (
+                  <li key={h} className="small-caps" style={{ padding: '8px 16px', border: '0.5px solid var(--hairline)', color: 'var(--umber)', fontSize: 10 }}>
+                    {h}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
+          </article>
+        ))}
+      </div>
+
+      {/* Closing note */}
+      <div style={{ background: 'var(--espresso)', color: 'var(--parchment)', padding: '110px 0', textAlign: 'center' }}>
+        <div className="container-narrow">
+          <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.6)', marginBottom: 22 }}>Before you pack</p>
+          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 4vw, 46px)', margin: 0, fontWeight: 300, color: 'var(--parchment)', lineHeight: 1.15 }}>
+            Dress for warm days and <em style={{ fontWeight: 300 }}>cooler evenings</em>
+          </h2>
+          <p className="reveal reveal-delay-2" style={{ marginTop: 24, maxWidth: 520, margin: '24px auto 0', fontSize: 15, lineHeight: 1.8, color: 'rgba(245,240,232,0.72)' }}>
+            Early June in Umbria is generous with sunshine. Much of the weekend is on
+            stone and garden paths, so pack block heels or elegant flats over stilettos,
+            and a light layer for after dark.
+          </p>
+          <a href="/faq/" className="small-caps reveal reveal-delay-3" style={{ display: 'inline-block', marginTop: 40, color: 'var(--parchment)', borderBottom: '0.5px solid var(--gold)', paddingBottom: 6 }}>
+            Packing &amp; travel notes &rarr;
+          </a>
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 980px) {
-          .schedule-grid { grid-template-columns: 1fr 1fr !important; }
-          .schedule-grid > div:nth-child(2) { border-right: none !important; }
-          .schedule-grid > div:nth-child(1), .schedule-grid > div:nth-child(2) { border-bottom: 0.5px solid var(--hairline); }
-        }
-        @media (max-width: 640px) {
-          .schedule-grid { grid-template-columns: 1fr !important; }
-          .schedule-grid > div { border-right: none !important; border-bottom: 0.5px solid var(--hairline); }
-          .schedule-grid > div:last-child { border-bottom: none !important; }
+        @media (max-width: 760px) {
+          .day-row { grid-template-columns: 1fr !important; gap: 24px !important; padding: 48px 0 !important; }
+          .day-aside { display: flex; align-items: baseline; flex-wrap: wrap; gap: 16px; }
+          .day-aside > div:last-child { display: flex !important; gap: 28px; margin-top: 8px !important; }
         }
       `}</style>
     </section>
@@ -182,240 +188,250 @@ function TravelSection() {
     }
   };
 
+  const modes = [
+    { k: 'By Air', v: 'Rome Fiumicino (FCO)', d: 'The nearest major airport — about 90 minutes north of the villa by car. Fly in on 1 June or earlier.' },
+    { k: 'By Rail', v: 'Trenitalia to Orvieto', d: 'Frequent, comfortable trains from Rome. From Orvieto it’s a short 20-minute drive up into the hills.' },
+    { k: 'By Car', v: 'A1 north, exit Orvieto', d: 'The A1 autostrada runs straight from Rome; leave at the Orvieto exit and wind your way into the countryside.' },
+    { k: 'Shuttle', v: 'Complimentary · 1 & 2 June', d: 'We’ll run transfers from FCO on arrival days. Send your flight details with your RSVP so we can time them.' },
+  ];
+
+  const nearby = [
+    { name: 'Orvieto', note: 'A cathedral town perched on a volcanic cliff — Gothic façade, underground caves, and a crisp Orvieto Classico.' },
+    { name: 'Assisi', note: 'The rose-stone hill town of St. Francis, all frescoes and far-reaching valley views, under an hour away.' },
+    { name: 'Perugia', note: 'Umbria’s handsome capital — medieval streets, a grand piazza, and very good chocolate.' },
+  ];
+
   return (
-    <section
-      id="travel"
-      ref={ref}
-      style={{ padding: '140px 0 120px', background: 'var(--parchment-deep)' }}
-    >
-      <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: 72 }}>
-          <p className="micro reveal" style={{ marginBottom: 22 }}>III · Getting There</p>
-          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(40px, 5vw, 64px)', margin: 0, fontWeight: 300 }}>
+    <section id="travel" ref={ref} style={{ background: 'var(--parchment-deep)' }}>
+      {/* Header band */}
+      <div style={{ background: 'var(--parchment)', borderBottom: '0.5px solid var(--hairline)', padding: '150px 0 96px', textAlign: 'center' }}>
+        <div className="container-narrow">
+          <p className="micro reveal" style={{ marginBottom: 26 }}>Getting There</p>
+          <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
             Plan your <em style={{ fontWeight: 300 }}>passage</em>
-          </h2>
+          </h1>
+          <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
+            The celebration is in the hills of Umbria, in central Italy&rsquo;s green
+            heart. Here&rsquo;s how to reach us, where you&rsquo;ll rest your head,
+            and what&rsquo;s worth seeing along the way.
+          </p>
         </div>
+      </div>
 
-        <div
-          className="travel-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 0,
-            border: '0.5px solid var(--hairline)',
-            background: 'var(--parchment)',
-          }}
-        >
-          {/* Stay card */}
-          <div id="stay" className="reveal" style={{ padding: '56px 56px 64px', borderRight: '0.5px solid var(--hairline)' }}>
-            <p className="micro" style={{ marginBottom: 18 }}>Accommodations</p>
-            <h3 className="serif" style={{ fontSize: 38, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
-              Where you&rsquo;re staying
-            </h3>
-            <p style={{ marginTop: 22, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-              We&rsquo;ve arranged accommodations for every guest — some at the
-              villa, others at a nearby hotel. Enter the code from your invitation
-              to see your details.
-            </p>
+      {/* Accommodations lookup */}
+      <div id="stay" className="container-narrow" style={{ padding: '110px 32px 20px' }}>
+        <div className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: 'clamp(40px, 6vw, 72px)' }}>
+          <p className="micro" style={{ marginBottom: 18 }}>Accommodations</p>
+          <h2 className="serif" style={{ fontSize: 'clamp(34px, 4.4vw, 52px)', margin: 0, fontWeight: 300, fontStyle: 'italic', lineHeight: 1.05 }}>
+            Where you&rsquo;re staying
+          </h2>
+          <p style={{ marginTop: 22, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+            We&rsquo;ve arranged a room for every guest &mdash; some at the villa
+            itself, others at a lovely hotel nearby. Enter the code from your
+            invitation to see exactly where you&rsquo;ll be, and for how long.
+          </p>
 
-            {accomState !== 'found' && (
-              <div style={{ marginTop: 36 }}>
-                <label style={{ display: 'block' }}>
-                  <span className="micro" style={{ display: 'block', marginBottom: 12 }}>Invitation code</span>
-                  <input
-                    type="text"
-                    value={accomCode}
-                    onChange={(e) => { setAccomCode(e.target.value); setAccomState('idle'); }}
-                    onKeyDown={(e) => e.key === 'Enter' && lookupCode()}
-                    placeholder="Enter your code"
-                    style={{
-                      width: '100%',
-                      padding: '14px 0',
-                      background: 'transparent',
-                      border: 'none',
-                      borderBottom: '0.5px solid var(--hairline)',
-                      fontFamily: 'Cormorant Garamond, serif',
-                      fontSize: 22,
-                      fontStyle: 'italic',
-                      fontWeight: 300,
-                      color: 'var(--espresso)',
-                      outline: 'none',
-                    }}
-                  />
-                </label>
-                {accomState === 'not_found' && (
-                  <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
-                    Code not found — double-check your invitation and try again.
-                  </p>
-                )}
-                {accomState === 'error' && (
-                  <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
-                    Something went wrong — please try again.
-                  </p>
-                )}
-                <button
-                  onClick={lookupCode}
-                  disabled={accomState === 'loading' || !accomCode.trim()}
-                  className="small-caps"
+          {accomState !== 'found' && (
+            <div style={{ marginTop: 40, maxWidth: 460 }}>
+              <label style={{ display: 'block' }}>
+                <span className="micro" style={{ display: 'block', marginBottom: 12 }}>Invitation code</span>
+                <input
+                  type="text"
+                  value={accomCode}
+                  onChange={(e) => { setAccomCode(e.target.value); setAccomState('idle'); }}
+                  onKeyDown={(e) => e.key === 'Enter' && lookupCode()}
+                  placeholder="Enter your code"
                   style={{
-                    marginTop: 22,
-                    background: 'var(--espresso)',
-                    color: 'var(--parchment)',
-                    border: 'none',
-                    padding: '12px 28px',
-                    letterSpacing: '0.28em',
-                    opacity: (accomState === 'loading' || !accomCode.trim()) ? 0.5 : 1,
-                    cursor: (accomState === 'loading' || !accomCode.trim()) ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  {accomState === 'loading' ? 'Looking up…' : 'Look up →'}
-                </button>
-              </div>
-            )}
-
-            {accomState === 'found' && accomData && (
-              <div style={{ marginTop: 36 }}>
-                <div style={{ padding: '28px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)' }}>
-                  <p className="micro" style={{ marginBottom: 10 }}>
-                    {accomData.accommodation_type === 'villa' ? 'Villa · SPAO' : 'Hotel'}
-                  </p>
-                  <p className="serif-italic" style={{ fontSize: 26, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>
-                    {accomData.property_name}
-                  </p>
-                  {accomData.room_detail && (
-                    <p className="small-caps" style={{ marginTop: 8, color: 'var(--umber)', fontSize: 11 }}>
-                      {accomData.room_detail}
-                    </p>
-                  )}
-                  {(accomData.check_in || accomData.check_out) && (
-                    <p style={{ marginTop: 16, fontSize: 13, color: 'var(--umber)', lineHeight: 1.6 }}>
-                      {accomData.check_in && (
-                        <>Check-in: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_in}</strong></>
-                      )}
-                      {accomData.check_in && accomData.check_out && ' · '}
-                      {accomData.check_out && (
-                        <>Check-out: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_out}</strong></>
-                      )}
-                    </p>
-                  )}
-                  {accomData.notes && (
-                    <p style={{ marginTop: 14, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>
-                      {accomData.notes}
-                    </p>
-                  )}
-                </div>
-                {accomData.booking_url && (
-                  <a
-                    href={accomData.booking_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="small-caps"
-                    style={{ display: 'inline-block', marginTop: 22, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}
-                  >
-                    Booking details →
-                  </a>
-                )}
-                <button
-                  onClick={() => { setAccomState('idle'); setAccomCode(''); setAccomData(null); }}
-                  className="small-caps"
-                  style={{
-                    display: 'block',
-                    marginTop: accomData.booking_url ? 12 : 22,
+                    width: '100%',
+                    padding: '14px 0',
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--umber)',
-                    letterSpacing: '0.2em',
-                    padding: 0,
-                    cursor: 'pointer',
-                    fontSize: 10,
+                    borderBottom: '0.5px solid var(--hairline)',
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 24,
+                    fontStyle: 'italic',
+                    fontWeight: 300,
+                    color: 'var(--espresso)',
+                    outline: 'none',
                   }}
-                >
-                  Use a different code
-                </button>
-              </div>
-            )}
-          </div>
+                />
+              </label>
+              {accomState === 'not_found' && (
+                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                  Code not found — double-check your invitation and try again.
+                </p>
+              )}
+              {accomState === 'error' && (
+                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                  Something went wrong — please try again.
+                </p>
+              )}
+              <button
+                onClick={lookupCode}
+                disabled={accomState === 'loading' || !accomCode.trim()}
+                className="small-caps"
+                style={{
+                  marginTop: 26,
+                  background: 'var(--espresso)',
+                  color: 'var(--parchment)',
+                  border: 'none',
+                  padding: '14px 32px',
+                  letterSpacing: '0.28em',
+                  opacity: (accomState === 'loading' || !accomCode.trim()) ? 0.5 : 1,
+                  cursor: (accomState === 'loading' || !accomCode.trim()) ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {accomState === 'loading' ? 'Looking up…' : 'Look up →'}
+              </button>
+            </div>
+          )}
 
-          {/* Travel card */}
-          <div className="reveal reveal-delay-1" style={{ padding: '56px 56px 64px' }}>
-            <p className="micro" style={{ marginBottom: 18 }}>Travel Guide</p>
-            <h3 className="serif" style={{ fontSize: 38, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
-              Finding the villa
-            </h3>
-            <p style={{ marginTop: 22, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-              The nearest airport is <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>Rome Fiumicino (FCO)</strong>, about
-              90 minutes north by car. From there, the A1 south takes you straight
-              to the Orvieto exit, then a short drive into the hills.
-            </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '32px 0 0', display: 'grid', gap: 14 }}>
-              {[
-                ['By Air', 'Fly into FCO · 90 min transfer'],
-                ['By Rail', 'Trenitalia to Orvieto · 20 min onward'],
-                ['By Car', 'A1 south from Rome · exit Orvieto'],
-                ['Shuttle', 'Complimentary from FCO, 1 & 2 June'],
-              ].map(([k, v]) => (
-                <li key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '0.5px dashed var(--hairline-soft)', paddingBottom: 10 }}>
-                  <span className="serif-italic" style={{ fontSize: 18, color: 'var(--espresso)' }}>{k}</span>
-                  <span className="small-caps" style={{ color: 'var(--umber)' }}>{v}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {accomState === 'found' && accomData && (
+            <div style={{ marginTop: 40 }}>
+              <div style={{ padding: '32px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)' }}>
+                <p className="micro" style={{ marginBottom: 10 }}>
+                  {accomData.accommodation_type === 'villa' ? 'Villa · SPAO' : 'Hotel'}
+                </p>
+                <p className="serif-italic" style={{ fontSize: 30, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>
+                  {accomData.property_name}
+                </p>
+                {accomData.room_detail && (
+                  <p className="small-caps" style={{ marginTop: 8, color: 'var(--umber)', fontSize: 11 }}>
+                    {accomData.room_detail}
+                  </p>
+                )}
+                {(accomData.check_in || accomData.check_out) && (
+                  <p style={{ marginTop: 16, fontSize: 14, color: 'var(--umber)', lineHeight: 1.6 }}>
+                    {accomData.check_in && (
+                      <>Check-in: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_in}</strong></>
+                    )}
+                    {accomData.check_in && accomData.check_out && ' · '}
+                    {accomData.check_out && (
+                      <>Check-out: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_out}</strong></>
+                    )}
+                  </p>
+                )}
+                {accomData.notes && (
+                  <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
+                    {accomData.notes}
+                  </p>
+                )}
+              </div>
+              {accomData.booking_url && (
+                <a
+                  href={accomData.booking_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="small-caps"
+                  style={{ display: 'inline-block', marginTop: 24, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}
+                >
+                  Booking details →
+                </a>
+              )}
+              <button
+                onClick={() => { setAccomState('idle'); setAccomCode(''); setAccomData(null); }}
+                className="small-caps"
+                style={{
+                  display: 'block',
+                  marginTop: accomData.booking_url ? 14 : 24,
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--umber)',
+                  letterSpacing: '0.2em',
+                  padding: 0,
+                  cursor: 'pointer',
+                  fontSize: 10,
+                }}
+              >
+                Use a different code
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Getting to the villa */}
+      <div className="container-narrow" style={{ padding: '90px 32px 20px' }}>
+        <div style={{ marginBottom: 12 }}>
+          <p className="micro reveal" style={{ marginBottom: 16 }}>The Journey</p>
+          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 3.6vw, 44px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
+            Finding the villa
+          </h2>
+          <p className="reveal reveal-delay-2" style={{ marginTop: 20, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 580 }}>
+            However you come, the last stretch is the loveliest &mdash; cypress-lined
+            roads climbing into the Umbrian hills. Four ways to reach us:
+          </p>
+        </div>
+        <div style={{ marginTop: 30 }}>
+          {modes.map((m, i) => (
+            <div
+              key={m.k}
+              className="mode-row reveal"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '200px 1fr',
+                gap: 32,
+                padding: '30px 0',
+                borderTop: '0.5px solid var(--hairline)',
+                borderBottom: i === modes.length - 1 ? '0.5px solid var(--hairline)' : 'none',
+              }}
+            >
+              <div className="mode-head">
+                <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 8 }}>{m.k}</p>
+                <p className="serif-italic" style={{ fontSize: 22, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>{m.v}</p>
+              </div>
+              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>{m.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Worth a detour */}
+      <div className="container-narrow" style={{ padding: '90px 32px 40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <p className="micro reveal" style={{ marginBottom: 16 }}>While You&rsquo;re Here</p>
+          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 3.6vw, 44px)', margin: 0, fontWeight: 300 }}>
+            Worth a <em style={{ fontWeight: 300 }}>detour</em>
+          </h2>
+          <p className="reveal reveal-delay-2" style={{ maxWidth: 520, margin: '20px auto 0', fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
+            Umbria and neighbouring Tuscany reward a longer stay. A few favourites
+            within an easy drive:
+          </p>
+        </div>
+        <div className="nearby-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          {nearby.map((n) => (
+            <div key={n.name} className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: '36px 32px 40px' }}>
+              <h3 className="serif" style={{ fontSize: 28, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>{n.name}</h3>
+              <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>{n.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Closing note */}
+      <div style={{ background: 'var(--espresso)', color: 'var(--parchment)', padding: '110px 0', textAlign: 'center' }}>
+        <div className="container-narrow">
+          <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.6)', marginBottom: 22 }}>Still planning</p>
+          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 4vw, 46px)', margin: 0, fontWeight: 300, color: 'var(--parchment)', lineHeight: 1.15 }}>
+            Visas, driving, money and <em style={{ fontWeight: 300 }}>more</em>
+          </h2>
+          <p className="reveal reveal-delay-2" style={{ marginTop: 24, maxWidth: 520, margin: '24px auto 0', fontSize: 15, lineHeight: 1.8, color: 'rgba(245,240,232,0.72)' }}>
+            Car rentals, tipping, plug types, phone data and the little Italian customs
+            worth knowing &mdash; the full guide lives in the FAQ.
+          </p>
+          <a href="/faq/" className="small-caps reveal reveal-delay-3" style={{ display: 'inline-block', marginTop: 40, color: 'var(--parchment)', borderBottom: '0.5px solid var(--gold)', paddingBottom: 6 }}>
+            Read the guest guide &rarr;
+          </a>
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
-          .travel-grid { grid-template-columns: 1fr !important; }
-          .travel-grid > div { border-right: none !important; }
-          .travel-grid > div:first-child { border-bottom: 0.5px solid var(--hairline); }
-        }
-        @media (max-width: 640px) {
-          .travel-grid > div { padding: 40px 28px 44px !important; }
+        @media (max-width: 760px) {
+          .mode-head { margin-bottom: 4px; }
+          .mode-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .nearby-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
-    </section>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────────
-   FAQTeaser — preview a few questions, link to the full FAQ page
-─────────────────────────────────────────────────────────────────*/
-function FAQTeaser() {
-  const ref = useReveal();
-  const preview = [
-    'What should I pack for early June in Umbria?',
-    'Do I need a car, or will there be transport?',
-    'How does tipping work in Italy?',
-    'What are the dining hours — and when is everything closed?',
-  ];
-  return (
-    <section
-      id="faq"
-      ref={ref}
-      style={{ padding: '120px 0', textAlign: 'center', background: 'var(--parchment)' }}
-    >
-      <div className="container-narrow">
-        <p className="micro reveal" style={{ marginBottom: 22 }}>IV · Before You Go</p>
-        <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', margin: 0, fontWeight: 300, textWrap: 'balance' }}>
-          Questions, <em style={{ fontWeight: 300 }}>answered</em>
-        </h2>
-        <p className="reveal reveal-delay-2" style={{ marginTop: 24, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)', maxWidth: 560, margin: '24px auto 0' }}>
-          Travelling to a wedding abroad brings a hundred small questions — from
-          airport transfers to how to order a coffee like a local. We&rsquo;ve
-          gathered everything in one place.
-        </p>
-        <ul className="reveal reveal-delay-3" style={{ listStyle: 'none', padding: 0, margin: '40px auto 0', maxWidth: 520, display: 'grid', gap: 14, textAlign: 'left' }}>
-          {preview.map((q) => (
-            <li key={q} className="serif-italic" style={{ fontSize: 19, color: 'var(--espresso)', borderBottom: '0.5px dashed var(--hairline-soft)', paddingBottom: 14 }}>
-              {q}
-            </li>
-          ))}
-        </ul>
-        <a href="/faq/" className="small-caps reveal reveal-delay-4" style={{ display: 'inline-block', marginTop: 44, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
-          Read the full guide →
-        </a>
-      </div>
     </section>
   );
 }
@@ -559,7 +575,7 @@ function RSVPModal({ open, onClose }) {
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <p className="micro" style={{ marginBottom: 14 }}>V · RSVP</p>
+              <p className="micro" style={{ marginBottom: 14 }}>RSVP</p>
               <h3 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 46px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
                 Kindly reply by 1 March 2027
               </h3>
@@ -825,76 +841,6 @@ function Field({ label, children }) {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   RSVPCallout — full-width section that opens the modal
-─────────────────────────────────────────────────────────────────*/
-function RSVPCallout({ onOpen }) {
-  const ref = useReveal();
-  return (
-    <section
-      ref={ref}
-      style={{
-        background: 'var(--espresso)',
-        color: 'var(--parchment)',
-        padding: '140px 0',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <div className="container-narrow" style={{ position: 'relative', zIndex: 2 }}>
-        <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.7)', marginBottom: 22 }}>V · The Favour of Your Reply</p>
-        <h2
-          className="serif reveal reveal-delay-1"
-          style={{
-            fontSize: 'clamp(48px, 6vw, 88px)',
-            margin: 0, fontWeight: 300, lineHeight: 1.02,
-            color: 'var(--parchment)',
-          }}
-        >
-          <em style={{ fontWeight: 300 }}>Will you</em><br />
-          join us?
-        </h2>
-        <p className="reveal reveal-delay-2" style={{ marginTop: 32, color: 'rgba(245,240,232,0.7)', fontSize: 15, letterSpacing: '0.04em' }}>
-          Kindly reply by the first of March, two thousand twenty-seven.
-        </p>
-        <button
-          onClick={onOpen}
-          className="small-caps reveal reveal-delay-3"
-          style={{
-            marginTop: 48,
-            background: 'var(--gold)',
-            color: 'var(--espresso)',
-            border: 'none',
-            padding: '18px 48px',
-            letterSpacing: '0.32em',
-            fontSize: 12,
-          }}
-        >
-          Begin your reply
-        </button>
-      </div>
-
-      {/* Decorative monogram watermark */}
-      <span
-        aria-hidden
-        className="serif"
-        style={{
-          position: 'absolute',
-          right: '-2vw', bottom: '-8vh',
-          fontSize: 'clamp(240px, 38vw, 520px)',
-          color: 'rgba(245,240,232,0.04)',
-          fontStyle: 'italic',
-          lineHeight: 1, pointerEvents: 'none',
-          fontWeight: 300,
-        }}
-      >
-        S&amp;D
-      </span>
-    </section>
-  );
-}
-
-/* ────────────────────────────────────────────────────────────────
    Footer
 ─────────────────────────────────────────────────────────────────*/
 function Footer({ monogram }) {
@@ -981,9 +927,7 @@ function MonogramWatermark({ show, monogram }) {
 Object.assign(window, {
   ScheduleSection,
   TravelSection,
-  FAQTeaser,
   RSVPModal,
-  RSVPCallout,
   Footer,
   MonogramWatermark,
 });

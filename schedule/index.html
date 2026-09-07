@@ -3,33 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Samantha &amp; Devin · June 2027 · SPAO, Italy</title>
-<link rel="canonical" href="https://www.samanthaanddevin.com/">
-<meta name="description" content="1 — 4 June 2027 · Umbria, Italy">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Samantha &amp; Devin">
-<meta property="og:title" content="Samantha &amp; Devin · June 2027 · SPAO, Italy">
-<meta property="og:description" content="1 — 4 June 2027 · Umbria, Italy">
-<meta property="og:url" content="https://www.samanthaanddevin.com/">
-<meta property="og:image" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
-<meta property="og:image:secure_url" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Samantha &amp; Devin — June 2027">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Samantha &amp; Devin · June 2027 · SPAO, Italy">
-<meta name="twitter:description" content="1 — 4 June 2027 · Umbria, Italy">
-<meta name="twitter:image" content="https://www.samanthaanddevin.com/og-image-v2.jpeg">
+<title>Schedule · Samantha &amp; Devin</title>
+<meta name="description" content="The four-day weekend, hour by hour — 1–4 June 2027, Umbria.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.samanthaanddevin.com/schedule/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
 <!-- Passcode gate: hide the page before paint if already unlocked (no flash). -->
-<link rel="stylesheet" href="gate.css">
+<link rel="stylesheet" href="../gate.css">
 <script>
   try {
     if (localStorage.getItem('wedding_invited_v1') === '1') {
@@ -37,21 +21,21 @@
     }
   } catch (e) {}
 </script>
-<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="../site.css">
 
-<!-- Tweak defaults (persisted by host) -->
+<!-- Site-wide tweak defaults (keep in sync with the homepage) -->
 <script>
-  window.__TWEAKS__ = /*EDITMODE-BEGIN*/{
+  window.__TWEAKS__ = {
     "palette": "parchment",
     "monogram": "S & D",
     "showWatermark": true,
-    "heroCrop": "tall",
     "italicAccents": true
-  }/*EDITMODE-END*/;
+  };
 </script>
 </head>
 <body>
 
+<!-- Gate (shared with homepage) -->
 <div id="passcode-gate">
   <span class="lock-eyebrow">A private invitation</span>
   <div class="lock-rule"></div>
@@ -72,16 +56,21 @@
 <div id="root"></div>
 </div>
 
-<script src="gate.js" defer></script>
+<script src="../gate.js" defer></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="image-slot.js"></script>
 
-<script type="text/babel" src="sections.jsx"></script>
-<script type="text/babel" src="sections2.jsx"></script>
-<script type="text/babel" src="page.jsx"></script>
-<script type="text/babel" src="app.jsx"></script>
+<script type="text/babel" src="../sections.jsx"></script>
+<script type="text/babel" src="../sections2.jsx"></script>
+<script type="text/babel" src="../page.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <WeddingPage solidNav={true}>
+      <ScheduleSection />
+    </WeddingPage>
+  );
+</script>
 
 </body>
 </html>

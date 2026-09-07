@@ -53,7 +53,7 @@ function Monogram({ style = 'S & D', size = 52, color = 'var(--espresso)' }) {
 /* ────────────────────────────────────────────────────────────────
    Nav — sticky, shrinks on scroll, opens drawer on mobile
 ─────────────────────────────────────────────────────────────────*/
-function Nav({ monogram, onRSVP }) {
+function Nav({ monogram, onRSVP, solid = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -64,18 +64,13 @@ function Nav({ monogram, onRSVP }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const links = [
-    { href: '#schedule', label: 'Schedule' },
-    { href: '#travel', label: 'Travel & Stay' },
-    { href: '#faq', label: 'FAQ' },
-  ];
+  const isSolid = solid || scrolled;
 
-  const scrollTo = (href) => (e) => {
-    e.preventDefault();
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setOpen(false);
-  };
+  const links = [
+    { href: '/schedule/', label: 'Schedule' },
+    { href: '/travel/', label: 'Travel & Stay' },
+    { href: '/faq/', label: 'FAQ' },
+  ];
 
   return (
     <header
@@ -83,15 +78,15 @@ function Nav({ monogram, onRSVP }) {
         position: 'fixed',
         top: 0, left: 0, right: 0,
         zIndex: 50,
-        background: scrolled
+        background: isSolid
           ? 'rgba(245, 240, 232, 0.92)'
           : 'linear-gradient(to bottom, rgba(20,14,8,0.30) 0%, rgba(20,14,8,0.24) 30%, rgba(20,14,8,0.15) 55%, rgba(20,14,8,0.06) 80%, rgba(20,14,8,0.015) 92%, rgba(20,14,8,0) 100%)',
         backdropFilter: 'saturate(140%) blur(14px)',
         WebkitBackdropFilter: 'saturate(140%) blur(14px)',
-        borderBottom: scrolled ? '0.5px solid var(--hairline)' : 'none',
-        maskImage: scrolled ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
-        WebkitMaskImage: scrolled ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
-        paddingBottom: scrolled ? 0 : 56,
+        borderBottom: isSolid ? '0.5px solid var(--hairline)' : 'none',
+        maskImage: isSolid ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
+        WebkitMaskImage: isSolid ? 'none' : 'linear-gradient(to bottom, black 0%, black 35%, transparent 100%)',
+        paddingBottom: isSolid ? 0 : 56,
         transition: 'background 0.4s ease, border-color 0.4s ease, padding 0.4s ease, mask-image 0.4s ease',
       }}
     >
@@ -101,24 +96,23 @@ function Nav({ monogram, onRSVP }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: scrolled ? '14px 32px' : '22px 32px',
+          padding: isSolid ? '14px 32px' : '22px 32px',
           transition: 'padding 0.4s ease',
         }}
       >
         <a
-          href="#top"
-          onClick={scrollTo('#top')}
+          href="/"
           style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}
         >
           <Monogram
             style={monogram}
-            size={scrolled ? 22 : 26}
-            color={scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.95)'}
+            size={isSolid ? 22 : 26}
+            color={isSolid ? 'var(--espresso)' : 'rgba(245,240,232,0.95)'}
           />
           <span
             className="micro"
             style={{
-              display: scrolled ? 'none' : 'inline',
+              display: isSolid ? 'none' : 'inline',
               color: 'rgba(245,240,232,0.75)',
             }}
           >
@@ -135,9 +129,8 @@ function Nav({ monogram, onRSVP }) {
             <a
               key={l.href}
               href={l.href}
-              onClick={scrollTo(l.href)}
               className="small-caps"
-              style={{ color: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', opacity: 0.85 }}
+              style={{ color: isSolid ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', opacity: 0.85 }}
             >
               {l.label}
             </a>
@@ -146,9 +139,9 @@ function Nav({ monogram, onRSVP }) {
             onClick={onRSVP}
             className="small-caps"
             style={{
-              background: scrolled ? 'var(--espresso)' : 'transparent',
-              color: scrolled ? 'var(--parchment)' : 'rgba(245,240,232,0.9)',
-              border: scrolled ? 'none' : '0.5px solid rgba(245,240,232,0.6)',
+              background: isSolid ? 'var(--espresso)' : 'transparent',
+              color: isSolid ? 'var(--parchment)' : 'rgba(245,240,232,0.9)',
+              border: isSolid ? 'none' : '0.5px solid rgba(245,240,232,0.6)',
               padding: '10px 22px',
               letterSpacing: '0.28em',
               transition: 'background 0.4s ease, color 0.4s ease, border-color 0.4s ease',
@@ -170,8 +163,8 @@ function Nav({ monogram, onRSVP }) {
             padding: 8,
           }}
         >
-          <span style={{ display: 'block', width: 22, height: 0.5, background: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', marginBottom: 6 }}></span>
-          <span style={{ display: 'block', width: 22, height: 0.5, background: scrolled ? 'var(--espresso)' : 'rgba(245,240,232,0.9)' }}></span>
+          <span style={{ display: 'block', width: 22, height: 0.5, background: isSolid ? 'var(--espresso)' : 'rgba(245,240,232,0.9)', marginBottom: 6 }}></span>
+          <span style={{ display: 'block', width: 22, height: 0.5, background: isSolid ? 'var(--espresso)' : 'rgba(245,240,232,0.9)' }}></span>
         </button>
       </div>
 
@@ -199,7 +192,7 @@ function Nav({ monogram, onRSVP }) {
               <a
                 key={l.href}
                 href={l.href}
-                onClick={scrollTo(l.href)}
+                onClick={() => setOpen(false)}
                 className="serif"
                 style={{ fontSize: 32, color: 'var(--espresso)' }}
               >
