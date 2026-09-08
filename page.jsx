@@ -3,7 +3,7 @@
 // and runs the global scroll-reveal observer. Components (Nav, Footer, etc.)
 // come from sections.jsx / sections2.jsx, loaded before this file.
 
-const { useState: usePageState, useEffect: usePageEffect, createContext, useContext } = React;
+const { useState: usePageState, useEffect: usePageEffect, useCallback: usePageCallback, createContext, useContext } = React;
 
 const PALETTES = {
   parchment: {
@@ -49,7 +49,7 @@ function useRSVP() { return useContext(RSVPContext); }
 function WeddingPage({ children, solidNav = false }) {
   const t = window.__TWEAKS__ || {};
   const [rsvpOpen, setRsvpOpen] = usePageState(false);
-  const openRSVP = () => setRsvpOpen(true);
+  const openRSVP = usePageCallback(() => setRsvpOpen(true), []);
 
   usePageEffect(() => { applyPalette(t.palette); }, [t.palette]);
 

@@ -73,11 +73,12 @@ function Nav({ monogram, onRSVP, solid = false }) {
   ];
 
   return (
+    <>
     <header
       style={{
         position: 'fixed',
         top: 0, left: 0, right: 0,
-        zIndex: 50,
+        zIndex: 210,
         background: isSolid
           ? 'rgba(245, 240, 232, 0.92)'
           : 'linear-gradient(to bottom, rgba(20,14,8,0.30) 0%, rgba(20,14,8,0.24) 30%, rgba(20,14,8,0.15) 55%, rgba(20,14,8,0.06) 80%, rgba(20,14,8,0.015) 92%, rgba(20,14,8,0) 100%)',
@@ -168,12 +169,20 @@ function Nav({ monogram, onRSVP, solid = false }) {
         </button>
       </div>
 
+
+      <style>{`
+        @media (max-width: 840px) {
+          .desktop-nav { display: none !important; }
+          .mobile-burger { display: block !important; }
+        }
+      `}</style>
+    </header>
       {/* Mobile drawer */}
       {open && (
         <div
           style={{
             position: 'fixed', inset: 0, background: 'var(--parchment)',
-            zIndex: 100, padding: '22px 22px',
+            zIndex: 260, padding: '22px 22px',
             display: 'flex', flexDirection: 'column',
           }}
         >
@@ -218,14 +227,7 @@ function Nav({ monogram, onRSVP, solid = false }) {
           </nav>
         </div>
       )}
-
-      <style>{`
-        @media (max-width: 840px) {
-          .desktop-nav { display: none !important; }
-          .mobile-burger { display: block !important; }
-        }
-      `}</style>
-    </header>
+    </>
   );
 }
 
@@ -317,7 +319,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
           className="serif reveal reveal-delay-1"
           style={{
             fontStyle: italicAccents ? 'italic' : 'normal',
-            fontSize: 'clamp(56px, 11vw, 148px)',
+            fontSize: 'clamp(40px, 10.5vw, 148px)',
             margin: 0,
             lineHeight: 1.02,
             fontWeight: 300,
