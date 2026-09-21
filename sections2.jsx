@@ -50,12 +50,12 @@ function ScheduleSection() {
         <div className="container-narrow">
           <p className="micro reveal" style={{ marginBottom: 26 }}>The Weekend</p>
           <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
-            Four days in <em style={{ fontWeight: 300 }}>Umbria</em>
+            Quattro <em style={{ fontWeight: 300 }}>giornate</em>
           </h1>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
-            We&rsquo;ve built the weekend like a good Italian meal &mdash; slow,
-            generous, and with plenty of time between courses. Come for the wedding;
-            stay for the long lunches.
+            A fresco is painted one <em>giornata</em> at a time &mdash; the patch of
+            fresh plaster a painter can finish before it dries. A day&rsquo;s work,
+            then another. Ours takes four.
           </p>
           <div className="reveal reveal-delay-3" style={{ marginTop: 44, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
             <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
@@ -65,21 +65,21 @@ function ScheduleSection() {
         </div>
       </div>
 
-      {/* Vertical timeline */}
-      <div className="container-narrow" style={{ padding: '20px 32px 40px' }}>
+      {/* Four patches of plaster, each cut by hand (see .giornata in site.css) */}
+      <div className="giornate">
+      <div className="container-narrow" style={{ padding: '40px 32px 60px' }}>
         {days.map((d) => (
           <article
             key={d.num}
-            className="day-row reveal"
+            className="day-row giornata reveal"
             style={{
               display: 'grid',
               gridTemplateColumns: '220px 1fr',
               gap: 48,
-              padding: '64px 0',
-              borderBottom: '0.5px solid var(--hairline)',
             }}
           >
             <aside className="day-aside">
+              <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 14 }}>Giornata</p>
               <div className="serif" style={{ fontSize: 84, fontStyle: 'italic', lineHeight: 0.9, color: d.featured ? 'var(--espresso)' : 'var(--travertine)', fontWeight: 300 }}>
                 {d.num}
               </div>
@@ -120,6 +120,7 @@ function ScheduleSection() {
           </article>
         ))}
       </div>
+      </div>
 
       {/* Closing note */}
       <div style={{ background: 'var(--espresso)', color: 'var(--parchment)', padding: '110px 0', textAlign: 'center' }}>
@@ -141,12 +142,79 @@ function ScheduleSection() {
 
       <style>{`
         @media (max-width: 760px) {
-          .day-row { grid-template-columns: 1fr !important; gap: 24px !important; padding: 48px 0 !important; }
+          .day-row { grid-template-columns: 1fr !important; gap: 24px !important; }
           .day-aside { display: flex; align-items: baseline; flex-wrap: wrap; gap: 16px; }
+          .day-aside > p:first-child { width: 100%; margin-bottom: 0; }
           .day-aside > div:last-child { display: flex !important; gap: 28px; margin-top: 8px !important; }
         }
       `}</style>
     </section>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────
+   ChalkMap — central Italy in red chalk; the A1 draws itself in,
+   then the last climb from Orvieto to the villa.
+   Projection: x = (lon − 11.0) · 147, y = (44.0 − lat) · 200
+─────────────────────────────────────────────────────────────────*/
+function ChalkMap() {
+  // Italy in chalk (Natural Earth 50m, simplified). Equirectangular, x = (lon − 6.6)·0.734·44, y = (47.1 − lat)·44.
+  const towns = [
+    { n: 'Florence',  x: 152.2, y: 148.5, dx: 2.2,  dy: 1.2,  d: 0.2 },
+    { n: 'Perugia',   x: 189.0, y: 177.6, dx: 2.2,  dy: 1.2,  d: 0.9 },
+    { n: 'Orvieto',   x: 180.0, y: 194.7, dx: 2.2,  dy: 3.2,  d: 1.2 },
+    { n: 'Rome',      x: 192.2, y: 230.8, dx: 2.2,  dy: 1.2,  d: 1.8 },
+    { n: 'Fiumicino', x: 184.1, y: 235.2, dx: -2.2, dy: 3.6,  d: 2.0, end: true },
+  ];
+  return (
+    <figure className="chalk-map reveal" aria-label="Chalk map of Italy showing the route from Florence and Rome to the villa">
+      <svg viewBox="0 0 392 466" role="img">
+        <defs>
+          <filter id="chalk" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" />
+            <feDisplacementMap in="SourceGraphic" scale="1.6" />
+          </filter>
+          <filter id="chalk-fine" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="2" seed="3" />
+            <feDisplacementMap in="SourceGraphic" scale="0.9" />
+          </filter>
+        </defs>
+        {/* Everything but the compass zooms into Umbria once the coast is drawn (site.css .map-zoom) */}
+        <g className="map-zoom">
+        <g className="italy" filter="url(#chalk)" fill="none" strokeLinejoin="round">
+          <path className="route italy-coast" pathLength="1" d="M15.6 53.7 L19.1 55.7 L32.3 51.4 L40.4 53.8 L47.0 49.7 L51.3 43.3 L50.3 38.5 L59.2 30.8 L60.9 30.8 L62.0 39.6 L67.9 45.5 L73.7 47.0 L72.3 50.6 L78.0 57.9 L80.3 57.2 L79.6 49.7 L87.6 37.8 L87.9 29.5 L89.3 28.6 L93.3 29.2 L96.6 36.9 L100.2 37.4 L109.8 34.5 L114.4 40.4 L116.5 39.2 L113.0 29.1 L114.6 24.0 L118.1 23.1 L120.6 25.5 L125.7 26.2 L124.7 21.1 L126.4 12.3 L134.1 13.2 L138.6 16.3 L143.9 16.2 L148.4 9.2 L152.0 7.5 L169.2 7.0 L181.9 2.8 L182.9 3.7 L180.6 7.1 L181.4 9.2 L188.9 19.5 L214.1 25.2 L231.3 27.5 L230.6 30.0 L221.6 36.4 L220.9 38.9 L222.3 41.1 L229.1 42.6 L224.4 48.7 L224.4 51.0 L228.1 51.3 L227.5 58.7 L232.0 60.9 L236.9 67.3 L231.9 68.5 L234.0 66.8 L229.0 60.5 L226.7 60.5 L223.7 63.2 L215.4 60.5 L209.7 66.3 L192.5 74.1 L190.4 73.8 L193.7 70.4 L192.3 70.4 L185.3 74.8 L183.7 83.8 L185.6 85.3 L189.1 92.6 L193.3 95.8 L191.4 101.2 L188.8 103.3 L185.4 101.8 L184.4 106.6 L186.2 119.5 L189.2 128.5 L198.7 138.6 L205.7 141.9 L218.2 152.2 L226.9 157.3 L234.7 174.5 L241.3 196.1 L246.9 204.1 L258.5 215.7 L269.0 224.1 L278.7 229.3 L286.4 230.2 L304.4 229.1 L310.9 231.0 L311.7 234.6 L310.5 237.0 L302.8 243.1 L302.4 247.9 L306.0 251.2 L323.4 260.2 L341.2 267.7 L353.2 277.4 L368.7 285.6 L380.8 298.1 L385.1 304.7 L385.9 309.8 L381.3 322.3 L372.7 317.2 L365.8 302.1 L350.7 299.4 L346.2 296.8 L343.7 292.3 L338.9 291.8 L335.6 294.2 L327.2 308.4 L322.7 320.6 L322.4 325.5 L324.9 330.3 L332.2 333.0 L341.6 341.7 L341.8 352.4 L343.5 358.5 L341.1 361.9 L336.3 361.0 L330.0 363.3 L325.5 367.2 L323.6 370.9 L323.2 384.4 L314.7 391.4 L307.4 405.0 L296.7 405.1 L294.1 400.9 L294.1 394.7 L295.9 390.9 L299.8 389.1 L302.5 381.1 L301.7 375.4 L304.7 371.0 L311.9 369.0 L312.4 361.0 L309.1 357.4 L306.3 342.8 L295.7 314.8 L292.2 312.1 L282.8 311.3 L271.7 303.9 L271.0 300.8 L272.8 297.8 L271.6 293.7 L268.1 286.7 L265.7 285.0 L252.0 288.1 L255.9 282.3 L251.0 278.6 L242.4 278.7 L242.5 276.1 L236.5 264.7 L232.4 260.0 L226.6 260.2 L216.7 257.7 L211.6 259.7 L203.8 252.4 L196.8 249.7 L178.8 229.0 L170.2 222.8 L164.7 213.7 L153.7 207.8 L148.7 209.2 L147.4 208.1 L150.1 206.3 L149.5 202.9 L142.1 193.9 L137.7 191.0 L134.7 185.2 L128.4 183.8 L128.6 173.4 L126.3 166.1 L122.2 159.8 L119.7 144.9 L117.9 140.7 L113.3 137.5 L103.1 133.9 L88.9 124.4 L71.9 119.8 L65.0 123.2 L47.4 143.8 L30.8 148.6 L30.5 144.3 L36.8 134.7 L35.5 131.1 L25.2 132.3 L11.7 123.6 L9.8 115.9 L13.6 108.6 L15.9 106.9 L14.7 102.0 L6.5 97.9 L3.1 91.4 L2.9 89.2 L5.0 88.1 L9.8 88.4 L17.4 83.8 L19.6 77.6 L8.2 61.8 L8.6 58.6 L15.6 53.7Z M291.9 392.7 L280.9 411.9 L276.5 426.2 L277.1 431.7 L280.7 435.6 L278.9 437.2 L282.8 444.0 L282.8 445.8 L277.0 453.5 L276.9 460.1 L269.7 458.6 L266.1 459.1 L257.2 455.3 L252.9 447.6 L249.4 444.4 L245.6 441.8 L237.9 442.0 L234.6 440.4 L220.4 431.1 L214.2 425.3 L206.2 421.3 L197.1 420.2 L193.4 416.9 L190.5 410.3 L194.1 400.1 L200.1 394.3 L205.6 400.9 L210.3 398.7 L210.5 396.6 L213.9 394.0 L218.1 394.0 L230.7 402.4 L234.2 403.2 L242.6 400.6 L250.3 401.7 L257.3 400.4 L266.5 395.1 L277.1 395.7 L289.4 389.6 L293.8 390.6 L291.9 392.7Z M99.9 275.6 L105.5 292.4 L100.3 302.6 L102.3 313.7 L97.7 351.1 L95.2 352.3 L88.0 348.9 L84.3 349.7 L81.3 347.9 L80.2 356.5 L78.4 360.0 L75.7 362.2 L68.2 361.6 L60.7 349.3 L60.1 337.2 L61.7 333.6 L61.8 326.6 L62.4 325.5 L64.7 326.2 L64.9 321.5 L63.2 318.9 L60.4 318.0 L62.4 301.5 L58.6 292.4 L53.3 285.7 L54.5 274.2 L58.9 277.2 L65.7 277.0 L73.7 272.6 L86.9 259.1 L88.7 261.5 L94.2 263.8 L99.4 269.6 L97.4 273.4 L99.9 275.6Z" />
+        </g>
+        <g className="town sea" style={{ '--d': '1.4s' }}>
+          <text x="173.2" y="332.0" textAnchor="middle">Tyrrhenian Sea</text>
+          <text x="286.2" y="164.8" textAnchor="middle">Adriatic Sea</text>
+        </g>
+        <g filter="url(#chalk-fine)" fill="none" stroke="var(--sinopia)" strokeLinecap="round" strokeLinejoin="round">
+          {/* A1: Florence → Arezzo → Orvieto → Rome → Fiumicino */}
+          <path className="route" pathLength="1" strokeWidth="0.42" d="M152.2 148.5 C155.6 150.8 167.9 154.5 172.5 162.2 C177.2 169.9 176.7 183.3 180.0 194.7 C183.2 206.2 191.5 224.1 192.2 230.8 C192.9 237.5 185.5 234.5 184.1 235.2" />
+          {/* the last climb */}
+          <path className="route route-last" pathLength="1" strokeWidth="0.75" d="M180.0 194.7 L175.8 190.3" />
+        </g>
+        {towns.map((t) => (
+          <g key={t.n} className="town" style={{ '--d': `${t.d + 3.9}s` }}>
+            <circle cx={t.x} cy={t.y} r="0.75" fill="var(--sinopia)" />
+            <text x={t.x + t.dx} y={t.y + t.dy} textAnchor={t.end ? 'end' : 'start'}>{t.n}</text>
+          </g>
+        ))}
+        {/* SPAO: a mark and a leader out to open sea for the label */}
+        <g className="town" style={{ '--d': '6.9s' }}>
+          <path d="M172.8 187.3 l2 2 M174.8 187.3 l-2 2" stroke="var(--sinopia)" strokeWidth="0.5" strokeLinecap="round" />
+          <path d="M172.2 187.8 L158 182.5" stroke="var(--sinopia)" strokeWidth=".2" fill="none" />
+          <text className="spao-label" x="156.8" y="183.6" textAnchor="end">SPAO</text>
+        </g>
+        </g>
+        {/* north */}
+        <g className="town" style={{ '--d': '0s' }} stroke="var(--umber)" strokeWidth="0.6" fill="none">
+          <path d="M368 46 v-22 M364 30 l4 -6 4 6" />
+          <text x="368" y="58" textAnchor="middle" fill="var(--umber)" stroke="none" style={{ fontStyle: 'normal', fontSize: 9 }}>N</text>
+        </g>
+      </svg>
+      <figcaption>Florence and Rome sit at either end of the A1.<br />Leave it at Orvieto and climb.</figcaption>
+    </figure>
   );
 }
 
@@ -362,7 +430,8 @@ function TravelSection() {
             roads climbing into the Umbrian hills. Four ways to reach us:
           </p>
         </div>
-        <div style={{ marginTop: 30 }}>
+        <div className="journey-grid" style={{ marginTop: 30 }}>
+        <div>
           {modes.map((m, i) => (
             <div
               key={m.k}
@@ -383,6 +452,8 @@ function TravelSection() {
               <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>{m.d}</p>
             </div>
           ))}
+        </div>
+        <ChalkMap />
         </div>
       </div>
 
