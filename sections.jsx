@@ -232,10 +232,32 @@ function Nav({ monogram, onRSVP, solid = false }) {
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Hero — full-bleed image-slot with parallax + overlay
+   UmbriaClock — the hour at the villa, ticking in the hero frame
+─────────────────────────────────────────────────────────────────*/
+function UmbriaClock() {
+  const fmt = useRef(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' }));
+  const [t, setT] = useState(() => fmt.current.format(new Date()));
+  useEffect(() => {
+    const id = setInterval(() => setT(fmt.current.format(new Date())), 15000);
+    return () => clearInterval(id);
+  }, []);
+  return <span>{t}</span>;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Hero — full-bleed image-slot with parallax + overlay.
+   First view each session opens on the Creation of Adam: drawn in chalk,
+   then painted; the touch becomes the light that reveals the photograph.
 ─────────────────────────────────────────────────────────────────*/
 function Hero({ monogram, heroCrop, italicAccents }) {
   const imgRef = useRef(null);
+  const [quick] = useState(() => {
+    try {
+      const seen = sessionStorage.getItem('sinopia_seen') === '1';
+      sessionStorage.setItem('sinopia_seen', '1');
+      return seen;
+    } catch (e) { return false; }
+  });
   useEffect(() => {
     const onScroll = () => {
       const el = imgRef.current;
@@ -256,7 +278,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
   const heightVal = heights[heroCrop] || '100vh';
 
   return (
-    <section id="top" style={{ position: 'relative', height: heightVal, minHeight: 560, overflow: 'hidden' }}>
+    <section id="top" className={quick ? 'hero hero-quick' : 'hero'} style={{ position: 'relative', height: heightVal, minHeight: 560, overflow: 'hidden' }}>
       <div
         ref={imgRef}
         style={{
@@ -289,6 +311,13 @@ function Hero({ monogram, heroCrop, italicAccents }) {
         }}
       ></div>
 
+      {/* The Creation of Adam (Sistine ceiling, 1512; public domain). Drawn in chalk from either
+          edge, then painted; the touch becomes light that reveals the villa. Choreography: site.css .creation */}
+      <div className="creation" aria-hidden="true">
+        <div className="fresco"><div className="fresco-sketch"></div><div className="fresco-paint"></div></div>
+        <div className="spark"></div>
+      </div>
+
       {/* Top hairline frame */}
       <div style={{
         position: 'absolute', top: 96, left: 32, right: 32,
@@ -298,11 +327,12 @@ function Hero({ monogram, heroCrop, italicAccents }) {
         color: 'var(--parchment)',
       }} className="hero-frame-top">
         <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}>N 42° 49′ · E 11° 59′</span>
-        <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}>Vol. I — Invitation</span>
+        <span className="micro" style={{ color: 'rgba(245,240,232,0.85)' }}><UmbriaClock /> in Umbria</span>
       </div>
 
       {/* Center stack */}
       <div
+        className="hero-text"
         style={{
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column',
@@ -353,7 +383,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
 
       {/* Bottom marker */}
       <div
-        className="reveal reveal-delay-4"
+        className="hero-text reveal reveal-delay-4"
         style={{
           position: 'absolute', bottom: 36, left: 0, right: 0,
           display: 'flex', justifyContent: 'center',
@@ -381,27 +411,42 @@ function Hero({ monogram, heroCrop, italicAccents }) {
 function InvitationNote({ italicAccents }) {
   const ref = useReveal();
   return (
-    <section ref={ref} className="container-narrow" style={{ padding: '140px 32px 100px', textAlign: 'center' }}>
-      <p className="micro reveal" style={{ marginBottom: 28 }}>I · An Invitation</p>
-      <p
-        className={italicAccents ? 'serif-italic reveal reveal-delay-1' : 'serif reveal reveal-delay-1'}
-        style={{
-          fontSize: 'clamp(26px, 3.4vw, 38px)',
-          lineHeight: 1.45,
-          margin: 0,
-          color: 'var(--espresso)',
-          fontWeight: 300,
-          textWrap: 'pretty',
-        }}
-      >
-        Come spend four slow days with us beneath an Umbrian sun —
-        share a long table, pour another glass, and watch two of your
-        favourite people promise the rest of it to one another.
-      </p>
-      <div className="reveal reveal-delay-2" style={{ marginTop: 56, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
-        <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
-        <span className="small-caps" style={{ color: 'var(--umber)' }}>1 — 4 June 2027</span>
-        <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
+    <section ref={ref} className="invitation">
+      <div className="container invitation-grid">
+        <div className="invitation-text">
+          <p className="micro reveal" style={{ marginBottom: 28 }}>I · An Invitation</p>
+          <p
+            className={italicAccents ? 'serif-italic reveal reveal-delay-1' : 'serif reveal reveal-delay-1'}
+            style={{
+              fontSize: 'clamp(26px, 3.4vw, 38px)',
+              lineHeight: 1.45,
+              margin: 0,
+              color: 'var(--espresso)',
+              fontWeight: 300,
+              textWrap: 'pretty',
+            }}
+          >
+            Come spend four slow days with us beneath an Umbrian sun —
+            share a long table, pour another glass, and watch two of your
+            favourite people promise the rest of it to one another.
+          </p>
+          <div className="reveal reveal-delay-2" style={{ marginTop: 56, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
+            <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>1 — 4 June 2027</span>
+            <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
+          </div>
+        </div>
+
+        {/* Michelangelo, The Creation of Adam (detail), 1512 — Sistine ceiling, public domain */}
+        <figure className="detail reveal reveal-delay-2">
+          <div className="detail-frame">
+            <img src="adam-detail.jpg" alt="Adam's face and shoulder, a detail of Michelangelo's Creation of Adam" loading="lazy" />
+          </div>
+          <figcaption>
+            Michelangelo, <em>The Creation of Adam</em> (detail), 1512.<br />
+            Fresco, Sistine Chapel ceiling.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
