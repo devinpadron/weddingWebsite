@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin · Samantha &amp; Devin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../site.css">
+<style>
+  body { padding: 40px 0 80px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 44px; margin: 0; }
+  .tabs { display: flex; gap: 8px; margin: 28px 0 20px; flex-wrap: wrap; }
+  .tab { padding: 10px 18px; border: 0.5px solid var(--hairline); background: transparent; font-family: 'Jost'; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; }
+  .tab.on { background: var(--espresso); color: var(--parchment); border-color: var(--espresso); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-weight: 500; padding: 10px 8px; border-bottom: 0.5px solid var(--hairline); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--umber); white-space: nowrap; }
+  td { padding: 10px 8px; border-bottom: 0.5px solid var(--hairline-soft); vertical-align: top; line-height: 1.5; }
+  td.pre { white-space: pre-wrap; }
+  input, select, textarea { font-family: 'Jost'; font-size: 13px; padding: 6px 8px; border: 0.5px solid var(--hairline); background: #fff; width: 100%; box-sizing: border-box; }
+  textarea { resize: vertical; min-height: 34px; }
+  .btn { font-family: 'Jost'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; padding: 10px 18px; border: none; background: var(--espresso); color: var(--parchment); }
+  .btn.ghost { background: transparent; color: var(--umber); border: 0.5px solid var(--hairline); }
+  .btn.danger { background: transparent; color: #9B3A3A; border: 0.5px solid #9B3A3A; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .err { color: #9B3A3A; font-size: 13px; margin-top: 10px; }
+  .wrap { overflow-x: auto; }
+  .muted { color: var(--umber); font-size: 13px; }
+  .login { max-width: 420px; margin: 120px auto 0; }
+</style>
+</head>
+<body>
+<div id="root" class="container"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const SB_URL = 'https://yiuglondgjbgyqfoqunz.supabase.co';
+const SB_KEY = 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2';
+
+// Every read and write goes through a server-side function that checks the password first.
+async function rpc(fn, args) {
+  const res = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) {
+    let msg = res.status + '';
+    try { msg = (await res.json()).message || msg; } catch (e) {}
+    throw new Error(msg);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+const fmt = (iso) => iso ? new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+
+function Login({ onOk }) {
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const go = async (e) => {
+    e.preventDefault(); setBusy(true); setErr('');
+    try { await rpc('admin_lookups', { pw }); sessionStorage.setItem('admin_pw', pw); onOk(pw); }
+    catch (e) { setErr('Wrong password.'); }
+    finally { setBusy(false); }
+  };
+  return (
+    <form className="login" onSubmit={go}>
+      <h1>Admin</h1>
+      <p className="muted">Guest replies, rooms and codes.</p>
+      <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Admin password" autoFocus style={{ marginTop: 20, padding: 12 }} />
+      <button className="btn" disabled={busy || !pw} style={{ marginTop: 14 }}>{busy ? 'Checking…' : 'Enter'}</button>
+      {err && <p className="err">{err}</p>}
+    </form>
+  );
+}
+
+function Rsvps({ pw }) {
+  const [rows, setRows] = useState(null);
+  const [err, setErr] = useState('');
+  useEffect(() => { rpc('admin_rsvps', { pw }).then(setRows).catch((e) => setErr(e.message)); }, []);
+  if (err) return <p className="err">{err}</p>;
+  if (!rows) return <p className="muted">Loading…</p>;
+  const yes = rows.filter((r) => r.attending === 'yes').length;
+  const csv = () => {
+    const cols = ['created_at', 'name', 'email', 'attending', 'diet', 'song', 'message'];
+    const q = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const body = [cols.join(','), ...rows.map((r) => cols.map((c) => q(r[c])).join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([body], { type: 'text/csv' }));
+    a.download = 'rsvps.csv'; a.click();
+  };
+  return (
+    <>
+      <div className="row" style={{ marginBottom: 14 }}>
+        <span className="muted">{rows.length} replies · {yes} yes · {rows.length - yes} no</span>
+        <button className="btn ghost" onClick={csv}>Download CSV</button>
+      </div>
+      <div className="wrap"><table>
+        <thead><tr><th>Received</th><th>Guests</th><th>Email</th><th>Attending</th><th>Dietary</th><th>Song</th><th>Message</th></tr></thead>
+        <tbody>{rows.map((r) => (
+          <tr key={r.id}>
+            <td style={{ whiteSpace: 'nowrap' }}>{fmt(r.created_at)}</td>
+            <td className="pre">{r.name}</td>
+            <td>{r.email}</td>
+            <td>{r.attending}</td>
+            <td className="pre">{r.diet}</td>
+            <td>{r.song}</td>
+            <td className="pre">{r.message}</td>
+          </tr>
+        ))}</tbody>
+      </table></div>
+    </>
+  );
+}
+
+const EMPTY = { code: '', guest_name: '', accommodation_type: 'villa', property_name: '', room_detail: '', check_in: '2027-06-01', check_out: '2027-06-04', notes: '', booking_url: '' };
+
+function RoomRow({ r, pw, onSaved, onDeleted, isNew }) {
+  const [v, setV] = useState(r);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const set = (k) => (e) => setV({ ...v, [k]: e.target.value });
+  const save = async () => {
+    setBusy(true); setErr('');
+    try {
+      await rpc('admin_upsert_accommodation', {
+        pw, p_code: v.code, p_guest_name: v.guest_name, p_type: v.accommodation_type, p_property: v.property_name,
+        p_room: v.room_detail, p_check_in: v.check_in || null, p_check_out: v.check_out || null, p_notes: v.notes, p_booking_url: v.booking_url,
+      });
+      onSaved(); if (isNew) setV(EMPTY);
+    } catch (e) { setErr(e.message); } finally { setBusy(false); }
+  };
+  const del = async () => {
+    if (!window.confirm(`Delete code ${v.code}?`)) return;
+    setBusy(true);
+    try { await rpc('admin_delete_accommodation', { pw, p_code: v.code }); onDeleted(); }
+    catch (e) { setErr(e.message); setBusy(false); }
+  };
+  return (
+    <tr>
+      <td><input value={v.code} onChange={set('code')} placeholder="CODE" disabled={!isNew} style={{ textTransform: 'uppercase', minWidth: 90 }} /></td>
+      <td><textarea value={v.guest_name} onChange={set('guest_name')} placeholder="Names on the invitation" style={{ minWidth: 160 }} /></td>
+      <td>
+        <select value={v.accommodation_type} onChange={set('accommodation_type')}>
+          <option value="villa">Villa (on site)</option>
+          <option value="hotel">Off site (Fonteverde)</option>
+        </select>
+      </td>
+      <td><input value={v.room_detail || ''} onChange={set('room_detail')} placeholder="Room name / number" style={{ minWidth: 120 }} /></td>
+      <td><input type="date" value={v.check_in || ''} onChange={set('check_in')} /></td>
+      <td><input type="date" value={v.check_out || ''} onChange={set('check_out')} /></td>
+      <td><textarea value={v.notes || ''} onChange={set('notes')} placeholder="Shown to the guest" style={{ minWidth: 160 }} /></td>
+      <td style={{ whiteSpace: 'nowrap' }}>
+        <div className="row">
+          <button className="btn" onClick={save} disabled={busy || !v.code.trim()}>{isNew ? 'Add' : 'Save'}</button>
+          {!isNew && <button className="btn danger" onClick={del} disabled={busy}>Delete</button>}
+        </div>
+        {err && <p className="err">{err}</p>}
+      </td>
+    </tr>
+  );
+}
+
+function Rooms({ pw }) {
+  const [rows, setRows] = useState(null);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_accommodations', { pw }).then(setRows).catch((e) => setErr(e.message));
+  useEffect(() => { load(); }, []);
+  if (err) return <p className="err">{err}</p>;
+  if (!rows) return <p className="muted">Loading…</p>;
+  return (
+    <>
+      <p className="muted" style={{ marginBottom: 14 }}>
+        One code per invitation. Guests sharing a villa room see each other&rsquo;s names when the room field matches exactly.
+        Off-site guests are shown Fonteverde. Property is filled in automatically if left blank.
+      </p>
+      <div className="wrap"><table>
+        <thead><tr><th>Code</th><th>Guests</th><th>Where</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Notes</th><th></th></tr></thead>
+        <tbody>
+          {rows.map((r) => <RoomRow key={r.code} r={r} pw={pw} onSaved={load} onDeleted={load} />)}
+          <RoomRow key="new" r={EMPTY} pw={pw} onSaved={load} onDeleted={load} isNew />
+        </tbody>
+      </table></div>
+    </>
+  );
+}
+
+function Lookups({ pw }) {
+  const [rows, setRows] = useState(null);
+  const [err, setErr] = useState('');
+  useEffect(() => { rpc('admin_lookups', { pw }).then(setRows).catch((e) => setErr(e.message)); }, []);
+  if (err) return <p className="err">{err}</p>;
+  if (!rows) return <p className="muted">Loading…</p>;
+  const seen = new Set(rows.filter((r) => r.found).map((r) => r.code.toUpperCase()));
+  return (
+    <>
+      <p className="muted" style={{ marginBottom: 14 }}>{seen.size} different valid codes looked up · {rows.length} lookups total (latest 500)</p>
+      <div className="wrap"><table>
+        <thead><tr><th>When</th><th>Code entered</th><th>Found</th></tr></thead>
+        <tbody>{rows.map((r) => (
+          <tr key={r.id}><td style={{ whiteSpace: 'nowrap' }}>{fmt(r.looked_up_at)}</td><td>{r.code}</td><td>{r.found ? 'yes' : 'no'}</td></tr>
+        ))}</tbody>
+      </table></div>
+    </>
+  );
+}
+
+function Password({ pw, onChanged }) {
+  const [np, setNp] = useState('');
+  const [msg, setMsg] = useState('');
+  const go = async (e) => {
+    e.preventDefault();
+    try { await rpc('admin_set_password', { pw, new_pw: np }); sessionStorage.setItem('admin_pw', np); onChanged(np); setNp(''); setMsg('Password changed.'); }
+    catch (e) { setMsg(e.message); }
+  };
+  return (
+    <form onSubmit={go} style={{ maxWidth: 420 }}>
+      <p className="muted">Pick something you and Sam will both remember. At least 8 characters.</p>
+      <input type="password" value={np} onChange={(e) => setNp(e.target.value)} placeholder="New admin password" style={{ marginTop: 12 }} />
+      <button className="btn" style={{ marginTop: 12 }} disabled={np.length < 8}>Change password</button>
+      {msg && <p className="muted" style={{ marginTop: 10 }}>{msg}</p>}
+    </form>
+  );
+}
+
+function App() {
+  const [pw, setPw] = useState(() => sessionStorage.getItem('admin_pw') || '');
+  const [tab, setTab] = useState('rsvps');
+  if (!pw) return <Login onOk={setPw} />;
+  const tabs = [['rsvps', 'RSVPs'], ['rooms', 'Rooms & codes'], ['lookups', 'Code lookups'], ['password', 'Password']];
+  return (
+    <>
+      <div className="row" style={{ justifyContent: 'space-between' }}>
+        <h1>Admin</h1>
+        <button className="btn ghost" onClick={() => { sessionStorage.removeItem('admin_pw'); setPw(''); }}>Sign out</button>
+      </div>
+      <div className="tabs">{tabs.map(([k, l]) => <button key={k} className={'tab' + (tab === k ? ' on' : '')} onClick={() => setTab(k)}>{l}</button>)}</div>
+      {tab === 'rsvps' && <Rsvps key="r" pw={pw} />}
+      {tab === 'rooms' && <Rooms key="m" pw={pw} />}
+      {tab === 'lookups' && <Lookups key="l" pw={pw} />}
+      {tab === 'password' && <Password pw={pw} onChanged={setPw} />}
+    </>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

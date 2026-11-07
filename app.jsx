@@ -8,15 +8,18 @@ function LinkIndex() {
   const ref = useReveal();
   const openRSVP = useRSVP();
   const cards = [
-    { n: 'I',  label: 'Schedule',      href: '/schedule/', blurb: 'Four slow days, hour by hour.' },
-    { n: 'II', label: 'Travel & Stay', href: '/travel/',   blurb: 'Getting there, and where you’ll rest.' },
-    { n: 'III',label: 'FAQ',           href: '/faq/',      blurb: 'Travel notes and a few Italian customs.' },
-    { n: 'IV', label: 'RSVP',          rsvp: true,         blurb: 'Kindly reply by the first of March.' },
+    { n: 'I',   label: 'Schedule', href: '/schedule/', blurb: 'Four days in Umbria, and what happens on each.' },
+    { n: 'II',  label: 'Travel',   href: '/travel/',   blurb: 'Flights, trains, and the last stretch to the villa.' },
+    { n: 'III', label: 'Stay',     href: '/stay/',     blurb: 'Enter your invitation code to see where you’re staying.' },
+    { n: 'IV',  label: 'FAQ',      href: '/faq/',      blurb: 'Answers to all your burning questions.' },
+    { n: 'V',   label: 'RSVP',     rsvp: true,         blurb: 'Kindly reply by January 15th, 2027.' },
   ];
+  // Optional tile image: add `img: 'file.jpg'` to a card above and it renders across the top.
 
   const Card = ({ c }) => {
     const inner = (
       <>
+        {c.img && <img src={c.img} alt="" loading="lazy" style={{ width: 'calc(100% + 80px)', margin: '-44px -40px 28px', aspectRatio: '16 / 9', objectFit: 'cover' }} />}
         <p className="micro" style={{ marginBottom: 16 }}>{c.n}</p>
         <h3 className="serif" style={{ fontSize: 'clamp(28px, 3vw, 36px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
           {c.label}
@@ -31,6 +34,7 @@ function LinkIndex() {
       display: 'block', textAlign: 'left', width: '100%',
       padding: '44px 40px 40px', background: 'var(--parchment)',
       border: '0.5px solid var(--hairline)',
+      gridColumn: c.rsvp ? '1 / -1' : undefined,
     };
     return c.rsvp
       ? <button className="reveal" onClick={openRSVP} style={{ ...style, cursor: 'pointer' }}>{inner}</button>

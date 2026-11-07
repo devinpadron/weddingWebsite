@@ -10,12 +10,10 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 //   WEBHOOK_SECRET   must match the secret in the DB trigger
 // Optional env:
 //   RSVP_FROM        e.g. "Samantha & Devin <rsvp@samanthaanddevin.com>"
-//   RSVP_REPLY_TO    e.g. "samanthaanddevin2027@gmail.com"
 
 const WEBHOOK_SECRET = Deno.env.get("WEBHOOK_SECRET") ?? "";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FROM = Deno.env.get("RSVP_FROM") ?? "Samantha & Devin <rsvp@samanthaanddevin.com>";
-const REPLY_TO = Deno.env.get("RSVP_REPLY_TO") ?? "samanthaanddevin2027@gmail.com";
 
 const esc = (s: string) =>
   String(s ?? "").replace(/[&<>"']/g, (c) =>
@@ -25,28 +23,27 @@ const esc = (s: string) =>
 function buildEmail(r: Record<string, unknown>) {
   const name = esc(String(r.name ?? ""));
   const attending = String(r.attending ?? "") === "yes";
-  const party = Number(r.party_size ?? 1);
-  const diet = Array.isArray(r.diet) ? (r.diet as string[]) : [];
+  const diet = Array.isArray(r.diet) ? (r.diet as string[]).join(", ") : String(r.diet ?? "").trim();
 
   const subject = attending
-    ? "We can’t wait to see you — RSVP confirmed"
-    : "Your RSVP — we’ll miss you";
+    ? "RSVP confirmed. We can’t wait to see you"
+    : "Your RSVP. We’ll miss you";
 
   const lede = attending
     ? "Your reply is in, and we could not be more thrilled. Here is what we have down for you:"
-    : "Thank you for letting us know. We will miss you dearly, but we are grateful you replied. Here is what we have down:";
+    : "Thank you for letting us know. We will miss you, but we are grateful you replied. Here is what we have down:";
+
+  const cell = (label: string, value: string) =>
+    `<tr><td style="padding:6px 0;color:#7A6E5A;font-size:11px;letter-spacing:.18em;text-transform:uppercase;vertical-align:top;">${label}</td><td style="padding:6px 0;text-align:right;">${value}</td></tr>`;
 
   const rows: string[] = [
-    `<tr><td style="padding:6px 0;color:#7A6E5A;font-size:11px;letter-spacing:.18em;text-transform:uppercase;">Guest</td><td style="padding:6px 0;text-align:right;">${name}</td></tr>`,
-    `<tr><td style="padding:6px 0;color:#7A6E5A;font-size:11px;letter-spacing:.18em;text-transform:uppercase;">Party</td><td style="padding:6px 0;text-align:right;">${party}</td></tr>`,
-    `<tr><td style="padding:6px 0;color:#7A6E5A;font-size:11px;letter-spacing:.18em;text-transform:uppercase;">Attending</td><td style="padding:6px 0;text-align:right;">${attending ? "Joyfully, yes" : "Regretfully, no"}</td></tr>`,
+    cell("Guests", name.replace(/\n/g, "<br>")),
+    cell("Attending", attending ? "Joyfully, yes" : "Regretfully, no"),
   ];
-  if (attending && diet.length) {
-    rows.push(`<tr><td style="padding:6px 0;color:#7A6E5A;font-size:11px;letter-spacing:.18em;text-transform:uppercase;">Dietary</td><td style="padding:6px 0;text-align:right;">${esc(diet.join(", "))}</td></tr>`);
-  }
+  if (attending && diet) rows.push(cell("Dietary", esc(diet).replace(/\n/g, "<br>")));
 
   const closing = attending
-    ? "We will follow up with travel and accommodation details closer to the day. Pack linen."
+    ? "Check the website for the schedule, travel notes and where you are staying. See you in June."
     : "We will raise a glass for you on June 2.";
 
   const html = `<!doctype html><html><body style="margin:0;background:#F5F0E8;">
@@ -55,25 +52,22 @@ function buildEmail(r: Record<string, unknown>) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border:1px solid rgba(124,110,90,.28);">
         <tr><td style="padding:44px 44px 8px;text-align:center;">
           <div style="font-family:Georgia,'Times New Roman',serif;font-size:30px;color:#2C2A25;letter-spacing:.04em;">S &amp; D</div>
-          <div style="margin-top:10px;color:#7A6E5A;font-size:10px;letter-spacing:.32em;text-transform:uppercase;font-family:Arial,sans-serif;">1 &mdash; 4 June 2027 &middot; Umbria, Italy</div>
+          <div style="margin-top:10px;color:#7A6E5A;font-size:10px;letter-spacing:.32em;text-transform:uppercase;font-family:Arial,sans-serif;">1&ndash;4 June 2027 &middot; Umbria, Italy</div>
         </td></tr>
         <tr><td style="padding:20px 44px;">
-          <p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#2C2A25;line-height:1.3;margin:0 0 18px;text-align:center;">${attending ? "We can’t wait to see you." : "We’ll miss you dearly."}</p>
-          <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a382f;line-height:1.7;margin:0 0 24px;">Dear ${name},</p>
+          <p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#2C2A25;line-height:1.3;margin:0 0 18px;text-align:center;">${attending ? "We can’t wait to see you." : "We’ll miss you."}</p>
           <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a382f;line-height:1.7;margin:0 0 24px;">${lede}</p>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#2C2A25;border-top:1px solid rgba(124,110,90,.2);border-bottom:1px solid rgba(124,110,90,.2);margin:0 0 24px;">${rows.join("")}</table>
           <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a382f;line-height:1.7;margin:0 0 8px;">${closing}</p>
           <p style="font-family:Arial,sans-serif;font-size:15px;color:#3a382f;line-height:1.7;margin:24px 0 0;">With love,<br>Samantha &amp; Devin</p>
         </td></tr>
-        <tr><td style="padding:16px 44px 40px;text-align:center;">
-          <div style="color:#9a907c;font-size:11px;font-family:Arial,sans-serif;line-height:1.6;">Need to change your reply? Just reply to this email.</div>
-        </td></tr>
+        <tr><td style="padding:8px 44px 40px;"></td></tr>
       </table>
     </td></tr>
   </table>
 </body></html>`;
 
-  const text = `${attending ? "We can't wait to see you." : "We'll miss you dearly."}\n\nDear ${name},\n\n${lede}\n\nGuest: ${name}\nParty: ${party}\nAttending: ${attending ? "Joyfully, yes" : "Regretfully, no"}${attending && diet.length ? `\nDietary: ${diet.join(", ")}` : ""}\n\n${closing}\n\nWith love,\nSamantha & Devin`;
+  const text = `${attending ? "We can't wait to see you." : "We'll miss you."}\n\n${lede}\n\nGuests: ${String(r.name ?? "")}\nAttending: ${attending ? "Joyfully, yes" : "Regretfully, no"}${attending && diet ? `\nDietary: ${diet}` : ""}\n\n${closing}\n\nWith love,\nSamantha & Devin`;
 
   return { subject, html, text };
 }
@@ -101,7 +95,7 @@ Deno.serve(async (req: Request) => {
   const to = String(record.email ?? "").trim();
 
   if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
-    // No usable email — nothing to send, but not an error worth retrying
+    // No usable email: nothing to send, but not an error worth retrying
     return new Response(JSON.stringify({ skipped: "no valid email" }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -109,7 +103,7 @@ Deno.serve(async (req: Request) => {
   }
 
   if (!RESEND_API_KEY) {
-    console.error("RESEND_API_KEY not set — cannot send confirmation");
+    console.error("RESEND_API_KEY not set, cannot send confirmation");
     return new Response(JSON.stringify({ error: "email provider not configured" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -124,7 +118,7 @@ Deno.serve(async (req: Request) => {
       Authorization: `Bearer ${RESEND_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ from: FROM, to, reply_to: REPLY_TO, subject, html, text }),
+    body: JSON.stringify({ from: FROM, to, subject, html, text }),
   });
 
   if (!resp.ok) {
