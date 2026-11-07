@@ -3,43 +3,45 @@
 const { useState: useState2, useEffect: useEffect2, useRef: useRef2 } = React;
 
 /* ────────────────────────────────────────────────────────────────
-   ScheduleSection — 4-day weekend timeline
+   ScheduleSection — the four days
 ─────────────────────────────────────────────────────────────────*/
 function ScheduleSection() {
   const ref = useReveal();
   const days = [
     {
       num: 'I', day: 'Tuesday', date: '1 June',
-      title: 'Arrival & Pizza Party',
-      time: 'from 17:00',
-      attire: 'Casual',
-      note: 'Drop your bags, pour a drink, and find us in the lower garden. A welcome night under string-lights — wood-fired pizza straight from the oven, a bottomless aperitivo cart, and absolutely no speeches.',
-      highlights: ['Check-in closes 19:00', 'Wood-fired pizza', 'Aperitivo cart'],
+      title: 'Arrival & Welcome Party',
+      subtitle: 'Evening in La Piazza',
+      time: 'Timing TBD',
+      timeNote: 'Staying on site? Check-in is 2–7pm. Please try your absolute best to arrive in that window.',
+      attire: 'Italian Summer Whites',
+      attireDetail: 'Cocktail attire: chic white cocktail dresses, matching sets, white button-downs, light fabrics and linens.',
+      note: 'Drop your bags, get settled, and meet us on site for drinks, food, and to see everyone you’ll be spending the next few days with.',
     },
     {
       num: 'II', day: 'Wednesday', date: '2 June',
       title: 'The Wedding',
-      time: '16:00 ceremony',
-      attire: 'Formal · garden-suitable',
-      note: 'The reason we’re all here. A ceremony among the olive trees at golden hour, cocktails on the terrace as the valley turns amber, then a long-table dinner in the orangery. Dancing until the cicadas give up.',
-      highlights: ['Olive-grove ceremony', 'Terrace cocktails', 'Long-table dinner'],
+      time: 'Timing TBD',
+      attire: 'Black Tie',
+      attireDetail: 'Women: colorful dresses.',
+      note: 'The day itself. The ceremony at the villa, then drinks, dinner, and dancing until late.',
+      notice: 'We’re having an unplugged ceremony. Please keep phones and cameras put away during the ceremony.',
       featured: true,
     },
     {
       num: 'III', day: 'Thursday', date: '3 June',
-      title: 'Day-After BBQ',
-      time: 'from 13:00',
-      attire: 'Linen & sandals',
-      note: 'A slow, sun-drunk lunch by the pool. Bring a swimsuit and leave your watch behind. Espresso martinis reappear at sunset for anyone still standing after the night before.',
-      highlights: ['Poolside lunch', 'Bring a swimsuit', 'Sunset espresso martinis'],
+      title: 'Rest & Recovery',
+      time: 'Timing TBD',
+      attire: 'Poolside Chic',
+      attireDetail: 'Come ready for an afternoon by the pool with some summer Italian style.',
+      note: 'A late BBQ lunch and drinks by the pool.',
     },
     {
       num: 'IV', day: 'Friday', date: '4 June',
-      title: 'Farewell Breakfast',
-      time: 'until 11:00',
-      attire: 'Whatever you slept in',
-      note: 'Coffee and warm cornetti on the loggia, and the slow business of saying goodbye. Check-out is at eleven — but please don’t leave without finding us for a hug.',
-      highlights: ['Coffee & cornetti', 'On the loggia', 'Check-out by 11:00'],
+      title: 'Goodbye Breakfast',
+      time: 'Check-out 11:00am',
+      attire: 'Casual', // TODO: confirm Day 4 attire with Sam
+      note: 'For everyone staying on the property. Check-out is at 11:00am.',
     },
   ];
 
@@ -48,18 +50,17 @@ function ScheduleSection() {
       {/* Header band */}
       <div style={{ background: 'var(--parchment-deep)', borderBottom: '0.5px solid var(--hairline)', padding: '150px 0 96px', textAlign: 'center' }}>
         <div className="container-narrow">
-          <p className="micro reveal" style={{ marginBottom: 26 }}>The Weekend</p>
+          <p className="micro reveal" style={{ marginBottom: 26 }}>The Week</p>
           <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
-            Quattro <em style={{ fontWeight: 300 }}>giornate</em>
+            Four <em style={{ fontWeight: 300 }}>days</em>
           </h1>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
-            A fresco is painted one <em>giornata</em> at a time &mdash; the patch of
-            fresh plaster a painter can finish before it dries. A day&rsquo;s work,
-            then another. Ours takes four.
+            Here&rsquo;s what&rsquo;s happening and when. Exact times are still being
+            finalized, and we&rsquo;ll update this page as they&rsquo;re confirmed.
           </p>
           <div className="reveal reveal-delay-3" style={{ marginTop: 44, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
             <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
-            <span className="small-caps" style={{ color: 'var(--umber)' }}>1 &mdash; 4 June 2027 &middot; SPAO, Umbria</span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>1–4 June 2027 &middot; San Pietro Aquaeortus, Umbria</span>
             <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
           </div>
         </div>
@@ -79,7 +80,7 @@ function ScheduleSection() {
             }}
           >
             <aside className="day-aside">
-              <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 14 }}>Giornata</p>
+              <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 14 }}>Day</p>
               <div className="serif" style={{ fontSize: 84, fontStyle: 'italic', lineHeight: 0.9, color: d.featured ? 'var(--espresso)' : 'var(--travertine)', fontWeight: 300 }}>
                 {d.num}
               </div>
@@ -93,6 +94,7 @@ function ScheduleSection() {
                 <div>
                   <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 4 }}>Attire</p>
                   <p className="small-caps" style={{ color: 'var(--umber)' }}>{d.attire}</p>
+                  <p className="micro" style={{ marginTop: 6, color: 'var(--travertine)', letterSpacing: '0.18em' }}>Outfit mood board to come</p>
                 </div>
               </div>
             </aside>
@@ -106,16 +108,27 @@ function ScheduleSection() {
               <h2 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 48px)', margin: 0, fontWeight: 300, lineHeight: 1.1, textWrap: 'balance' }}>
                 {d.title}
               </h2>
+              {d.subtitle && (
+                <p className="serif-italic" style={{ fontSize: 24, margin: '10px 0 0', color: 'var(--umber)' }}>{d.subtitle}</p>
+              )}
               <p style={{ marginTop: 22, fontSize: 16, lineHeight: 1.85, color: 'var(--umber)', maxWidth: 540 }}>
                 {d.note}
               </p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '30px 0 0', display: 'flex', flexWrap: 'wrap', gap: '10px 12px' }}>
-                {d.highlights.map((h) => (
-                  <li key={h} className="small-caps" style={{ padding: '8px 16px', border: '0.5px solid var(--hairline)', color: 'var(--umber)', fontSize: 10 }}>
-                    {h}
-                  </li>
-                ))}
-              </ul>
+              {d.notice && (
+                <p style={{ marginTop: 16, fontSize: 16, lineHeight: 1.85, color: 'var(--espresso)', maxWidth: 540, fontWeight: 500 }}>
+                  {d.notice}
+                </p>
+              )}
+              {d.timeNote && (
+                <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 540 }}>
+                  <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>Check-in. </strong>{d.timeNote}
+                </p>
+              )}
+              {d.attireDetail && (
+                <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 540 }}>
+                  <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>What to wear. </strong>{d.attireDetail}
+                </p>
+              )}
             </div>
           </article>
         ))}
@@ -127,12 +140,12 @@ function ScheduleSection() {
         <div className="container-narrow">
           <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.6)', marginBottom: 22 }}>Before you pack</p>
           <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 4vw, 46px)', margin: 0, fontWeight: 300, color: 'var(--parchment)', lineHeight: 1.15 }}>
-            Dress for warm days and <em style={{ fontWeight: 300 }}>cooler evenings</em>
+            Warm days, <em style={{ fontWeight: 300 }}>cooler evenings</em>
           </h2>
           <p className="reveal reveal-delay-2" style={{ marginTop: 24, maxWidth: 520, margin: '24px auto 0', fontSize: 15, lineHeight: 1.8, color: 'rgba(245,240,232,0.72)' }}>
-            Early June in Umbria is generous with sunshine. Much of the weekend is on
-            stone and garden paths, so pack block heels or elegant flats over stilettos,
-            and a light layer for after dark.
+            Early June in Umbria is sunny and warm, and it cools off after dark.
+            Much of the week is on stone and garden paths, so bring block heels or
+            flats rather than stilettos, and a light layer for the evenings.
           </p>
           <a href="/faq/" className="small-caps reveal reveal-delay-3" style={{ display: 'inline-block', marginTop: 40, color: 'var(--parchment)', borderBottom: '0.5px solid var(--gold)', paddingBottom: 6 }}>
             Packing &amp; travel notes &rarr;
@@ -162,12 +175,13 @@ function ChalkMap() {
   const towns = [
     { n: 'Florence',  x: 152.2, y: 148.5, dx: 2.2,  dy: 1.2,  d: 0.2 },
     { n: 'Perugia',   x: 189.0, y: 177.6, dx: 2.2,  dy: 1.2,  d: 0.9 },
-    { n: 'Orvieto',   x: 180.0, y: 194.7, dx: 2.2,  dy: 3.2,  d: 1.2 },
+    { n: 'Fabro',     x: 177.4, y: 186.4, dx: 2.4,  dy: -0.6, d: 1.1 },
+    { n: 'Orvieto',   x: 180.0, y: 194.7, dx: 2.2,  dy: 3.2,  d: 1.3 },
     { n: 'Rome',      x: 192.2, y: 230.8, dx: 2.2,  dy: 1.2,  d: 1.8 },
     { n: 'Fiumicino', x: 184.1, y: 235.2, dx: -2.2, dy: 3.6,  d: 2.0, end: true },
   ];
   return (
-    <figure className="chalk-map reveal" aria-label="Chalk map of Italy showing the route from Florence and Rome to the villa">
+    <figure className="chalk-map reveal" aria-label="Chalk map of Italy showing the route from Florence and Rome to Fabro and the villa">
       <svg viewBox="0 0 392 466" role="img">
         <defs>
           <filter id="chalk" x="-5%" y="-5%" width="110%" height="110%">
@@ -192,7 +206,7 @@ function ChalkMap() {
           {/* A1: Florence → Arezzo → Orvieto → Rome → Fiumicino */}
           <path className="route" pathLength="1" strokeWidth="0.42" d="M152.2 148.5 C155.6 150.8 167.9 154.5 172.5 162.2 C177.2 169.9 176.7 183.3 180.0 194.7 C183.2 206.2 191.5 224.1 192.2 230.8 C192.9 237.5 185.5 234.5 184.1 235.2" />
           {/* the last climb */}
-          <path className="route route-last" pathLength="1" strokeWidth="0.75" d="M180.0 194.7 L175.8 190.3" />
+          <path className="route route-last" pathLength="1" strokeWidth="0.75" d="M177.4 186.4 L174.6 187.9" />
         </g>
         {towns.map((t) => (
           <g key={t.n} className="town" style={{ '--d': `${t.d + 3.9}s` }}>
@@ -200,11 +214,11 @@ function ChalkMap() {
             <text x={t.x + t.dx} y={t.y + t.dy} textAnchor={t.end ? 'end' : 'start'}>{t.n}</text>
           </g>
         ))}
-        {/* SPAO: a mark and a leader out to open sea for the label */}
+        {/* The villa: a mark and a leader out to open sea for the label */}
         <g className="town" style={{ '--d': '6.9s' }}>
           <path d="M172.8 187.3 l2 2 M174.8 187.3 l-2 2" stroke="var(--sinopia)" strokeWidth="0.5" strokeLinecap="round" />
           <path d="M172.2 187.8 L158 182.5" stroke="var(--sinopia)" strokeWidth=".2" fill="none" />
-          <text className="spao-label" x="156.8" y="183.6" textAnchor="end">SPAO</text>
+          <text className="spao-label" x="156.8" y="183.6" textAnchor="end">S. Pietro Aquaeortus</text>
         </g>
         </g>
         {/* north */}
@@ -213,236 +227,99 @@ function ChalkMap() {
           <text x="368" y="58" textAnchor="middle" fill="var(--umber)" stroke="none" style={{ fontStyle: 'normal', fontSize: 9 }}>N</text>
         </g>
       </svg>
-      <figcaption>Florence and Rome sit at either end of the A1.<br />Leave it at Orvieto and climb.</figcaption>
+      <figcaption>Florence and Rome sit at either end of the A1.<br />Leave it at Fabro; the villa is a short drive away.</figcaption>
     </figure>
   );
 }
 
 /* ────────────────────────────────────────────────────────────────
-   TravelSection — stay + travel teasers side-by-side
+   TravelSection — how to reach the villa
 ─────────────────────────────────────────────────────────────────*/
+const SB_URL = 'https://yiuglondgjbgyqfoqunz.supabase.co';
+const SB_KEY = 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2';
+const sbHeaders = { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
 function TravelSection() {
   const ref = useReveal();
-  const [accomCode, setAccomCode] = useState2('');
-  const [accomState, setAccomState] = useState2('idle'); // idle | loading | found | not_found | error
-  const [accomData, setAccomData] = useState2(null);
+  const [from, setFrom] = useState2('Rome');
 
-  const lookupCode = async () => {
-    const trimmed = accomCode.trim();
-    if (!trimmed) return;
-    setAccomState('loading');
-    try {
-      const res = await fetch(
-        'https://yiuglondgjbgyqfoqunz.supabase.co/rest/v1/rpc/lookup_accommodation',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
-            'Authorization': 'Bearer sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2',
-          },
-          body: JSON.stringify({ guest_code: trimmed }),
-        }
-      );
-      const rows = await res.json();
-      if (Array.isArray(rows) && rows.length > 0) {
-        setAccomData(rows[0]);
-        setAccomState('found');
-      } else {
-        setAccomState('not_found');
-      }
-    } catch (e) {
-      setAccomState('error');
-    }
+  const steps = [
+    { k: '01 · Fly', v: 'Rome Fiumicino (FCO)', d: 'Rome is the nearest major airport. Aim to land on 1 June or, better, a day or two before so you have time to settle in.' },
+    { k: '02 · Train', v: 'FCO to Fabro-Ficulle', d: 'Take the Leonardo Express from the airport to Roma Termini, then a Regionale toward Florence that stops at Fabro-Ficulle. We know most apps will tell you to go to Orvieto. We recommend Fabro-Ficulle instead: it’s closer to the villa and on the direct line from Rome.' },
+    { k: '03 · Drive', v: 'Fabro-Ficulle to the villa', d: 'The villa is a 15 to 20 minute drive from the station. Book a taxi in advance with one of the drivers below, or pick up a rental car at the airport and take the A1 north to the Fabro exit.' },
+  ];
+
+  // Routes to Fabro-Ficulle by origin. Times are approximate; check Trenitalia before you book.
+  const origins = {
+    Rome: [
+      ['Airport to Rome', 'Leonardo Express from FCO to Roma Termini: about 32 minutes, every 15 to 20 minutes, about €14. Buy at the machines in the station under the terminal.'],
+      ['Rome to Fabro-Ficulle', 'From Roma Termini, a Regionale or Regionale Veloce toward Firenze or Chiusi stops at Fabro-Ficulle in about 1 hour 30, roughly €16 to €22. There are about 11 a day but they’re unevenly spaced, so check the timetable before you plan the connection.'],
+      ['By car', 'About 140 km and 1 hour 30 from central Rome, or about 1 hour 40 from FCO. A1 north, exit Fabro.'],
+    ],
+    Naples: [
+      ['Naples to Rome', 'Frecciarossa or Italo from Napoli Centrale to Roma Termini: about 1 hour 10. Book ahead for the best fares.'],
+      ['Rome to Fabro-Ficulle', 'From Roma Termini, a Regionale toward Firenze or Chiusi stops at Fabro-Ficulle in about 1 hour 30. Allow 3.5 to 4 hours door to door.'],
+      ['By car', 'About 340 km and 3 hours on the A1 north, exit Fabro.'],
+    ],
+    Florence: [
+      ['Florence to Fabro-Ficulle', 'A direct Regionale from Firenze Santa Maria Novella to Fabro-Ficulle takes about 2 hours, with several a day and no change needed.'],
+      ['By car', 'About 140 km and 1 hour 20 on the A1 south, exit Fabro.'],
+    ],
   };
 
-  const modes = [
-    { k: 'By Air', v: 'Rome Fiumicino (FCO)', d: 'The nearest major airport — about 90 minutes north of the villa by car. Fly in on 1 June or earlier.' },
-    { k: 'By Rail', v: 'Trenitalia to Orvieto', d: 'Frequent, comfortable trains from Rome. From Orvieto it’s a short 20-minute drive up into the hills.' },
-    { k: 'By Car', v: 'A1 north, exit Orvieto', d: 'The A1 autostrada runs straight from Rome; leave at the Orvieto exit and wind your way into the countryside.' },
-    { k: 'Shuttle', v: 'Complimentary · 1 & 2 June', d: 'We’ll run transfers from FCO on arrival days. Send your flight details with your RSVP so we can time them.' },
+  const drivers = [
+    ['Sandra Cassinadri', '+39 377 085 4964'],
+    ['Taxi Orvieto NCC', '+39 370 318 1469'],
+    ['Taxi Orvieto', '+39 349 729 2550'],
+    ['Anelio Gennari', '+39 338 847 7349'],
+    ['Giorgi', '+39 338 122 7823'],
   ];
 
   const nearby = [
-    { name: 'Orvieto', note: 'A cathedral town perched on a volcanic cliff — Gothic façade, underground caves, and a crisp Orvieto Classico.' },
-    { name: 'Assisi', note: 'The rose-stone hill town of St. Francis, all frescoes and far-reaching valley views, under an hour away.' },
-    { name: 'Perugia', note: 'Umbria’s handsome capital — medieval streets, a grand piazza, and very good chocolate.' },
+    { name: 'Orvieto', img: '', note: 'A cathedral town on a volcanic cliff. Gothic façade, caves underneath, and a crisp Orvieto Classico.' },
+    { name: 'Assisi', img: '', note: 'The hill town of St. Francis, all frescoes and valley views, under an hour away.' },
+    { name: 'Perugia', img: '', note: 'Umbria’s capital. Medieval streets, a grand piazza, and very good chocolate.' },
   ];
+
+  // YouTube video IDs (the part after v= in the URL). Leave empty to hide the section.
+  const videos = [];
+
+  const h2 = { fontSize: 'clamp(30px, 3.6vw, 44px)', margin: 0, fontWeight: 300, fontStyle: 'italic' };
 
   return (
     <section id="travel" ref={ref} style={{ background: 'var(--parchment-deep)' }}>
       {/* Header band */}
       <div style={{ background: 'var(--parchment)', borderBottom: '0.5px solid var(--hairline)', padding: '150px 0 96px', textAlign: 'center' }}>
         <div className="container-narrow">
-          <p className="micro reveal" style={{ marginBottom: 26 }}>Getting There</p>
+          <p className="micro reveal" style={{ marginBottom: 26 }}>Travel</p>
           <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
-            Plan your <em style={{ fontWeight: 300 }}>passage</em>
+            Getting <em style={{ fontWeight: 300 }}>there</em>
           </h1>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
-            The celebration is in the hills of Umbria, in central Italy&rsquo;s green
-            heart. Here&rsquo;s how to reach us, where you&rsquo;ll rest your head,
-            and what&rsquo;s worth seeing along the way.
+            The villa is in the hills of Umbria, in central Italy. Fly to Rome,
+            take the train to Fabro-Ficulle, and it&rsquo;s a short drive from there.
           </p>
         </div>
       </div>
 
-      {/* Accommodations lookup */}
-      <div id="stay" className="container-narrow" style={{ padding: '110px 32px 20px' }}>
-        <div className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: 'clamp(40px, 6vw, 72px)' }}>
-          <p className="micro" style={{ marginBottom: 18 }}>Accommodations</p>
-          <h2 className="serif" style={{ fontSize: 'clamp(34px, 4.4vw, 52px)', margin: 0, fontWeight: 300, fontStyle: 'italic', lineHeight: 1.05 }}>
-            Where you&rsquo;re staying
-          </h2>
-          <p style={{ marginTop: 22, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
-            We&rsquo;ve arranged a room for every guest &mdash; some at the villa
-            itself, others at a lovely hotel nearby. Enter the code from your
-            invitation to see exactly where you&rsquo;ll be, and for how long.
-          </p>
-
-          {accomState !== 'found' && (
-            <div style={{ marginTop: 40, maxWidth: 460 }}>
-              <label style={{ display: 'block' }}>
-                <span className="micro" style={{ display: 'block', marginBottom: 12 }}>Invitation code</span>
-                <input
-                  type="text"
-                  value={accomCode}
-                  onChange={(e) => { setAccomCode(e.target.value); setAccomState('idle'); }}
-                  onKeyDown={(e) => e.key === 'Enter' && lookupCode()}
-                  placeholder="Enter your code"
-                  style={{
-                    width: '100%',
-                    padding: '14px 0',
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '0.5px solid var(--hairline)',
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 24,
-                    fontStyle: 'italic',
-                    fontWeight: 300,
-                    color: 'var(--espresso)',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-              {accomState === 'not_found' && (
-                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
-                  Code not found — double-check your invitation and try again.
-                </p>
-              )}
-              {accomState === 'error' && (
-                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
-                  Something went wrong — please try again.
-                </p>
-              )}
-              <button
-                onClick={lookupCode}
-                disabled={accomState === 'loading' || !accomCode.trim()}
-                className="small-caps"
-                style={{
-                  marginTop: 26,
-                  background: 'var(--espresso)',
-                  color: 'var(--parchment)',
-                  border: 'none',
-                  padding: '14px 32px',
-                  letterSpacing: '0.28em',
-                  opacity: (accomState === 'loading' || !accomCode.trim()) ? 0.5 : 1,
-                  cursor: (accomState === 'loading' || !accomCode.trim()) ? 'not-allowed' : 'pointer',
-                }}
-              >
-                {accomState === 'loading' ? 'Looking up…' : 'Look up →'}
-              </button>
-            </div>
-          )}
-
-          {accomState === 'found' && accomData && (
-            <div style={{ marginTop: 40 }}>
-              <div style={{ padding: '32px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)' }}>
-                <p className="micro" style={{ marginBottom: 10 }}>
-                  {accomData.accommodation_type === 'villa' ? 'Villa · SPAO' : 'Hotel'}
-                </p>
-                <p className="serif-italic" style={{ fontSize: 30, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>
-                  {accomData.property_name}
-                </p>
-                {accomData.room_detail && (
-                  <p className="small-caps" style={{ marginTop: 8, color: 'var(--umber)', fontSize: 11 }}>
-                    {accomData.room_detail}
-                  </p>
-                )}
-                {(accomData.check_in || accomData.check_out) && (
-                  <p style={{ marginTop: 16, fontSize: 14, color: 'var(--umber)', lineHeight: 1.6 }}>
-                    {accomData.check_in && (
-                      <>Check-in: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_in}</strong></>
-                    )}
-                    {accomData.check_in && accomData.check_out && ' · '}
-                    {accomData.check_out && (
-                      <>Check-out: <strong style={{ color: 'var(--espresso)', fontWeight: 500 }}>{accomData.check_out}</strong></>
-                    )}
-                  </p>
-                )}
-                {accomData.notes && (
-                  <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-                    {accomData.notes}
-                  </p>
-                )}
-              </div>
-              {accomData.booking_url && (
-                <a
-                  href={accomData.booking_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="small-caps"
-                  style={{ display: 'inline-block', marginTop: 24, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}
-                >
-                  Booking details →
-                </a>
-              )}
-              <button
-                onClick={() => { setAccomState('idle'); setAccomCode(''); setAccomData(null); }}
-                className="small-caps"
-                style={{
-                  display: 'block',
-                  marginTop: accomData.booking_url ? 14 : 24,
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--umber)',
-                  letterSpacing: '0.2em',
-                  padding: 0,
-                  cursor: 'pointer',
-                  fontSize: 10,
-                }}
-              >
-                Use a different code
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Getting to the villa */}
-      <div className="container-narrow" style={{ padding: '90px 32px 20px' }}>
+      {/* Finding the villa */}
+      <div className="container-narrow" style={{ padding: '100px 32px 20px' }}>
         <div style={{ marginBottom: 12 }}>
           <p className="micro reveal" style={{ marginBottom: 16 }}>The Journey</p>
-          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 3.6vw, 44px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
-            Finding the villa
-          </h2>
-          <p className="reveal reveal-delay-2" style={{ marginTop: 20, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 580 }}>
-            However you come, the last stretch is the loveliest &mdash; cypress-lined
-            roads climbing into the Umbrian hills. Four ways to reach us:
-          </p>
+          <h2 className="serif reveal reveal-delay-1" style={h2}>Finding the villa</h2>
         </div>
         <div className="journey-grid" style={{ marginTop: 30 }}>
         <div>
-          {modes.map((m, i) => (
+          {steps.map((m, i) => (
             <div
               key={m.k}
-              className="mode-row reveal"
+              className="reveal"
               style={{
                 display: 'grid',
-                gridTemplateColumns: '200px 1fr',
-                gap: 32,
-                padding: '30px 0',
+                gap: 10,
+                padding: '26px 0',
                 borderTop: '0.5px solid var(--hairline)',
-                borderBottom: i === modes.length - 1 ? '0.5px solid var(--hairline)' : 'none',
+                borderBottom: i === steps.length - 1 ? '0.5px solid var(--hairline)' : 'none',
               }}
             >
               <div className="mode-head">
@@ -452,28 +329,106 @@ function TravelSection() {
               <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>{m.d}</p>
             </div>
           ))}
+
+          {/* Taxis & drivers */}
+          <div className="reveal" style={{ marginTop: 40 }}>
+            <p className="micro" style={{ marginBottom: 14 }}>Taxis &amp; drivers · Fabro-Ficulle to the villa</p>
+            <p style={{ margin: '0 0 16px', fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>
+              Taxis don&rsquo;t wait at the station, so book one in advance. Any of these can take you to the villa:
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              {drivers.map(([n, tel]) => (
+                <li key={tel} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '12px 0', borderTop: '0.5px solid var(--hairline-soft)', fontSize: 15 }}>
+                  <span style={{ color: 'var(--espresso)' }}>{n}</span>
+                  <a href={'tel:' + tel.replace(/\s+/g, '')} className="small-caps" style={{ color: 'var(--umber)', letterSpacing: '0.12em', whiteSpace: 'nowrap' }}>{tel}</a>
+                </li>
+              ))}
+            </ul>
+            <p style={{ margin: '16px 0 0', fontSize: 14, lineHeight: 1.8, color: 'var(--umber)' }}>
+              Prefer to drive? Hertz, Avis, Europcar, Sixt and Budget all have desks at Fiumicino. Book an automatic early; most rentals in Italy are manual.
+            </p>
+          </div>
+
+          <a href="/faq/" className="small-caps reveal" style={{ display: 'inline-block', marginTop: 36, background: 'var(--espresso)', color: 'var(--parchment)', padding: '14px 32px', letterSpacing: '0.28em' }}>
+            Here&rsquo;s more information &rarr;
+          </a>
         </div>
         <ChalkMap />
         </div>
       </div>
 
+      {/* Travelling from */}
+      <div className="container-narrow" style={{ padding: '90px 32px 20px' }}>
+        <p className="micro reveal" style={{ marginBottom: 16 }}>Travelling from</p>
+        <h2 className="serif reveal reveal-delay-1" style={h2}>Rome, Naples or Florence</h2>
+        <p className="reveal reveal-delay-2" style={{ marginTop: 20, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 580 }}>
+          Whichever city you start in, head for Fabro-Ficulle station. Times are approximate, so check Trenitalia before you book.
+        </p>
+        <div className="reveal" role="tablist" style={{ display: 'flex', gap: 8, marginTop: 28, flexWrap: 'wrap' }}>
+          {Object.keys(origins).map((o) => (
+            <button
+              key={o}
+              role="tab"
+              aria-selected={from === o}
+              onClick={() => setFrom(o)}
+              className="small-caps"
+              style={{
+                padding: '12px 22px',
+                background: from === o ? 'var(--espresso)' : 'transparent',
+                color: from === o ? 'var(--parchment)' : 'var(--espresso)',
+                border: '0.5px solid ' + (from === o ? 'var(--espresso)' : 'var(--hairline)'),
+                letterSpacing: '0.2em',
+                transition: 'all 0.2s',
+              }}
+            >
+              {o}
+            </button>
+          ))}
+        </div>
+        <div style={{ marginTop: 8, background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: 'clamp(28px, 4vw, 44px)' }}>
+          {origins[from].map(([h, d]) => (
+            <div key={h} className="mode-row" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 32, padding: '20px 0', borderTop: '0.5px solid var(--hairline-soft)' }}>
+              <p className="serif-italic mode-head" style={{ fontSize: 20, margin: 0, color: 'var(--espresso)', lineHeight: 1.25 }}>{h}</p>
+              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Videos */}
+      {videos.length > 0 && (
+        <div className="container-narrow" style={{ padding: '90px 32px 20px' }}>
+          <p className="micro reveal" style={{ marginBottom: 16 }}>Watch</p>
+          <h2 className="serif reveal reveal-delay-1" style={h2}>A few videos worth your time</h2>
+          <div className="nearby-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginTop: 30 }}>
+            {videos.map((id) => (
+              <iframe key={id} src={'https://www.youtube-nocookie.com/embed/' + id} title="Travel video" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowFullScreen style={{ width: '100%', aspectRatio: '16 / 9', border: '0.5px solid var(--hairline)', background: 'var(--parchment)' }}></iframe>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Worth a detour */}
       <div className="container-narrow" style={{ padding: '90px 32px 40px' }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <p className="micro reveal" style={{ marginBottom: 16 }}>While You&rsquo;re Here</p>
-          <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 3.6vw, 44px)', margin: 0, fontWeight: 300 }}>
+          <h2 className="serif reveal reveal-delay-1" style={{ ...h2, fontStyle: 'normal' }}>
             Worth a <em style={{ fontWeight: 300 }}>detour</em>
           </h2>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 520, margin: '20px auto 0', fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-            Umbria and neighbouring Tuscany reward a longer stay. A few favourites
-            within an easy drive:
+            Umbria and neighbouring Tuscany are worth a longer stay. A few favourites within an easy drive:
           </p>
         </div>
         <div className="nearby-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
           {nearby.map((n) => (
-            <div key={n.name} className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: '36px 32px 40px' }}>
-              <h3 className="serif" style={{ fontSize: 28, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>{n.name}</h3>
-              <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>{n.note}</p>
+            <div key={n.name} className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: '0 0 40px', overflow: 'hidden' }}>
+              {n.img
+                ? <img src={n.img} alt={n.name} loading="lazy" style={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover' }} />
+                : <div className="ph" data-label={n.name + ' · photo to come'} style={{ aspectRatio: '4 / 3' }}></div>}
+              <div style={{ padding: '28px 32px 0' }}>
+                <h3 className="serif" style={{ fontSize: 28, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>{n.name}</h3>
+                <p style={{ marginTop: 14, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>{n.note}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -484,14 +439,13 @@ function TravelSection() {
         <div className="container-narrow">
           <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.6)', marginBottom: 22 }}>Still planning</p>
           <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 4vw, 46px)', margin: 0, fontWeight: 300, color: 'var(--parchment)', lineHeight: 1.15 }}>
-            Visas, driving, money and <em style={{ fontWeight: 300 }}>more</em>
+            Answering all your <em style={{ fontWeight: 300 }}>burning questions</em>
           </h2>
           <p className="reveal reveal-delay-2" style={{ marginTop: 24, maxWidth: 520, margin: '24px auto 0', fontSize: 15, lineHeight: 1.8, color: 'rgba(245,240,232,0.72)' }}>
-            Car rentals, tipping, plug types, phone data and the little Italian customs
-            worth knowing &mdash; the full guide lives in the FAQ.
+            Trains, driving, money, plugs, coffee, and everything else you might be wondering about. It&rsquo;s all in the FAQ.
           </p>
           <a href="/faq/" className="small-caps reveal reveal-delay-3" style={{ display: 'inline-block', marginTop: 40, color: 'var(--parchment)', borderBottom: '0.5px solid var(--gold)', paddingBottom: 6 }}>
-            Read the guest guide &rarr;
+            Read the FAQ &rarr;
           </a>
         </div>
       </div>
@@ -508,14 +462,175 @@ function TravelSection() {
 }
 
 /* ────────────────────────────────────────────────────────────────
+   StaySection — invitation-code lookup: villa room, or Fonteverde
+─────────────────────────────────────────────────────────────────*/
+const fmtDate = (iso) => {
+  if (!iso) return '';
+  const d = new Date(iso + 'T12:00:00');
+  return isNaN(d) ? iso : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+};
+
+function StaySection() {
+  const ref = useReveal();
+  const [code, setCode] = useState2('');
+  const [state, setState] = useState2('idle'); // idle | loading | found | not_found | error
+  const [data, setData] = useState2(null);
+
+  const lookup = async () => {
+    const trimmed = code.trim();
+    if (!trimmed) return;
+    setState('loading');
+    try {
+      const res = await fetch(SB_URL + '/rest/v1/rpc/lookup_accommodation', {
+        method: 'POST', headers: sbHeaders, body: JSON.stringify({ guest_code: trimmed }),
+      });
+      const rows = await res.json();
+      if (Array.isArray(rows) && rows.length > 0) { setData(rows[0]); setState('found'); }
+      else setState('not_found');
+    } catch (e) { setState('error'); }
+  };
+
+  const onSite = data && data.accommodation_type === 'villa';
+  const label = { display: 'block', marginBottom: 6 };
+  const row = { marginTop: 22 };
+
+  return (
+    <section id="stay" ref={ref} style={{ background: 'var(--parchment-deep)' }}>
+      <div style={{ background: 'var(--parchment)', borderBottom: '0.5px solid var(--hairline)', padding: '150px 0 96px', textAlign: 'center' }}>
+        <div className="container-narrow">
+          <p className="micro reveal" style={{ marginBottom: 26 }}>Stay</p>
+          <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
+            Where you&rsquo;re <em style={{ fontWeight: 300 }}>staying</em>
+          </h1>
+          <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
+            Enter the code from your invitation to see where you&rsquo;ll be sleeping and who you&rsquo;re with.
+          </p>
+        </div>
+      </div>
+
+      <div className="container-narrow" style={{ padding: '100px 32px 120px' }}>
+        <div className="reveal" style={{ background: 'var(--parchment)', border: '0.5px solid var(--hairline)', padding: 'clamp(40px, 6vw, 72px)' }}>
+          {state !== 'found' && (
+            <div style={{ maxWidth: 460 }}>
+              <label style={{ display: 'block' }}>
+                <span className="micro" style={{ display: 'block', marginBottom: 12 }}>Invitation code</span>
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => { setCode(e.target.value); setState('idle'); }}
+                  onKeyDown={(e) => e.key === 'Enter' && lookup()}
+                  placeholder="Enter your code"
+                  autoCapitalize="characters"
+                  style={{ ...inputStyle, fontSize: 24 }}
+                />
+              </label>
+              {state === 'not_found' && (
+                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                  Code not found. Double-check your invitation and try again.
+                </p>
+              )}
+              {state === 'error' && (
+                <p style={{ marginTop: 10, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>
+                  Something went wrong, please try again.
+                </p>
+              )}
+              <button
+                onClick={lookup}
+                disabled={state === 'loading' || !code.trim()}
+                className="small-caps"
+                style={{
+                  marginTop: 26, background: 'var(--espresso)', color: 'var(--parchment)', border: 'none',
+                  padding: '14px 32px', letterSpacing: '0.28em',
+                  opacity: (state === 'loading' || !code.trim()) ? 0.5 : 1,
+                  cursor: (state === 'loading' || !code.trim()) ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {state === 'loading' ? 'Looking up…' : 'Look up →'}
+              </button>
+            </div>
+          )}
+
+          {state === 'found' && data && (
+            <div>
+              <p className="micro" style={{ marginBottom: 10 }}>{data.guest_name}</p>
+              {onSite ? (
+                <>
+                  <h2 className="serif-italic" style={{ fontSize: 'clamp(30px, 4vw, 44px)', margin: 0, color: 'var(--espresso)', lineHeight: 1.1 }}>
+                    You&rsquo;re staying at the villa
+                  </h2>
+                  <p style={{ marginTop: 18, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+                    We&rsquo;ve set aside a room for you at {data.property_name || 'San Pietro Aquaeortus'}. Check-in is 2–7pm on 1 June; please try your best to arrive in that window.
+                  </p>
+                  <div style={{ marginTop: 32, padding: '28px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)', display: 'grid', gap: 18 }}>
+                    {data.room_detail && (
+                      <div><span className="micro" style={label}>Room</span><span className="serif-italic" style={{ fontSize: 24 }}>{data.room_detail}</span></div>
+                    )}
+                    {data.sharing_with && (
+                      <div><span className="micro" style={label}>Sharing with</span><span className="serif-italic" style={{ fontSize: 24 }}>{data.sharing_with}</span></div>
+                    )}
+                    {(data.check_in || data.check_out) && (
+                      <div>
+                        <span className="micro" style={label}>Dates</span>
+                        <span className="serif-italic" style={{ fontSize: 24 }}>
+                          {fmtDate(data.check_in)}{data.check_in && data.check_out ? ' to ' : ''}{fmtDate(data.check_out)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="serif-italic" style={{ fontSize: 'clamp(30px, 4vw, 44px)', margin: 0, color: 'var(--espresso)', lineHeight: 1.1 }}>
+                    We recommend Fonteverde
+                  </h2>
+                  <p style={{ marginTop: 18, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+                    Rooms at the villa are limited, so for you we recommend <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>Fonteverde</strong>,
+                    a thermal spa resort in San Casciano dei Bagni, just over the Tuscan border. It&rsquo;s about 20 km from the villa,
+                    roughly a 25 minute drive, and about the same from Fabro-Ficulle station.
+                  </p>
+                  <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+                    Book directly with the hotel. Località Terme 1, 53040 San Casciano dei Bagni (SI) · <a href="tel:+39057857241" style={{ borderBottom: '0.5px solid var(--travertine)' }}>+39 0578 57241</a>
+                  </p>
+                  <a
+                    href={data.booking_url || 'https://fonteverdespa.com/en/'}
+                    target="_blank" rel="noopener noreferrer"
+                    className="small-caps"
+                    style={{ display: 'inline-block', marginTop: 28, background: 'var(--espresso)', color: 'var(--parchment)', padding: '14px 32px', letterSpacing: '0.28em' }}
+                  >
+                    Fonteverde &rarr;
+                  </a>
+                </>
+              )}
+              {data.notes && (
+                <p style={{ ...row, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)', maxWidth: 560 }}>{data.notes}</p>
+              )}
+              {onSite && data.booking_url && (
+                <a href={data.booking_url} target="_blank" rel="noopener noreferrer" className="small-caps" style={{ display: 'inline-block', marginTop: 24, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
+                  Details &rarr;
+                </a>
+              )}
+              <button
+                onClick={() => { setState('idle'); setCode(''); setData(null); }}
+                className="small-caps"
+                style={{ display: 'block', marginTop: 28, background: 'transparent', border: 'none', color: 'var(--umber)', letterSpacing: '0.2em', padding: 0, cursor: 'pointer', fontSize: 10 }}
+              >
+                Use a different code
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────
    RSVPModal — elegant form with multi-step feel
 ─────────────────────────────────────────────────────────────────*/
 function RSVPModal({ open, onClose }) {
   const [step, setStep] = useState2(0);
-  const [data, setData] = useState2({
-    name: '', email: '', party: 1, attending: null,
-    diet: [], song: '', message: '',
-  });
+  const blank = { name: '', email: '', attending: null, diet: '', song: '', message: '' };
+  const [data, setData] = useState2(blank);
   const [submitted, setSubmitted] = useState2(false);
   const [submitting, setSubmitting] = useState2(false);
   const [submitError, setSubmitError] = useState2(null);
@@ -528,6 +643,7 @@ function RSVPModal({ open, onClose }) {
 
   useEffect2(() => {
     if (open) {
+      if (submitted) setData(blank); // a fresh form after a sent reply
       setStep(0);
       setSubmitted(false);
       setSubmitError(null);
@@ -535,15 +651,8 @@ function RSVPModal({ open, onClose }) {
   }, [open]);
 
   const setField = (k, v) => setData((d) => ({ ...d, [k]: v }));
-  const toggleDiet = (d) =>
-    setData((s) => ({
-      ...s,
-      diet: s.diet.includes(d) ? s.diet.filter((x) => x !== d) : [...s.diet, d],
-    }));
 
   if (!open) return null;
-
-  const dietOptions = ['Vegetarian', 'Vegan', 'Gluten-free', 'Pescatarian', 'No shellfish', 'Nut allergy'];
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
   const step0Valid = data.name.trim() && emailValid && data.attending;
@@ -563,20 +672,19 @@ function RSVPModal({ open, onClose }) {
             'Prefer': 'return=minimal',
           },
           body: JSON.stringify({
-            name: data.name,
+            name: data.name.trim(),
             email: data.email.trim(),
-            party_size: data.party,
             attending: data.attending,
-            diet: data.diet,
-            song: data.song || null,
-            message: data.message || null,
+            diet: data.attending === 'yes' ? (data.diet.trim() || null) : null,
+            song: data.attending === 'yes' ? (data.song.trim() || null) : null,
+            message: data.message.trim() || null,
           }),
         }
       );
       if (!res.ok) throw new Error(`${res.status}`);
       setSubmitted(true);
     } catch (err) {
-      setSubmitError('Something went wrong — please try again or email samanthaanddevin2027@gmail.com.');
+      setSubmitError('Something went wrong, please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -627,8 +735,8 @@ function RSVPModal({ open, onClose }) {
             </p>
             <p style={{ color: 'var(--umber)', fontSize: 15, lineHeight: 1.7, maxWidth: 380, margin: '0 auto' }}>
               {data.attending === 'yes'
-                ? 'A confirmation is on its way to your inbox. Pack linen.'
-                : 'Thank you for letting us know. We\u2019ll raise a glass for you on June 2.'}
+                ? 'A confirmation is on its way to your inbox. See you in June.'
+                : 'Thank you for letting us know. We\u2019ll miss you.'}
             </p>
             <button
               onClick={onClose}
@@ -648,7 +756,7 @@ function RSVPModal({ open, onClose }) {
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <p className="micro" style={{ marginBottom: 14 }}>RSVP</p>
               <h3 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 46px)', margin: 0, fontWeight: 300, fontStyle: 'italic' }}>
-                Kindly reply by 1 March 2027
+                Kindly reply by January 15th, 2027
               </h3>
             </div>
 
@@ -669,13 +777,13 @@ function RSVPModal({ open, onClose }) {
 
             {step === 0 && (
               <div style={{ display: 'grid', gap: 28 }}>
-                <Field label="Your name">
-                  <input
-                    type="text"
+                <Field label="Invited guests (as listed on your invitation)">
+                  <textarea
                     value={data.name}
                     onChange={(e) => setField('name', e.target.value)}
-                    placeholder="As it appears on your invitation"
-                    style={inputStyle}
+                    rows={2}
+                    placeholder="Names exactly as they appear on your invitation"
+                    style={{ ...inputStyle, resize: 'vertical' }}
                   />
                 </Field>
                 <Field label="Email address">
@@ -687,27 +795,6 @@ function RSVPModal({ open, onClose }) {
                     autoComplete="email"
                     style={inputStyle}
                   />
-                </Field>
-                <Field label="Party size">
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {[1, 2, 3, 4].map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => setField('party', n)}
-                        className="small-caps"
-                        style={{
-                          flex: 1, padding: '14px 0',
-                          background: data.party === n ? 'var(--espresso)' : 'transparent',
-                          color: data.party === n ? 'var(--parchment)' : 'var(--espresso)',
-                          border: '0.5px solid ' + (data.party === n ? 'var(--espresso)' : 'var(--hairline)'),
-                          letterSpacing: '0.2em',
-                          transition: 'all 0.2s',
-                        }}
-                      >
-                        {n}
-                      </button>
-                    ))}
-                  </div>
                 </Field>
                 <Field label="Will you be joining us?">
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -766,36 +853,21 @@ function RSVPModal({ open, onClose }) {
 
             {step === 1 && (
               <div style={{ display: 'grid', gap: 28 }}>
-                <Field label="Dietary preferences (select any that apply)">
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {dietOptions.map((d) => {
-                      const on = data.diet.includes(d);
-                      return (
-                        <button
-                          key={d}
-                          onClick={() => toggleDiet(d)}
-                          className="small-caps"
-                          style={{
-                            padding: '10px 18px',
-                            background: on ? 'var(--espresso)' : 'transparent',
-                            color: on ? 'var(--parchment)' : 'var(--espresso)',
-                            border: '0.5px solid ' + (on ? 'var(--espresso)' : 'var(--hairline)'),
-                            letterSpacing: '0.2em',
-                            transition: 'all 0.2s',
-                          }}
-                        >
-                          {d}
-                        </button>
-                      );
-                    })}
-                  </div>
+                <Field label="Dietary restrictions">
+                  <textarea
+                    value={data.diet}
+                    onChange={(e) => setField('diet', e.target.value)}
+                    rows={3}
+                    placeholder="Which guests have dietary restrictions, and what are they?"
+                    style={{ ...inputStyle, resize: 'vertical', fontFamily: 'Jost, sans-serif', fontSize: 15, fontStyle: 'normal' }}
+                  />
                 </Field>
                 <Field label="A song to fill the dance floor">
                   <input
                     type="text"
                     value={data.song}
                     onChange={(e) => setField('song', e.target.value)}
-                    placeholder="Artist — Title"
+                    placeholder="Artist, title"
                     style={inputStyle}
                   />
                 </Field>
@@ -829,7 +901,7 @@ function RSVPModal({ open, onClose }) {
                     value={data.message}
                     onChange={(e) => setField('message', e.target.value)}
                     rows={5}
-                    placeholder="Anything you\u2019d like us to know\u2026"
+                    placeholder={'Anything you\u2019d like us to know\u2026'}
                     style={{ ...inputStyle, resize: 'vertical', fontFamily: 'Jost, sans-serif' }}
                   />
                 </Field>
@@ -840,8 +912,8 @@ function RSVPModal({ open, onClose }) {
                 }}>
                   <p className="micro" style={{ marginBottom: 12 }}>Summary</p>
                   <p className="serif" style={{ fontSize: 22, margin: 0, lineHeight: 1.4 }}>
-                    <em>{data.name || 'Guest'}</em>
-                    <span style={{ color: 'var(--umber)' }}> · party of {data.party} · </span>
+                    <em>{data.name.trim() || 'Guest'}</em>
+                    <span style={{ color: 'var(--umber)' }}> · </span>
                     {data.attending === 'yes' ? 'joining us' : 'unable to join'}
                   </p>
                 </div>
@@ -941,7 +1013,7 @@ function Footer({ monogram }) {
           <div style={{ textAlign: 'right' }}>
             <p className="micro" style={{ marginBottom: 8 }}>The Place</p>
             <p className="serif-italic" style={{ fontSize: 22, margin: 0, color: 'var(--espresso)' }}>
-              SPAO, Umbria
+              San Pietro Aquaeortus, Umbria
             </p>
           </div>
         </div>
@@ -952,9 +1024,6 @@ function Footer({ monogram }) {
         }}>
           <span className="micro" style={{ color: 'var(--umber)' }}>
             With love from S &amp; D
-          </span>
-          <span className="micro" style={{ color: 'var(--umber)' }}>
-            Questions? samanthaanddevin2027@gmail.com
           </span>
         </div>
       </div>
@@ -998,6 +1067,7 @@ function MonogramWatermark({ show, monogram }) {
 Object.assign(window, {
   ScheduleSection,
   TravelSection,
+  StaySection,
   RSVPModal,
   Footer,
   MonogramWatermark,

@@ -68,7 +68,8 @@ function Nav({ monogram, onRSVP, solid = false }) {
 
   const links = [
     { href: '/schedule/', label: 'Schedule' },
-    { href: '/travel/', label: 'Travel & Stay' },
+    { href: '/travel/', label: 'Travel' },
+    { href: '/stay/', label: 'Stay' },
     { href: '/faq/', label: 'FAQ' },
   ];
 
@@ -246,18 +247,9 @@ function UmbriaClock() {
 
 /* ────────────────────────────────────────────────────────────────
    Hero — full-bleed image-slot with parallax + overlay.
-   First view each session opens on the Creation of Adam: drawn in chalk,
-   then painted; the touch becomes the light that reveals the photograph.
 ─────────────────────────────────────────────────────────────────*/
 function Hero({ monogram, heroCrop, italicAccents }) {
   const imgRef = useRef(null);
-  const [quick] = useState(() => {
-    try {
-      const seen = sessionStorage.getItem('sinopia_seen') === '1';
-      sessionStorage.setItem('sinopia_seen', '1');
-      return seen;
-    } catch (e) { return false; }
-  });
   useEffect(() => {
     const onScroll = () => {
       const el = imgRef.current;
@@ -278,7 +270,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
   const heightVal = heights[heroCrop] || '100vh';
 
   return (
-    <section id="top" className={quick ? 'hero hero-quick' : 'hero'} style={{ position: 'relative', height: heightVal, minHeight: 560, overflow: 'hidden' }}>
+    <section id="top" className="hero" style={{ position: 'relative', height: heightVal, minHeight: 560, overflow: 'hidden' }}>
       <div
         ref={imgRef}
         style={{
@@ -290,7 +282,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
           id="hero-photo"
           shape="rect"
           src="eros-1735.jpg"
-          placeholder="SPAO villa · golden hour · wide editorial crop"
+          placeholder="San Pietro Aquaeortus · golden hour · wide editorial crop"
           style={{
             width: '100%',
             height: '100%',
@@ -310,13 +302,6 @@ function Hero({ monogram, heroCrop, italicAccents }) {
           pointerEvents: 'none',
         }}
       ></div>
-
-      {/* The Creation of Adam (Sistine ceiling, 1512; public domain). Drawn in chalk from either
-          edge, then painted; the touch becomes light that reveals the villa. Choreography: site.css .creation */}
-      <div className="creation" aria-hidden="true">
-        <div className="fresco"><div className="fresco-sketch"></div><div className="fresco-paint"></div></div>
-        <div className="spark"></div>
-      </div>
 
       {/* Top hairline frame */}
       <div style={{
@@ -343,7 +328,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
         }}
       >
         <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.85)', marginBottom: 28 }}>
-          Together with their families
+          Join us for the wedding of
         </p>
         <h1
           className="serif reveal reveal-delay-1"
@@ -364,10 +349,13 @@ function Hero({ monogram, heroCrop, italicAccents }) {
         <div className="reveal reveal-delay-2" style={{ marginTop: 30, display: 'flex', alignItems: 'center', gap: 18 }}>
           <span style={{ width: 36, height: 0.5, background: 'rgba(245,240,232,0.6)' }}></span>
           <span className="small-caps" style={{ color: 'rgba(245,240,232,0.95)', letterSpacing: '0.42em' }}>
-            The Second of June · MMXXVII
+            June 1st – 4th, 2027
           </span>
           <span style={{ width: 36, height: 0.5, background: 'rgba(245,240,232,0.6)' }}></span>
         </div>
+        <p className="micro reveal reveal-delay-2" style={{ marginTop: 14, color: 'rgba(245,240,232,0.7)' }}>
+          MMXXVII
+        </p>
         <p
           className="serif-italic reveal reveal-delay-3"
           style={{
@@ -377,7 +365,7 @@ function Hero({ monogram, heroCrop, italicAccents }) {
             fontWeight: 300,
           }}
         >
-          SPAO · Umbria, Italy
+          San Pietro Aquaeortus · Umbria, Italy
         </p>
       </div>
 
@@ -426,13 +414,13 @@ function InvitationNote({ italicAccents }) {
               textWrap: 'pretty',
             }}
           >
-            Come spend four slow days with us beneath an Umbrian sun —
-            share a long table, pour another glass, and watch two of your
-            favourite people promise the rest of it to one another.
+            Come spend four days with us in the hills of Umbria. Long dinners,
+            good wine, and two people you love promising the rest of their lives
+            to each other.
           </p>
           <div className="reveal reveal-delay-2" style={{ marginTop: 56, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
             <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
-            <span className="small-caps" style={{ color: 'var(--umber)' }}>1 — 4 June 2027</span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>1–4 June 2027</span>
             <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
           </div>
         </div>
