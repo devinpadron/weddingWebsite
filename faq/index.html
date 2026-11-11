@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guest Guide &amp; FAQ · Samantha &amp; Devin</title>
-<meta name="description" content="Answers to all your burning questions: travel, trains, money, and a few Italian customs. 1–4 June 2027, Umbria, Italy.">
+<meta name="description" content="Answers to all your burning questions: travel, trains, money, and a few Italian customs. June 1–4, 2027, Umbria, Italy.">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://www.samanthaanddevin.com/faq/">
 
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="../gate.css">
 <script>
   try {
-    if (localStorage.getItem('wedding_invited_v1') === '1') {
+    if (localStorage.getItem('wedding_invited_v2') === '1') {
       document.documentElement.classList.add('gate-unlocked');
     }
   } catch (e) {}
@@ -38,40 +38,14 @@
   .faq-hero h1 em { font-style: italic; }
   .faq-hero .sub { margin: 30px auto 0; max-width: 580px; font-size: 16px; line-height: 1.8; color: var(--umber); }
 
-  /* Q&A sections */
-  .faq-section { padding: 44px 0 16px; }
-  .faq-section > h2 {
-    font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic;
-    font-size: clamp(28px, 3.4vw, 42px); margin: 0 0 6px;
+  /* Section tabs (accordion styles live in site.css, shared with the Travel page) */
+  .faq-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 36px 0 8px; }
+  .faq-tabs button {
+    padding: 12px 22px; background: transparent; color: var(--espresso);
+    border: 0.5px solid var(--hairline); letter-spacing: 0.2em; transition: all 0.2s;
   }
-  .faq-section > .lede { font-size: 15px; line-height: 1.7; color: var(--umber); margin: 0 0 12px; max-width: 620px; }
-
-  /* Q&A accordion (native <details>) */
-  details.qa { border-top: 0.5px solid var(--hairline); }
-  .faq-section details.qa:last-of-type { border-bottom: 0.5px solid var(--hairline); }
-  details.qa > summary {
-    list-style: none; cursor: pointer;
-    display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
-    padding: 22px 2px;
-    font-family: 'Cormorant Garamond', serif; font-weight: 400;
-    font-size: clamp(19px, 2.2vw, 24px); color: var(--espresso);
-    transition: color 0.2s;
-  }
-  details.qa > summary::-webkit-details-marker { display: none; }
-  details.qa > summary:hover { color: var(--umber); }
-  details.qa > summary .plus {
-    flex: none; font-family: 'Jost', sans-serif; font-weight: 300;
-    font-size: 22px; line-height: 1; color: var(--travertine);
-    transition: transform 0.25s ease;
-  }
-  details.qa[open] > summary .plus { transform: rotate(45deg); }
-  details.qa > .answer { padding: 0 2px 26px; max-width: 680px; }
-  details.qa > .answer p { margin: 0 0 12px; font-size: 15px; line-height: 1.85; color: #43403A; }
-  details.qa > .answer p:last-child { margin-bottom: 0; }
-  details.qa > .answer strong { font-weight: 500; color: var(--espresso); }
-  details.qa > .answer ul { margin: 4px 0 12px; padding-left: 20px; }
-  details.qa > .answer li { font-size: 15px; line-height: 1.8; color: #43403A; margin-bottom: 6px; }
-  .phrase { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--espresso); }
+  .faq-tabs button[aria-selected="true"] { background: var(--espresso); color: var(--parchment); border-color: var(--espresso); }
+  .faq-section[hidden] { display: none; }
 
   /* Closing band — matches the Schedule/Travel pages */
   .faq-close { background: var(--espresso); color: var(--parchment); padding: 110px 0; text-align: center; }
@@ -83,12 +57,6 @@
   .faq-close .sub { margin: 24px auto 0; max-width: 520px; font-size: 15px; line-height: 1.8; color: rgba(245,240,232,0.72); }
   .faq-close .cta { display: inline-block; margin-top: 36px; background: var(--gold); color: var(--espresso); border: none; padding: 14px 36px; letter-spacing: 0.28em; }
 
-  /* Unplugged notice + distance table */
-  .notice { margin: 36px 0 8px; padding: 22px 26px; border: 0.5px solid var(--hairline); background: rgba(200, 184, 154, 0.18); font-size: 15px; line-height: 1.7; color: var(--espresso); }
-  .notice strong { font-weight: 500; }
-  table.dist { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 14px; }
-  table.dist th { text-align: left; font-weight: 500; color: var(--espresso); padding: 8px 10px 8px 0; border-bottom: 0.5px solid var(--hairline); }
-  table.dist td { padding: 8px 10px 8px 0; border-bottom: 0.5px solid var(--hairline-soft); color: #43403A; vertical-align: top; line-height: 1.5; }
 </style>
 
 <!-- Site-wide tweak defaults (keep in sync with the homepage) -->
@@ -127,27 +95,31 @@
 
 <div class="faq-hero">
   <div class="container-narrow">
-    <p class="micro">Guest Guide · 1–4 June 2027 · Umbria, Italy</p>
+    <p class="micro">Guest Guide · June 1–4, 2027 · Umbria, Italy</p>
     <h1>Everything you&rsquo;ll want to <em>know</em></h1>
     <p class="sub">
       Answers to all your burning questions, from how to get to the villa
-      to how to order a coffee. Wedding questions first, then everything Italy.
+      to how to order a coffee. Pick a section below.
     </p>
   </div>
 </div>
 
 <div class="container-narrow" style="padding-top: 20px;">
-  <p class="notice"><strong>We&rsquo;re having an unplugged ceremony. Please keep phones and cameras put away during the ceremony.</strong></p>
+  <div class="faq-tabs" role="tablist" aria-label="FAQ sections">
+    <button type="button" class="small-caps" role="tab" id="tab-wedding" aria-controls="panel-wedding" aria-selected="true">The Wedding</button>
+    <button type="button" class="small-caps" role="tab" id="tab-italy" aria-controls="panel-italy" aria-selected="false">Italy</button>
+    <button type="button" class="small-caps" role="tab" id="tab-recommendations" aria-controls="panel-recommendations" aria-selected="false">Our Recommendations</button>
+  </div>
 
   <!-- ══ THE WEDDING ══ -->
-  <section class="faq-section">
+  <section class="faq-section" id="panel-wedding" role="tabpanel" aria-labelledby="tab-wedding">
     <h2>The wedding</h2>
-    <p class="lede">Dates, getting here, where you&rsquo;re staying, and what to wear.</p>
+    <p class="lede">Dates, where you&rsquo;re staying, and what to wear. Getting here is on the <a class="phrase" href="/travel/">Travel page</a>.</p>
 
     <details class="qa">
       <summary>When should I arrive?<span class="plus">+</span></summary>
       <div class="answer">
-        <p>Please be on site by <strong>June 1st</strong>. If you can, arrive a day or two earlier to acclimate and shake off the flight, so you&rsquo;re not tired for the week.</p>
+        <p>Please be on site by <strong>Tuesday, June 1st</strong>. If you can, arrive a day or two earlier to acclimate and shake off the flight, so you&rsquo;re not tired for the week.</p>
       </div>
     </details>
 
@@ -159,51 +131,6 @@
     </details>
 
     <details class="qa">
-      <summary>Which airport should I fly into?<span class="plus">+</span></summary>
-      <div class="answer">
-        <p><strong>Rome Fiumicino (FCO)</strong>. It&rsquo;s the closest large international airport, about 1 hour 40 from the villa by car or around 3 hours by train. <strong>Florence (FLR)</strong> also works if you&rsquo;d like to start your trip there; it&rsquo;s about 2 hours away by direct train.</p>
-      </div>
-    </details>
-
-    <details class="qa">
-      <summary>Is there a shuttle?<span class="plus">+</span></summary>
-      <div class="answer">
-        <p>No. We aren&rsquo;t arranging group transport, so plan to reach the villa by train and taxi, or by rental car. The <a class="phrase" href="/travel/">Travel page</a> walks you through it.</p>
-      </div>
-    </details>
-
-    <details class="qa">
-      <summary>Do I need to rent a car?<span class="plus">+</span></summary>
-      <div class="answer">
-        <p>We aren&rsquo;t arranging group travel, so a car is the easiest way to come and go. If you do rent, get an <strong>International Driving Permit</strong> from AAA before you leave. It&rsquo;s super easy, costs about $20, and takes less than 30 minutes at a branch. Bring your licence and two passport photos. Book an automatic early, as most rentals in Italy are manual.</p>
-        <p>If you don&rsquo;t rent a car, book a taxi from Fabro-Ficulle in advance. The numbers are on the <a class="phrase" href="/travel/">Travel page</a>.</p>
-      </div>
-    </details>
-
-    <details class="qa">
-      <summary>Can I take the train?<span class="plus">+</span></summary>
-      <div class="answer">
-        <p>Yes, and we recommend it. Take the train to <strong>Fabro-Ficulle</strong> station, not Orvieto. Most apps will route you to Orvieto, but Fabro-Ficulle is closer to the villa and on the direct line from Rome and Florence.</p>
-        <p>Trains in Italy are easy to understand once you know the basics. See <em>How do trains work in Italy?</em> below for best practices, and schedule a taxi from the station in advance.</p>
-      </div>
-    </details>
-
-    <details class="qa">
-      <summary>How far is the venue from Rome, Naples, Florence and Milan?<span class="plus">+</span></summary>
-      <div class="answer">
-        <p>Times are approximate. Train times are to Fabro-Ficulle station, plus a 15 to 20 minute drive to the villa.</p>
-        <table class="dist">
-          <tr><th>From</th><th>By train</th><th>By car</th></tr>
-          <tr><td>Rome (FCO)</td><td>About 3 hours, change at Roma Termini</td><td>About 1 hour 40</td></tr>
-          <tr><td>Rome (Termini)</td><td>About 1 hour 30, direct Regionale</td><td>About 1 hour 30 (140 km)</td></tr>
-          <tr><td>Naples</td><td>3.5 to 4 hours, change at Roma Termini</td><td>About 3 hours (340 km)</td></tr>
-          <tr><td>Florence</td><td>About 2 hours, direct Regionale</td><td>About 1 hour 20 (140 km)</td></tr>
-          <tr><td>Milan</td><td>4.5 to 5 hours, change at Florence</td><td>About 4 hours (440 km)</td></tr>
-        </table>
-      </div>
-    </details>
-
-    <details class="qa">
       <summary>How do I find my accommodation?<span class="plus">+</span></summary>
       <div class="answer">
         <p>Go to the <a class="phrase" href="/stay/">Stay page</a> and enter the <strong>code from your invitation</strong>. It shows your room at the villa and who you&rsquo;re sharing with, or our recommended hotel nearby if you&rsquo;re staying off site.</p>
@@ -211,9 +138,16 @@
     </details>
 
     <details class="qa">
+      <summary>I&rsquo;m staying at Fonteverde. How do I get there?<span class="plus">+</span></summary>
+      <div class="answer">
+        <p>Follow the same steps as everyone else as far as <strong>Fabro-Ficulle</strong> station (they&rsquo;re on the <a class="phrase" href="/travel/">Travel page</a>). From there, Fonteverde (Localit&agrave; Terme 1, San Casciano dei Bagni) is roughly a 20 to 30 minute drive, so book a taxi in advance or pick up a rental car at the airport.</p>
+      </div>
+    </details>
+
+    <details class="qa">
       <summary>Can I arrive early or stay on afterwards?<span class="plus">+</span></summary>
       <div class="answer">
-        <p>Please do. Umbria and neighbouring Tuscany are worth a longer visit. Rooms at the villa are for the wedding nights only (1 to 4 June), so for extra nights look at Orvieto, Fonteverde in San Casciano dei Bagni, or the towns nearby.</p>
+        <p>Please do. Umbria and neighbouring Tuscany are worth a longer visit. Rooms at the villa are for the wedding nights only (Tuesday, June 1st to Friday, June 4th), so for extra nights look at Orvieto, Fonteverde in San Casciano dei Bagni, or the towns nearby.</p>
       </div>
     </details>
 
@@ -221,10 +155,10 @@
       <summary>What&rsquo;s the dress code?<span class="plus">+</span></summary>
       <div class="answer">
         <ul>
-          <li><strong>Welcome party, June 1st.</strong> Italian summer whites. Cocktail attire: chic white cocktail dresses, matching sets, white button-downs, light fabrics and linens.</li>
-          <li><strong>The wedding, June 2nd.</strong> Black tie. Women: colorful dresses.</li>
-          <li><strong>Rest &amp; recovery, June 3rd.</strong> Poolside chic. Come ready for an afternoon by the pool with some summer Italian style.</li>
-          <li><strong>Goodbye breakfast, June 4th.</strong> Casual.</li>
+          <li><strong>Welcome party, Tuesday, June 1st.</strong> Italian summer whites. Cocktail attire: chic white cocktail dresses, matching sets, white button-downs, light fabrics and linens.</li>
+          <li><strong>The wedding, Wednesday, June 2nd.</strong> Black tie. Women: colorful dresses.</li>
+          <li><strong>Rest &amp; recovery, Thursday, June 3rd.</strong> Poolside chic. Come ready for an afternoon by the pool with some summer Italian style.</li>
+          <li><strong>Goodbye breakfast, Friday, June 4th.</strong> Casual.</li>
         </ul>
         <p>Much of the week is on stone, grass and garden paths, so <strong>stilettos are a struggle</strong>. Block heels or flats will serve you far better. Outfit mood boards to come.</p>
       </div>
@@ -237,7 +171,7 @@
           <li>An outfit for each event (see the dress code above).</li>
           <li>A <strong>light wrap or jacket</strong> for the evenings; it cools off after dark.</li>
           <li>Shoes that work on stone and grass, and something to change into for dancing.</li>
-          <li>A swimsuit and a cover-up for the pool on June 3rd.</li>
+          <li>A swimsuit and a cover-up for the pool on Thursday, June 3rd.</li>
           <li>Sunglasses, sunscreen and a hat for the daytime.</li>
         </ul>
       </div>
@@ -246,20 +180,21 @@
     <details class="qa">
       <summary>What will the weather be like?<span class="plus">+</span></summary>
       <div class="answer">
-        <p>Early June in Umbria is usually <strong>warm and sunny</strong>, with days around 25–28&deg;C (high 70s to low 80s&deg;F) and cooler evenings once the sun drops behind the hills. The occasional afternoon shower is possible.</p>
+        <p>Early June in Umbria is usually <strong>sunny and hot</strong>, with cooler evenings once the sun drops behind the hills. The occasional afternoon shower is possible.</p>
       </div>
     </details>
 
+
     <details class="qa">
-      <summary>What&rsquo;s worth seeing nearby?<span class="plus">+</span></summary>
+      <summary>Can I take photos during the ceremony?<span class="plus">+</span></summary>
       <div class="answer">
-        <p>Within an easy drive: the cathedral town of <strong>Orvieto</strong> (perched on a volcanic cliff), <strong>Assisi</strong>, <strong>Perugia</strong>, and the medieval hill towns of the Umbrian valley. Wine lovers should seek out a local Orvieto Classico or a Sagrantino from Montefalco.</p>
+        <p>We&rsquo;re having an <strong>unplugged ceremony</strong>. Please keep phones and cameras put away during the ceremony.</p>
       </div>
     </details>
   </section>
 
   <!-- ══ ITALY ══ -->
-  <section class="faq-section">
+  <section class="faq-section" id="panel-italy" role="tabpanel" aria-labelledby="tab-italy" hidden>
     <h2>Italy</h2>
     <p class="lede">Trains, driving, money, water, coffee, and a few customs worth knowing. None of this is a test; Italians are warm and forgiving of visitors.</p>
 
@@ -291,7 +226,7 @@
     <details class="qa">
       <summary>Anything I should know about driving?<span class="plus">+</span></summary>
       <div class="answer">
-        <p><strong>Be careful in historic town centres.</strong> The roads are tight, parking is scarce, and driving can be hard and scary. Park outside the old town and walk in.</p>
+        <p><strong>Be careful in historic town centres.</strong> The roads are tight and parking is scarce. Park outside the old town and walk in.</p>
         <p>Many centres are also <span class="phrase">ZTL</span> zones (limited traffic). There&rsquo;s no barrier, just a camera that reads your plate, and the fine arrives through your rental company months later. If you see a red-circle ZTL sign, don&rsquo;t drive past it.</p>
         <p>Country roads are narrow and winding but beautiful. Take your time, and expect locals to pass you.</p>
       </div>
@@ -301,6 +236,7 @@
       <summary>Cash or card, and what currency?<span class="plus">+</span></summary>
       <div class="answer">
         <p>Italy uses the <strong>euro (&euro;)</strong>. Right now, 1 US dollar is about <strong id="usd-eur">&euro;0.90</strong>. Cards (including contactless and phone payments) are widely accepted in cities and most restaurants, but <strong>carry some cash</strong> for small caf&eacute;s, markets, taxis and rural spots. Withdraw euros from a bank ATM (a <span class="phrase">bancomat</span>) rather than the airport exchange desks for a better rate, and always choose to be charged <strong>in euros</strong>, not dollars, to avoid a poor conversion.</p>
+        <p><strong>Avoid the scammy exchange shops</strong> and anyone offering to exchange your money for cash. They will rip you off.</p>
       </div>
     </details>
 
@@ -345,6 +281,7 @@
       <summary>Where should I shop for food?<span class="plus">+</span></summary>
       <div class="answer">
         <p>Go to <strong>Conad</strong> or <strong>Esselunga</strong>, the big supermarkets, and to the <strong>local markets</strong> whenever you can; the produce, cheese and bread are the point of being here. Skip the small corner minimarkets: the prices are higher and the quality is lower.</p>
+        <p>At markets and shops, look for the authentic store owners and local <strong>Italian</strong> businesses.</p>
       </div>
     </details>
 
@@ -379,7 +316,7 @@
     <details class="qa">
       <summary>What is aperitivo?<span class="plus">+</span></summary>
       <div class="answer">
-        <p>Make time for it. <span class="phrase">Aperitivo</span> is the Italian tradition of a pre-dinner drink, usually between <strong>18:00 and 20:00</strong>, with a few snacks on the house: olives, chips, little sandwiches. Order a spritz, a glass of wine, or a Negroni, find a seat outside, and watch the town go by. It&rsquo;s time to sit and enjoy where you are. Don&rsquo;t fill up; dinner is still coming.</p>
+        <p>Make time for it. <span class="phrase">Aperitivo</span> is the Italian tradition of a pre-dinner drink, usually between <strong>6:00pm and 8:00pm</strong>, with a few snacks on the house: olives, chips, little sandwiches. Order a spritz, a glass of wine, or a Negroni, find a seat outside, and watch the town go by. It&rsquo;s time to sit and enjoy where you are. Don&rsquo;t fill up; dinner is still coming.</p>
       </div>
     </details>
 
@@ -387,8 +324,8 @@
       <summary>When do Italians eat, and when is everything closed?<span class="plus">+</span></summary>
       <div class="answer">
         <ul>
-          <li><strong>Lunch</strong> is usually 13:00–15:00. <strong>Dinner</strong> rarely starts before 20:00, and kitchens in smaller towns often don&rsquo;t open until then.</li>
-          <li>Many shops and businesses close for a midday <span class="phrase">riposo</span> (roughly 13:00–16:00), especially in small towns. Plan errands for the morning or late afternoon.</li>
+          <li><strong>Lunch</strong> is usually 1:00–3:00pm. <strong>Dinner</strong> rarely starts before 8:00pm, and kitchens in smaller towns often don&rsquo;t open until then.</li>
+          <li>Many shops and businesses close for a midday <span class="phrase">riposo</span> (roughly 1:00–4:00pm), especially in small towns. Plan errands for the morning or late afternoon.</li>
         </ul>
       </div>
     </details>
@@ -439,10 +376,10 @@
     </details>
   </section>
 
-  <!-- ══ FLORENCE ══ -->
-  <section class="faq-section">
-    <h2>A few days in Florence</h2>
-    <p class="lede">If you&rsquo;re adding Florence to the trip, here are our picks.</p>
+  <!-- ══ OUR RECOMMENDATIONS ══ -->
+  <section class="faq-section" id="panel-recommendations" role="tabpanel" aria-labelledby="tab-recommendations" hidden>
+    <h2>Our recommendations</h2>
+    <p class="lede">Florence is very special to us, and we recommend visiting it at least once. If you&rsquo;re adding it to the trip, here are our picks.</p>
 
     <details class="qa">
       <summary>What should I see?<span class="plus">+</span></summary>
@@ -482,6 +419,21 @@
 </div>
 
 <script src="../gate.js" defer></script>
+<script>
+  // Section tabs: one section visible at a time.
+  (() => {
+    const tabs = Array.from(document.querySelectorAll('.faq-tabs [role="tab"]'));
+    const show = (tab) => tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    tabs.forEach((t) => t.addEventListener('click', () => show(t)));
+    // Deep links: /faq/#italy or /faq/#recommendations
+    const want = document.getElementById('tab-' + location.hash.slice(1));
+    if (want) show(want);
+  })();
+</script>
 <script>
   // Live USD to EUR rate for the money answer; the static figure stays if the fetch fails.
   (async () => {

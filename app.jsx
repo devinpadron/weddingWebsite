@@ -8,7 +8,7 @@ function LinkIndex() {
   const ref = useReveal();
   const openRSVP = useRSVP();
   const cards = [
-    { n: 'I',   label: 'Schedule', href: '/schedule/', blurb: 'Four days in Umbria, and what happens on each.' },
+    { n: 'I',   label: 'Schedule', href: '/schedule/', blurb: 'Three days in Umbria, and what happens on each.' },
     { n: 'II',  label: 'Travel',   href: '/travel/',   blurb: 'Flights, trains, and the last stretch to the villa.' },
     { n: 'III', label: 'Stay',     href: '/stay/',     blurb: 'Enter your invitation code to see where you’re staying.' },
     { n: 'IV',  label: 'FAQ',      href: '/faq/',      blurb: 'Answers to all your burning questions.' },

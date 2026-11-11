@@ -156,7 +156,7 @@ image-slot.editorial[data-empty] {
   .detail { order: -1; width: min(78vw, 400px); margin: 0 auto; }
 }
 
-/* ── Schedule: four giornate, each a hand-cut patch of plaster that dries as you reach it ── */
+/* ── Schedule: the giornate, each a hand-cut patch of plaster that dries as you reach it ── */
 .giornate { background: color-mix(in srgb, var(--parchment) 60%, var(--parchment-deep)); }
 .giornata {
   position: relative;
@@ -224,6 +224,43 @@ image-slot.editorial[data-empty] {
   .journey-grid { grid-template-columns: 1fr; gap: 28px; }
   .chalk-map { order: -1; position: static; width: min(86vw, 360px); margin: 0 auto 8px; }
 }
+
+/* ── Q&A accordion (FAQ and Travel pages) ── */
+.faq-section { padding: 44px 0 16px; }
+.faq-section > h2 {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic;
+  font-size: clamp(28px, 3.4vw, 42px); margin: 0 0 6px;
+}
+.faq-section > .lede { font-size: 15px; line-height: 1.7; color: var(--umber); margin: 0 0 12px; max-width: 620px; }
+
+details.qa { border-top: 0.5px solid var(--hairline); }
+.faq-section details.qa:last-of-type { border-bottom: 0.5px solid var(--hairline); }
+details.qa > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
+  padding: 22px 2px;
+  font-family: 'Cormorant Garamond', serif; font-weight: 400;
+  font-size: clamp(19px, 2.2vw, 24px); color: var(--espresso);
+  transition: color 0.2s;
+}
+details.qa > summary::-webkit-details-marker { display: none; }
+details.qa > summary:hover { color: var(--umber); }
+details.qa > summary .plus {
+  flex: none; font-family: 'Jost', sans-serif; font-weight: 300;
+  font-size: 22px; line-height: 1; color: var(--travertine);
+  transition: transform 0.25s ease;
+}
+details.qa[open] > summary .plus { transform: rotate(45deg); }
+details.qa > .answer { padding: 0 2px 26px; max-width: 680px; }
+details.qa > .answer p { margin: 0 0 12px; font-size: 15px; line-height: 1.85; color: #43403A; }
+details.qa > .answer p:last-child { margin-bottom: 0; }
+details.qa > .answer strong { font-weight: 500; color: var(--espresso); }
+details.qa > .answer ul { margin: 4px 0 12px; padding-left: 20px; }
+details.qa > .answer li { font-size: 15px; line-height: 1.8; color: #43403A; margin-bottom: 6px; }
+.phrase { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--espresso); }
+table.dist { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 14px; }
+table.dist th { text-align: left; font-weight: 500; color: var(--espresso); padding: 8px 10px 8px 0; border-bottom: 0.5px solid var(--hairline); }
+table.dist td { padding: 8px 10px 8px 0; border-bottom: 0.5px solid var(--hairline-soft); color: #43403A; vertical-align: top; line-height: 1.5; }
 
 /* ── Stillness for anyone who asked for it ── */
 @media (prefers-reduced-motion: reduce) {

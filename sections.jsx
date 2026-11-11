@@ -118,7 +118,7 @@ function Nav({ monogram, onRSVP, solid = false }) {
               color: 'rgba(245,240,232,0.75)',
             }}
           >
-            01 · VI · 27
+            VI · 01 · 27
           </span>
         </a>
 
@@ -236,10 +236,11 @@ function Nav({ monogram, onRSVP, solid = false }) {
    UmbriaClock — the hour at the villa, ticking in the hero frame
 ─────────────────────────────────────────────────────────────────*/
 function UmbriaClock() {
-  const fmt = useRef(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' }));
-  const [t, setT] = useState(() => fmt.current.format(new Date()));
+  const fmt = useRef(new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Rome', hour: 'numeric', minute: '2-digit', hour12: true }));
+  const now = () => fmt.current.format(new Date()).replace(/\s/g, '').toLowerCase(); // "3:45pm"
+  const [t, setT] = useState(now);
   useEffect(() => {
-    const id = setInterval(() => setT(fmt.current.format(new Date())), 15000);
+    const id = setInterval(() => setT(now()), 15000);
     return () => clearInterval(id);
   }, []);
   return <span>{t}</span>;
@@ -414,13 +415,13 @@ function InvitationNote({ italicAccents }) {
               textWrap: 'pretty',
             }}
           >
-            Come spend four days with us in the hills of Umbria. Long dinners,
+            Come spend three days with us in the hills of Umbria. Long dinners,
             good wine, and two people you love promising the rest of their lives
             to each other.
           </p>
           <div className="reveal reveal-delay-2" style={{ marginTop: 56, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
             <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
-            <span className="small-caps" style={{ color: 'var(--umber)' }}>1–4 June 2027</span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>June 1–4, 2027</span>
             <span style={{ width: 32, height: 0.5, background: 'var(--travertine)' }}></span>
           </div>
         </div>

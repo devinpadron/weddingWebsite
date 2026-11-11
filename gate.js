@@ -4,7 +4,7 @@
   // publishable key below is safe to embed in client code by design.
   const SUPABASE_URL = 'https://yiuglondgjbgyqfoqunz.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2';
-  const STORAGE_KEY   = 'wedding_invited_v1';
+  const STORAGE_KEY   = 'wedding_invited_v2';
   const NAME_KEY      = 'wedding_visitor_name';
 
   // Paste your Google Apps Script web-app URL here. Format:
