@@ -577,7 +577,7 @@ const fmtDate = (iso) => {
 };
 
 const CONTACT_EMAIL = 'samanthaanddevin2027@gmail.com';
-// Fonteverde 10% discount code. Leave empty until we have it; the page then says "coming soon".
+// Fonteverde 15% discount code. Leave empty until we have it; the page then says "coming soon".
 const FONTEVERDE_CODE = '';
 
 function CodeHelp({ style }) {
@@ -711,9 +711,14 @@ function StaySection() {
     if (!trimmed) return;
     setState('loading');
     try {
-      const res = await fetch(SB_URL + '/rest/v1/rpc/lookup_accommodation', {
-        method: 'POST', headers: sbHeaders, body: JSON.stringify({ guest_code: trimmed }),
+      // Send along the name typed at the site gate so Admin can see who looked up which code.
+      let visitor = '';
+      try { visitor = localStorage.getItem('wedding_visitor_name') || ''; } catch (e) {}
+      const call = (args) => fetch(SB_URL + '/rest/v1/rpc/lookup_accommodation', {
+        method: 'POST', headers: sbHeaders, body: JSON.stringify(args),
       });
+      let res = await call({ guest_code: trimmed, visitor_name: visitor });
+      if (res.status === 404) res = await call({ guest_code: trimmed }); // database not yet updated to accept the name
       const rows = await res.json();
       if (Array.isArray(rows) && rows.length > 0) { setData(rows[0]); setState('found'); }
       else setState('not_found');
@@ -823,7 +828,7 @@ function StaySection() {
                     roughly a 20 minute drive, set in the secluded, calm Tuscan hills.
                   </p>
                   <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
-                    We have a <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>10% coupon code</strong> for this location, but you are free to stay wherever you would like.{' '}
+                    We have a <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>15% coupon code</strong> for this location, but you are free to stay wherever you would like.{' '}
                     {FONTEVERDE_CODE
                       ? <>Use code <strong style={{ fontWeight: 500, color: 'var(--espresso)', letterSpacing: '0.08em' }}>{FONTEVERDE_CODE}</strong> when you book.</>
                       : 'The code is coming soon; check back here before you book.'}

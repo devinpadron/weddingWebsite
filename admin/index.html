@@ -29,6 +29,32 @@
   .wrap { overflow-x: auto; }
   .muted { color: var(--umber); font-size: 13px; }
   .login { max-width: 420px; margin: 120px auto 0; }
+
+  /* Rooms & codes: one card per invitation, nothing hidden off to the side */
+  .cards { display: grid; gap: 16px; }
+  h2.group { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: 30px; margin: 40px 0 14px; padding-bottom: 10px; border-bottom: 0.5px solid var(--hairline); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  h2.group span { font-family: 'Jost', sans-serif; font-style: normal; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--umber); font-weight: 400; }
+  .card { background: #fff; border: 0.5px solid var(--hairline); padding: 22px 24px; }
+  .card.new { background: rgba(200, 184, 154, 0.18); border-style: dashed; }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .card-code { font-family: 'Cormorant Garamond', serif; font-size: 28px; line-height: 1; margin: 0; letter-spacing: 0.04em; }
+  .card-names { margin: 6px 0 0; font-size: 14px; color: var(--umber); white-space: pre-wrap; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 5px 10px; border: 0.5px solid var(--hairline); font-weight: 400; }
+  .chip.villa { background: var(--espresso); color: var(--parchment); border-color: var(--espresso); }
+  .chip.paid { background: #E3EBDD; color: #2F4A27; border-color: #B9CBAE; }
+  .chip.unpaid { background: #F3E3DC; color: #7A2E22; border-color: #DDB9AD; }
+  .fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 16px; }
+  .fields.pay { margin-top: 16px; padding-top: 16px; border-top: 0.5px solid var(--hairline-soft); align-items: end; }
+  .f { display: block; min-width: 0; }
+  .f.wide { grid-column: span 2; }
+  .f > span { display: block; margin-bottom: 5px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--umber); font-weight: 400; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; padding-bottom: 6px; }
+  .check input { width: 18px; height: 18px; }
+  @media (max-width: 760px) {
+    .fields { grid-template-columns: 1fr 1fr; }
+    .f.wide { grid-column: 1 / -1; }
+  }
 </style>
 </head>
 <body>
@@ -144,31 +170,55 @@ function RoomRow({ r, pw, onSaved, onDeleted, isNew }) {
     try { await rpc('admin_delete_accommodation', { pw, p_code: v.code }); onDeleted(); }
     catch (e) { setErr(e.message); setBusy(false); }
   };
+  const villa = v.accommodation_type === 'villa';        // what the form currently says
+  const savedVilla = r.accommodation_type === 'villa';   // what is saved (drives the badges)
+  const F = ({ label, wide, children }) => (
+    <label className={'f' + (wide ? ' wide' : '')}><span>{label}</span>{children}</label>
+  );
   return (
-    <tr>
-      <td><input value={v.code} onChange={set('code')} placeholder="CODE" disabled={!isNew} style={{ textTransform: 'uppercase', minWidth: 90 }} /></td>
-      <td><textarea value={v.guest_name} onChange={set('guest_name')} placeholder="Names on the invitation" style={{ minWidth: 160 }} /></td>
-      <td>
-        <select value={v.accommodation_type} onChange={set('accommodation_type')}>
-          <option value="villa">Villa (on site)</option>
-          <option value="hotel">Off site (Fonteverde)</option>
-        </select>
-      </td>
-      <td><input value={v.room_detail || ''} onChange={set('room_detail')} placeholder="Room name / number" style={{ minWidth: 120 }} /></td>
-      <td><input type="date" value={v.check_in || ''} onChange={set('check_in')} /></td>
-      <td><input type="date" value={v.check_out || ''} onChange={set('check_out')} /></td>
-      <td><textarea value={v.notes || ''} onChange={set('notes')} placeholder="Shown to the guest" style={{ minWidth: 160 }} /></td>
-      <td><input value={v.room_price || ''} onChange={set('room_price')} placeholder="e.g. €1,200" style={{ minWidth: 90 }} /></td>
-      <td><input value={v.payment_url || ''} onChange={set('payment_url')} placeholder="Stripe payment link" style={{ minWidth: 160 }} /></td>
-      <td style={{ textAlign: 'center' }}><input type="checkbox" checked={!!v.paid} onChange={(e) => setV({ ...v, paid: e.target.checked })} style={{ width: 'auto' }} /></td>
-      <td style={{ whiteSpace: 'nowrap' }}>
-        <div className="row">
-          <button className="btn" onClick={save} disabled={busy || !v.code.trim()}>{isNew ? 'Add' : 'Save'}</button>
-          {!isNew && <button className="btn danger" onClick={del} disabled={busy}>Delete</button>}
+    <div className={'card' + (isNew ? ' new' : '')}>
+      <div className="card-head">
+        <div>
+          <p className="card-code">{isNew ? 'Add a new code' : v.code}</p>
+          {!isNew && <p className="card-names">{r.guest_name || 'No names yet'}</p>}
         </div>
-        {err && <p className="err">{err}</p>}
-      </td>
-    </tr>
+        {!isNew && (
+          <div className="chips">
+            <span className={'chip ' + (savedVilla ? 'villa' : 'off')}>{savedVilla ? 'Villa' : 'Off site'}</span>
+            {savedVilla && <span className={'chip ' + (r.paid_at ? 'paid' : 'unpaid')}>{r.paid_at ? 'Paid' : 'Not paid'}</span>}
+          </div>
+        )}
+      </div>
+
+      <div className="fields">
+        {isNew && F({ label: 'Code', children: <input value={v.code} onChange={set('code')} placeholder="CODE" style={{ textTransform: 'uppercase' }} /> })}
+        {F({ label: 'Guests on the invitation', wide: true, children: <textarea value={v.guest_name} onChange={set('guest_name')} placeholder="Names on the invitation" /> })}
+        {F({ label: 'Where', children: (
+          <select value={v.accommodation_type} onChange={set('accommodation_type')}>
+            <option value="villa">Villa (on site)</option>
+            <option value="hotel">Off site (Fonteverde)</option>
+          </select>
+        ) })}
+        {F({ label: 'Room', children: <input value={v.room_detail || ''} onChange={set('room_detail')} placeholder="Room name / number" /> })}
+        {F({ label: 'Check-in', children: <input type="date" value={v.check_in || ''} onChange={set('check_in')} /> })}
+        {F({ label: 'Check-out', children: <input type="date" value={v.check_out || ''} onChange={set('check_out')} /> })}
+        {F({ label: 'Notes (shown to the guest)', wide: true, children: <textarea value={v.notes || ''} onChange={set('notes')} placeholder="Shown to the guest" /> })}
+      </div>
+
+      {villa && (
+        <div className="fields pay">
+          {F({ label: 'Room price', children: <input value={v.room_price || ''} onChange={set('room_price')} placeholder="e.g. €1,200" /> })}
+          {F({ label: 'Stripe payment link', wide: true, children: <input value={v.payment_url || ''} onChange={set('payment_url')} placeholder="https://buy.stripe.com/…" /> })}
+          <label className="check"><input type="checkbox" checked={!!v.paid} onChange={(e) => setV({ ...v, paid: e.target.checked })} /> Paid</label>
+        </div>
+      )}
+
+      <div className="row" style={{ marginTop: 18 }}>
+        <button className="btn" onClick={save} disabled={busy || !v.code.trim()}>{busy ? 'Saving…' : isNew ? 'Add code' : 'Save changes'}</button>
+        {!isNew && <button className="btn danger" onClick={del} disabled={busy}>Delete</button>}
+        {err && <span className="err" style={{ marginTop: 0 }}>{err}</span>}
+      </div>
+    </div>
   );
 }
 
@@ -179,21 +229,36 @@ function Rooms({ pw }) {
   useEffect(() => { load(); }, []);
   if (err) return <p className="err">{err}</p>;
   if (!rows) return <p className="muted">Loading…</p>;
+  const villa = rows.filter((r) => r.accommodation_type === 'villa');
+  const paid = villa.filter((r) => r.paid_at).length;
+  const offSite = rows.filter((r) => r.accommodation_type !== 'villa');
+  // Not-paid rooms first, so the ones still owing are at the top.
+  const villaSorted = [...villa].sort((x, y) => (x.paid_at ? 1 : 0) - (y.paid_at ? 1 : 0));
   return (
     <>
-      <p className="muted" style={{ marginBottom: 14 }}>
-        One code per invitation. Guests sharing a villa room see each other&rsquo;s names when the room field matches exactly.
-        Off-site guests are shown Fonteverde. Property is filled in automatically if left blank.
-        Price, payment link and Paid are only shown to villa guests: type the price exactly as guests should see it,
+      <p className="muted" style={{ marginBottom: 6 }}>
+        {rows.length} codes · {villa.length} at the villa · {rows.length - villa.length} off site · {paid} of {villa.length} villa rooms paid
+      </p>
+      <p className="muted" style={{ marginBottom: 18 }}>
+        One card per invitation code. Guests sharing a villa room see each other&rsquo;s names when the Room field matches exactly.
+        Off-site guests are shown Fonteverde. For villa guests, type the price exactly as they should see it,
         paste that room&rsquo;s Stripe payment link, and tick Paid once the payment arrives.
       </p>
-      <div className="wrap"><table>
-        <thead><tr><th>Code</th><th>Guests</th><th>Where</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Notes</th><th>Price</th><th>Payment link</th><th>Paid</th><th></th></tr></thead>
-        <tbody>
-          {rows.map((r) => <RoomRow key={r.code} r={r} pw={pw} onSaved={load} onDeleted={load} />)}
-          <RoomRow key="new" r={EMPTY} pw={pw} onSaved={load} onDeleted={load} isNew />
-        </tbody>
-      </table></div>
+      <div className="cards">
+        <RoomRow key="new" r={EMPTY} pw={pw} onSaved={load} onDeleted={load} isNew />
+      </div>
+
+      <h2 className="group">At the villa <span>{villa.length} codes · {paid} paid · {villa.length - paid} not paid</span></h2>
+      <div className="cards">
+        {villaSorted.map((r) => <RoomRow key={r.code} r={r} pw={pw} onSaved={load} onDeleted={load} />)}
+        {villa.length === 0 && <p className="muted">No villa codes yet.</p>}
+      </div>
+
+      <h2 className="group">Off site <span>{offSite.length} codes · no payment collected</span></h2>
+      <div className="cards">
+        {offSite.map((r) => <RoomRow key={r.code} r={r} pw={pw} onSaved={load} onDeleted={load} />)}
+        {offSite.length === 0 && <p className="muted">No off-site codes yet.</p>}
+      </div>
     </>
   );
 }
@@ -255,9 +320,9 @@ function Lookups({ pw }) {
     <>
       <p className="muted" style={{ marginBottom: 14 }}>{seen.size} different valid codes looked up · {rows.length} lookups total (latest 500)</p>
       <div className="wrap"><table>
-        <thead><tr><th>When</th><th>Code entered</th><th>Found</th></tr></thead>
+        <thead><tr><th>When</th><th>Name entered at login</th><th>Code entered</th><th>Found</th></tr></thead>
         <tbody>{rows.map((r) => (
-          <tr key={r.id}><td style={{ whiteSpace: 'nowrap' }}>{fmt(r.looked_up_at)}</td><td>{r.code}</td><td>{r.found ? 'yes' : 'no'}</td></tr>
+          <tr key={r.id}><td style={{ whiteSpace: 'nowrap' }}>{fmt(r.looked_up_at)}</td><td>{r.visitor_name || '—'}</td><td>{r.code}</td><td>{r.found ? 'yes' : 'no'}</td></tr>
         ))}</tbody>
       </table></div>
     </>
