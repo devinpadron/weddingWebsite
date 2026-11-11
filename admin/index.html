@@ -58,7 +58,7 @@ async function rpc(fn, args) {
   return text ? JSON.parse(text) : null;
 }
 
-const fmt = (iso) => iso ? new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+const fmt = (iso) => iso ? new Date(iso).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
 
 function Login({ onOk }) {
   const [pw, setPw] = useState('');
@@ -73,7 +73,7 @@ function Login({ onOk }) {
   return (
     <form className="login" onSubmit={go}>
       <h1>Admin</h1>
-      <p className="muted">Guest replies, rooms and codes.</p>
+      <p className="muted">Guest replies, rooms, payments and passports.</p>
       <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Admin password" autoFocus style={{ marginTop: 20, padding: 12 }} />
       <button className="btn" disabled={busy || !pw} style={{ marginTop: 14 }}>{busy ? 'Checking…' : 'Enter'}</button>
       {err && <p className="err">{err}</p>}
@@ -120,10 +120,10 @@ function Rsvps({ pw }) {
   );
 }
 
-const EMPTY = { code: '', guest_name: '', accommodation_type: 'villa', property_name: '', room_detail: '', check_in: '2027-06-01', check_out: '2027-06-04', notes: '', booking_url: '' };
+const EMPTY = { code: '', guest_name: '', accommodation_type: 'villa', property_name: '', room_detail: '', check_in: '2027-06-01', check_out: '2027-06-04', notes: '', booking_url: '', room_price: '', payment_url: '', paid_at: null };
 
 function RoomRow({ r, pw, onSaved, onDeleted, isNew }) {
-  const [v, setV] = useState(r);
+  const [v, setV] = useState({ ...r, paid: !!r.paid_at });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const set = (k) => (e) => setV({ ...v, [k]: e.target.value });
@@ -134,7 +134,8 @@ function RoomRow({ r, pw, onSaved, onDeleted, isNew }) {
         pw, p_code: v.code, p_guest_name: v.guest_name, p_type: v.accommodation_type, p_property: v.property_name,
         p_room: v.room_detail, p_check_in: v.check_in || null, p_check_out: v.check_out || null, p_notes: v.notes, p_booking_url: v.booking_url,
       });
-      onSaved(); if (isNew) setV(EMPTY);
+      await rpc('admin_set_payment', { pw, p_code: v.code, p_price: v.room_price || '', p_payment_url: v.payment_url || '', p_paid: !!v.paid });
+      onSaved(); if (isNew) setV({ ...EMPTY, paid: false });
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
   const del = async () => {
@@ -157,6 +158,9 @@ function RoomRow({ r, pw, onSaved, onDeleted, isNew }) {
       <td><input type="date" value={v.check_in || ''} onChange={set('check_in')} /></td>
       <td><input type="date" value={v.check_out || ''} onChange={set('check_out')} /></td>
       <td><textarea value={v.notes || ''} onChange={set('notes')} placeholder="Shown to the guest" style={{ minWidth: 160 }} /></td>
+      <td><input value={v.room_price || ''} onChange={set('room_price')} placeholder="e.g. €1,200" style={{ minWidth: 90 }} /></td>
+      <td><input value={v.payment_url || ''} onChange={set('payment_url')} placeholder="Stripe payment link" style={{ minWidth: 160 }} /></td>
+      <td style={{ textAlign: 'center' }}><input type="checkbox" checked={!!v.paid} onChange={(e) => setV({ ...v, paid: e.target.checked })} style={{ width: 'auto' }} /></td>
       <td style={{ whiteSpace: 'nowrap' }}>
         <div className="row">
           <button className="btn" onClick={save} disabled={busy || !v.code.trim()}>{isNew ? 'Add' : 'Save'}</button>
@@ -180,13 +184,61 @@ function Rooms({ pw }) {
       <p className="muted" style={{ marginBottom: 14 }}>
         One code per invitation. Guests sharing a villa room see each other&rsquo;s names when the room field matches exactly.
         Off-site guests are shown Fonteverde. Property is filled in automatically if left blank.
+        Price, payment link and Paid are only shown to villa guests: type the price exactly as guests should see it,
+        paste that room&rsquo;s Stripe payment link, and tick Paid once the payment arrives.
       </p>
       <div className="wrap"><table>
-        <thead><tr><th>Code</th><th>Guests</th><th>Where</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Notes</th><th></th></tr></thead>
+        <thead><tr><th>Code</th><th>Guests</th><th>Where</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Notes</th><th>Price</th><th>Payment link</th><th>Paid</th><th></th></tr></thead>
         <tbody>
           {rows.map((r) => <RoomRow key={r.code} r={r} pw={pw} onSaved={load} onDeleted={load} />)}
           <RoomRow key="new" r={EMPTY} pw={pw} onSaved={load} onDeleted={load} isNew />
         </tbody>
+      </table></div>
+    </>
+  );
+}
+
+function Passports({ pw }) {
+  const [rows, setRows] = useState(null);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_passports', { pw }).then(setRows).catch((e) => setErr(e.message));
+  useEffect(() => { load(); }, []);
+  const call = async (action, id) => {
+    const res = await fetch(`${SB_URL}/functions/v1/passport-admin`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SB_KEY }, body: JSON.stringify({ pw, action, id }),
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || res.status + '');
+    return out;
+  };
+  const view = async (id) => {
+    const w = window.open('', '_blank'); // opened first so the browser doesn't block it
+    try { const { url } = await call('sign', id); w.location = url; }
+    catch (e) { w.close(); setErr(e.message); }
+  };
+  const del = async (r) => {
+    if (!window.confirm(`Permanently delete the passport for ${r.guest_name}?`)) return;
+    try { await call('delete', r.id); load(); } catch (e) { setErr(e.message); }
+  };
+  if (!rows) return err ? <p className="err">{err}</p> : <p className="muted">Loading…</p>;
+  return (
+    <>
+      <p className="muted" style={{ marginBottom: 14 }}>
+        {rows.length} passport{rows.length === 1 ? '' : 's'} received. Files are private; View opens a link that expires after two minutes.
+        Delete them all once the front desk has what it needs.
+      </p>
+      {err && <p className="err">{err}</p>}
+      <div className="wrap"><table>
+        <thead><tr><th>Code</th><th>Name on passport</th><th>Uploaded</th><th></th></tr></thead>
+        <tbody>{rows.map((r) => (
+          <tr key={r.id}>
+            <td>{r.code}</td><td>{r.guest_name}</td><td style={{ whiteSpace: 'nowrap' }}>{fmt(r.uploaded_at)}</td>
+            <td style={{ whiteSpace: 'nowrap' }}><div className="row">
+              <button className="btn" onClick={() => view(r.id)}>View</button>
+              <button className="btn danger" onClick={() => del(r)}>Delete</button>
+            </div></td>
+          </tr>
+        ))}</tbody>
       </table></div>
     </>
   );
@@ -234,7 +286,7 @@ function App() {
   const [pw, setPw] = useState(() => sessionStorage.getItem('admin_pw') || '');
   const [tab, setTab] = useState('rsvps');
   if (!pw) return <Login onOk={setPw} />;
-  const tabs = [['rsvps', 'RSVPs'], ['rooms', 'Rooms & codes'], ['lookups', 'Code lookups'], ['password', 'Password']];
+  const tabs = [['rsvps', 'RSVPs'], ['rooms', 'Rooms & codes'], ['passports', 'Passports'], ['lookups', 'Code lookups'], ['password', 'Password']];
   return (
     <>
       <div className="row" style={{ justifyContent: 'space-between' }}>
@@ -244,6 +296,7 @@ function App() {
       <div className="tabs">{tabs.map(([k, l]) => <button key={k} className={'tab' + (tab === k ? ' on' : '')} onClick={() => setTab(k)}>{l}</button>)}</div>
       {tab === 'rsvps' && <Rsvps key="r" pw={pw} />}
       {tab === 'rooms' && <Rooms key="m" pw={pw} />}
+      {tab === 'passports' && <Passports key="p" pw={pw} />}
       {tab === 'lookups' && <Lookups key="l" pw={pw} />}
       {tab === 'password' && <Password pw={pw} onChanged={setPw} />}
     </>

@@ -44,7 +44,7 @@ function buildEmail(r: Record<string, unknown>) {
 
   const closing = attending
     ? "Check the website for the schedule, travel notes and where you are staying. See you in June."
-    : "We will raise a glass for you on June 2.";
+    : "We will raise a glass for you on Wednesday, June 2nd.";
 
   const html = `<!doctype html><html><body style="margin:0;background:#F5F0E8;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:40px 16px;">
@@ -52,7 +52,7 @@ function buildEmail(r: Record<string, unknown>) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#FFFFFF;border:1px solid rgba(124,110,90,.28);">
         <tr><td style="padding:44px 44px 8px;text-align:center;">
           <div style="font-family:Georgia,'Times New Roman',serif;font-size:30px;color:#2C2A25;letter-spacing:.04em;">S &amp; D</div>
-          <div style="margin-top:10px;color:#7A6E5A;font-size:10px;letter-spacing:.32em;text-transform:uppercase;font-family:Arial,sans-serif;">1&ndash;4 June 2027 &middot; Umbria, Italy</div>
+          <div style="margin-top:10px;color:#7A6E5A;font-size:10px;letter-spacing:.32em;text-transform:uppercase;font-family:Arial,sans-serif;">June 1&ndash;4, 2027 &middot; Umbria, Italy</div>
         </td></tr>
         <tr><td style="padding:20px 44px;">
           <p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#2C2A25;line-height:1.3;margin:0 0 18px;text-align:center;">${attending ? "We can’t wait to see you." : "We’ll miss you."}</p>

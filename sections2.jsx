@@ -3,33 +3,33 @@
 const { useState: useState2, useEffect: useEffect2, useRef: useRef2 } = React;
 
 /* ────────────────────────────────────────────────────────────────
-   ScheduleSection — the four days
+   ScheduleSection — three days, plus the morning everyone leaves
 ─────────────────────────────────────────────────────────────────*/
 function ScheduleSection() {
   const ref = useReveal();
   const days = [
     {
-      num: 'I', day: 'Tuesday', date: '1 June',
+      num: 'I', day: 'Tuesday', date: 'June 1st',
       title: 'Arrival & Welcome Party',
       subtitle: 'Evening in La Piazza',
       time: 'Timing TBD',
-      timeNote: 'Staying on site? Check-in is 2–7pm. Please try your absolute best to arrive in that window.',
+      checkIn: '2–7pm',
+      checkInNote: 'Staying on site? Please try your absolute best to arrive in that window.',
       attire: 'Italian Summer Whites',
       attireDetail: 'Cocktail attire: chic white cocktail dresses, matching sets, white button-downs, light fabrics and linens.',
       note: 'Drop your bags, get settled, and meet us on site for drinks, food, and to see everyone you’ll be spending the next few days with.',
     },
     {
-      num: 'II', day: 'Wednesday', date: '2 June',
+      num: 'II', day: 'Wednesday', date: 'June 2nd',
       title: 'The Wedding',
       time: 'Timing TBD',
       attire: 'Black Tie',
       attireDetail: 'Women: colorful dresses.',
       note: 'The day itself. The ceremony at the villa, then drinks, dinner, and dancing until late.',
-      notice: 'We’re having an unplugged ceremony. Please keep phones and cameras put away during the ceremony.',
       featured: true,
     },
     {
-      num: 'III', day: 'Thursday', date: '3 June',
+      num: 'III', day: 'Thursday', date: 'June 3rd',
       title: 'Rest & Recovery',
       time: 'Timing TBD',
       attire: 'Poolside Chic',
@@ -37,10 +37,11 @@ function ScheduleSection() {
       note: 'A late BBQ lunch and drinks by the pool.',
     },
     {
-      num: 'IV', day: 'Friday', date: '4 June',
+      // Not one of the three days: the morning everyone heads home.
+      departure: true, day: 'Friday', date: 'June 4th',
       title: 'Goodbye Breakfast',
       time: 'Check-out 11:00am',
-      attire: 'Casual', // TODO: confirm Day 4 attire with Sam
+      attire: 'Casual', // TODO: confirm departure-morning attire with Sam
       note: 'For everyone staying on the property. Check-out is at 11:00am.',
     },
   ];
@@ -52,7 +53,7 @@ function ScheduleSection() {
         <div className="container-narrow">
           <p className="micro reveal" style={{ marginBottom: 26 }}>The Week</p>
           <h1 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(52px, 8vw, 104px)', margin: 0, fontWeight: 300, lineHeight: 1.02 }}>
-            Four <em style={{ fontWeight: 300 }}>days</em>
+            Three <em style={{ fontWeight: 300 }}>days</em>
           </h1>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
             Here&rsquo;s what&rsquo;s happening and when. Exact times are still being
@@ -60,18 +61,18 @@ function ScheduleSection() {
           </p>
           <div className="reveal reveal-delay-3" style={{ marginTop: 44, display: 'inline-flex', alignItems: 'center', gap: 18 }}>
             <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
-            <span className="small-caps" style={{ color: 'var(--umber)' }}>1–4 June 2027 &middot; San Pietro Aquaeortus, Umbria</span>
+            <span className="small-caps" style={{ color: 'var(--umber)' }}>June 1–4, 2027 &middot; San Pietro Aquaeortus, Umbria</span>
             <span style={{ width: 40, height: 0.5, background: 'var(--travertine)' }}></span>
           </div>
         </div>
       </div>
 
-      {/* Four patches of plaster, each cut by hand (see .giornata in site.css) */}
+      {/* Patches of plaster, each cut by hand (see .giornata in site.css) */}
       <div className="giornate">
       <div className="container-narrow" style={{ padding: '40px 32px 60px' }}>
         {days.map((d) => (
           <article
-            key={d.num}
+            key={d.date}
             className="day-row giornata reveal"
             style={{
               display: 'grid',
@@ -80,23 +81,14 @@ function ScheduleSection() {
             }}
           >
             <aside className="day-aside">
-              <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 14 }}>Day</p>
-              <div className="serif" style={{ fontSize: 84, fontStyle: 'italic', lineHeight: 0.9, color: d.featured ? 'var(--espresso)' : 'var(--travertine)', fontWeight: 300 }}>
-                {d.num}
-              </div>
-              <p className="serif-italic" style={{ fontSize: 24, margin: '18px 0 0', color: 'var(--espresso)' }}>{d.day}</p>
+              <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 14 }}>{d.departure ? 'Departure' : 'Day'}</p>
+              {d.num && (
+                <div className="serif" style={{ fontSize: 84, fontStyle: 'italic', lineHeight: 0.9, color: d.featured ? 'var(--espresso)' : 'var(--travertine)', fontWeight: 300 }}>
+                  {d.num}
+                </div>
+              )}
+              <p className="serif-italic" style={{ fontSize: 24, margin: d.num ? '18px 0 0' : 0, color: 'var(--espresso)' }}>{d.day}</p>
               <p className="micro" style={{ marginTop: 6 }}>{d.date}</p>
-              <div style={{ marginTop: 24, display: 'grid', gap: 10 }}>
-                <div>
-                  <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 4 }}>Time</p>
-                  <p className="small-caps" style={{ color: 'var(--espresso)' }}>{d.time}</p>
-                </div>
-                <div>
-                  <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 4 }}>Attire</p>
-                  <p className="small-caps" style={{ color: 'var(--umber)' }}>{d.attire}</p>
-                  <p className="micro" style={{ marginTop: 6, color: 'var(--travertine)', letterSpacing: '0.18em' }}>Outfit mood board to come</p>
-                </div>
-              </div>
             </aside>
 
             <div className="day-body">
@@ -105,25 +97,34 @@ function ScheduleSection() {
                   The main event
                 </span>
               )}
-              <h2 className="serif" style={{ fontSize: 'clamp(34px, 4vw, 48px)', margin: 0, fontWeight: 300, lineHeight: 1.1, textWrap: 'balance' }}>
+              <h2 className="serif" style={{ fontSize: d.departure ? 'clamp(28px, 3.2vw, 36px)' : 'clamp(34px, 4vw, 48px)', margin: 0, fontWeight: 300, lineHeight: 1.1, textWrap: 'balance' }}>
                 {d.title}
               </h2>
               {d.subtitle && (
                 <p className="serif-italic" style={{ fontSize: 24, margin: '10px 0 0', color: 'var(--umber)' }}>{d.subtitle}</p>
               )}
+
+              {/* The practical details, right under the title where nobody can miss them */}
+              <dl className="day-strip">
+                <div>
+                  <dt className="micro">Time</dt>
+                  <dd>{d.time}</dd>
+                </div>
+                {d.checkIn && (
+                  <div>
+                    <dt className="micro">Check-in</dt>
+                    <dd>{d.checkIn}<span>{d.checkInNote}</span></dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="micro">Attire</dt>
+                  <dd>{d.attire}{!d.departure && <span>Outfit mood board to come</span>}</dd>
+                </div>
+              </dl>
+
               <p style={{ marginTop: 22, fontSize: 16, lineHeight: 1.85, color: 'var(--umber)', maxWidth: 540 }}>
                 {d.note}
               </p>
-              {d.notice && (
-                <p style={{ marginTop: 16, fontSize: 16, lineHeight: 1.85, color: 'var(--espresso)', maxWidth: 540, fontWeight: 500 }}>
-                  {d.notice}
-                </p>
-              )}
-              {d.timeNote && (
-                <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 540 }}>
-                  <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>Check-in. </strong>{d.timeNote}
-                </p>
-              )}
               {d.attireDetail && (
                 <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 540 }}>
                   <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>What to wear. </strong>{d.attireDetail}
@@ -140,10 +141,10 @@ function ScheduleSection() {
         <div className="container-narrow">
           <p className="micro reveal" style={{ color: 'rgba(245,240,232,0.6)', marginBottom: 22 }}>Before you pack</p>
           <h2 className="serif reveal reveal-delay-1" style={{ fontSize: 'clamp(30px, 4vw, 46px)', margin: 0, fontWeight: 300, color: 'var(--parchment)', lineHeight: 1.15 }}>
-            Warm days, <em style={{ fontWeight: 300 }}>cooler evenings</em>
+            Hot days, <em style={{ fontWeight: 300 }}>cooler evenings</em>
           </h2>
           <p className="reveal reveal-delay-2" style={{ marginTop: 24, maxWidth: 520, margin: '24px auto 0', fontSize: 15, lineHeight: 1.8, color: 'rgba(245,240,232,0.72)' }}>
-            Early June in Umbria is sunny and warm, and it cools off after dark.
+            Early June in Umbria is sunny and hot, and it cools off after dark.
             Much of the week is on stone and garden paths, so bring block heels or
             flats rather than stilettos, and a light layer for the evenings.
           </p>
@@ -158,8 +159,15 @@ function ScheduleSection() {
           .day-row { grid-template-columns: 1fr !important; gap: 24px !important; }
           .day-aside { display: flex; align-items: baseline; flex-wrap: wrap; gap: 16px; }
           .day-aside > p:first-child { width: 100%; margin-bottom: 0; }
-          .day-aside > div:last-child { display: flex !important; gap: 28px; margin-top: 8px !important; }
+          .day-aside > p { margin-top: 0 !important; }
+          .day-strip > div { grid-template-columns: 1fr !important; gap: 4px !important; }
         }
+        .day-strip { margin: 24px 0 0; max-width: 540px; border: 0.5px solid var(--hairline); background: rgba(200, 184, 154, 0.16); }
+        .day-strip > div { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: baseline; padding: 14px 20px; }
+        .day-strip > div + div { border-top: 0.5px solid var(--hairline-soft); }
+        .day-strip dt { margin: 0; }
+        .day-strip dd { margin: 0; font-size: 17px; line-height: 1.4; font-weight: 400; color: var(--espresso); }
+        .day-strip dd span { display: block; margin-top: 4px; font-size: 13px; line-height: 1.6; font-weight: 300; color: var(--umber); }
       `}</style>
     </section>
   );
@@ -232,6 +240,20 @@ function ChalkMap() {
   );
 }
 
+/* Shared by the Travel page; the FAQ carries the same words in plain HTML. */
+function FonteverdeDirections() {
+  const p = { margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' };
+  return (
+    <>
+      <p style={p}>
+        Follow the same steps as everyone else as far as <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>Fabro-Ficulle</strong> station.
+        From there, Fonteverde (Località Terme 1, San Casciano dei Bagni) is roughly a 20 to 30 minute drive, so book a taxi in advance
+        or pick up a rental car at the airport.
+      </p>
+    </>
+  );
+}
+
 /* ────────────────────────────────────────────────────────────────
    TravelSection — how to reach the villa
 ─────────────────────────────────────────────────────────────────*/
@@ -239,22 +261,29 @@ const SB_URL = 'https://yiuglondgjbgyqfoqunz.supabase.co';
 const SB_KEY = 'sb_publishable_ot6gkuv71siQwCe6dd4A0A_1ANgCQi2';
 const sbHeaders = { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
+const AIRPORT = 'Rome Fiumicino Airport (FCO)';
+
 function TravelSection() {
   const ref = useReveal();
   const [from, setFrom] = useState2('Rome');
 
+  const B = ({ children }) => <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>{children}</strong>;
   const steps = [
-    { k: '01 · Fly', v: 'Rome Fiumicino (FCO)', d: 'Rome is the nearest major airport. Aim to land on 1 June or, better, a day or two before so you have time to settle in.' },
-    { k: '02 · Train', v: 'FCO to Fabro-Ficulle', d: 'Take the Leonardo Express from the airport to Roma Termini, then a Regionale toward Florence that stops at Fabro-Ficulle. We know most apps will tell you to go to Orvieto. We recommend Fabro-Ficulle instead: it’s closer to the villa and on the direct line from Rome.' },
-    { k: '03 · Drive', v: 'Fabro-Ficulle to the villa', d: 'The villa is a 15 to 20 minute drive from the station. Book a taxi in advance with one of the drivers below, or pick up a rental car at the airport and take the A1 north to the Fabro exit.' },
+    <>Fly into <B>{AIRPORT}</B>. Aim to land on Tuesday, June 1st or, better, a day or two before.</>,
+    <>Follow the signs to the <B>train station</B> inside the airport.</>,
+    <>Buy <B>one ticket</B>, directly from <B>Fiumicino Aeroporto</B> to <B>Fabro-Ficulle</B>. Use the Trenitalia app, trenitalia.com, or the machines in the station (they have an English option).</>,
+    <>You might have to <B>change trains in Rome</B>, at either <B>Roma Termini</B> or <B>Roma Tiburtina</B>. Your ticket tells you which one.</>,
+    <>Look for the <B>train number</B> on your ticket, then find that number on the departures board to see exactly which track (<em>binario</em>) it leaves from.</>,
+    <>Get off at <B>Fabro-Ficulle</B>. Most apps will send you to Orvieto. Ignore them: Fabro-Ficulle is closer to the villa.</>,
+    <>Take your <B>pre-booked taxi</B> from the station to the villa, a 15 to 20 minute drive. Taxis don&rsquo;t wait at the station, so book one of the drivers below in advance.</>,
   ];
 
   // Routes to Fabro-Ficulle by origin. Times are approximate; check Trenitalia before you book.
   const origins = {
     Rome: [
-      ['Airport to Rome', 'Leonardo Express from FCO to Roma Termini: about 32 minutes, every 15 to 20 minutes, about €14. Buy at the machines in the station under the terminal.'],
+      ['From the airport', 'From ' + AIRPORT + ', buy one ticket from Fiumicino Aeroporto to Fabro-Ficulle. Depending on the train, you change in Rome at either Roma Termini or Roma Tiburtina. Allow about 3 hours in all.'],
       ['Rome to Fabro-Ficulle', 'From Roma Termini, a Regionale or Regionale Veloce toward Firenze or Chiusi stops at Fabro-Ficulle in about 1 hour 30, roughly €16 to €22. There are about 11 a day but they’re unevenly spaced, so check the timetable before you plan the connection.'],
-      ['By car', 'About 140 km and 1 hour 30 from central Rome, or about 1 hour 40 from FCO. A1 north, exit Fabro.'],
+      ['By car', 'About 140 km and 1 hour 30 from central Rome, or about 1 hour 40 from ' + AIRPORT + '. A1 north, exit Fabro.'],
     ],
     Naples: [
       ['Naples to Rome', 'Frecciarossa or Italo from Napoli Centrale to Roma Termini: about 1 hour 10. Book ahead for the best fares.'],
@@ -275,10 +304,11 @@ function TravelSection() {
     ['Giorgi', '+39 338 122 7823'],
   ];
 
+  // Drive times from the villa (routing estimates; adjust if Google Maps disagrees).
   const nearby = [
-    { name: 'Orvieto', img: '', note: 'A cathedral town on a volcanic cliff. Gothic façade, caves underneath, and a crisp Orvieto Classico.' },
-    { name: 'Assisi', img: '', note: 'The hill town of St. Francis, all frescoes and valley views, under an hour away.' },
-    { name: 'Perugia', img: '', note: 'Umbria’s capital. Medieval streets, a grand piazza, and very good chocolate.' },
+    { name: 'Orvieto', drive: 'About a 35 minute drive', img: '', note: 'A cathedral town on a volcanic cliff. Gothic façade, caves underneath, and a crisp Orvieto Classico.' },
+    { name: 'Perugia', drive: 'About a 1 hour 10 minute drive', img: '', note: 'Umbria’s capital. Medieval streets, a grand piazza, and very good chocolate.' },
+    { name: 'Assisi', drive: 'About a 1 hour 35 minute drive', img: '', note: 'The hill town of St. Francis, all frescoes and valley views.' },
   ];
 
   // YouTube video IDs (the part after v= in the URL). Leave empty to hide the section.
@@ -310,25 +340,25 @@ function TravelSection() {
         </div>
         <div className="journey-grid" style={{ marginTop: 30 }}>
         <div>
-          {steps.map((m, i) => (
-            <div
-              key={m.k}
-              className="reveal"
-              style={{
-                display: 'grid',
-                gap: 10,
-                padding: '26px 0',
-                borderTop: '0.5px solid var(--hairline)',
-                borderBottom: i === steps.length - 1 ? '0.5px solid var(--hairline)' : 'none',
-              }}
-            >
-              <div className="mode-head">
-                <p className="micro" style={{ color: 'var(--travertine)', marginBottom: 8 }}>{m.k}</p>
-                <p className="serif-italic" style={{ fontSize: 22, margin: 0, color: 'var(--espresso)', lineHeight: 1.2 }}>{m.v}</p>
-              </div>
-              <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)' }}>{m.d}</p>
-            </div>
-          ))}
+          <ol className="reveal" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {steps.map((step, i) => (
+              <li
+                key={i}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '44px 1fr',
+                  gap: 12,
+                  alignItems: 'baseline',
+                  padding: '20px 0',
+                  borderTop: '0.5px solid var(--hairline)',
+                  borderBottom: i === steps.length - 1 ? '0.5px solid var(--hairline)' : 'none',
+                }}
+              >
+                <span className="serif-italic" style={{ fontSize: 30, lineHeight: 1, color: 'var(--travertine)' }}>{i + 1}</span>
+                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.75, color: 'var(--umber)' }}>{step}</p>
+              </li>
+            ))}
+          </ol>
 
           {/* Taxis & drivers */}
           <div className="reveal" style={{ marginTop: 40 }}>
@@ -345,8 +375,14 @@ function TravelSection() {
               ))}
             </ul>
             <p style={{ margin: '16px 0 0', fontSize: 14, lineHeight: 1.8, color: 'var(--umber)' }}>
-              Prefer to drive? Hertz, Avis, Europcar, Sixt and Budget all have desks at Fiumicino. Book an automatic early; most rentals in Italy are manual.
+              Prefer to drive? Hertz, Avis, Europcar, Sixt and Budget all have desks at {AIRPORT}. Book an automatic early; most rentals in Italy are manual.
             </p>
+          </div>
+
+          {/* Off-site guests */}
+          <div className="reveal" style={{ marginTop: 40, padding: '26px 28px', background: 'var(--parchment)', border: '0.5px solid var(--hairline)' }}>
+            <p className="micro" style={{ marginBottom: 12 }}>Staying at Fonteverde?</p>
+            <FonteverdeDirections />
           </div>
 
           <a href="/faq/" className="small-caps reveal" style={{ display: 'inline-block', marginTop: 36, background: 'var(--espresso)', color: 'var(--parchment)', padding: '14px 32px', letterSpacing: '0.28em' }}>
@@ -416,7 +452,7 @@ function TravelSection() {
             Worth a <em style={{ fontWeight: 300 }}>detour</em>
           </h2>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 520, margin: '20px auto 0', fontSize: 15, lineHeight: 1.75, color: 'var(--umber)' }}>
-            Umbria and neighbouring Tuscany are worth a longer stay. A few favourites within an easy drive:
+            Umbria and neighbouring Tuscany are worth a longer stay. A few favourites you can drive to:
           </p>
         </div>
         <div className="nearby-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
@@ -427,10 +463,77 @@ function TravelSection() {
                 : <div className="ph" data-label={n.name + ' · photo to come'} style={{ aspectRatio: '4 / 3' }}></div>}
               <div style={{ padding: '28px 32px 0' }}>
                 <h3 className="serif" style={{ fontSize: 28, margin: 0, fontWeight: 300, fontStyle: 'italic' }}>{n.name}</h3>
+                <p className="small-caps" style={{ marginTop: 10, color: 'var(--espresso)', letterSpacing: '0.16em' }}>{n.drive}</p>
                 <p style={{ marginTop: 14, fontSize: 14, lineHeight: 1.75, color: 'var(--umber)' }}>{n.note}</p>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Travel questions (moved here from the FAQ) */}
+      <div className="container-narrow" style={{ padding: '50px 32px 100px' }}>
+        <div className="faq-section reveal">
+          <p className="micro" style={{ marginBottom: 16 }}>Good to know</p>
+          <h2>Travel questions</h2>
+
+          <details className="qa">
+            <summary>Which airport should I fly into?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p><strong>{AIRPORT}</strong>. It&rsquo;s the closest large international airport, about 1 hour 40 from the villa by car or around 3 hours by train. <strong>Florence Airport (FLR)</strong> also works if you&rsquo;d like to start your trip there; it&rsquo;s about 2 hours away by direct train.</p>
+            </div>
+          </details>
+
+          <details className="qa">
+            <summary>Is there a shuttle?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p>No. We aren&rsquo;t arranging group transport, so plan to reach the villa by train and taxi, or by rental car. The steps at the top of this page walk you through it.</p>
+            </div>
+          </details>
+
+          <details className="qa">
+            <summary>Do I need to rent a car?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p>We aren&rsquo;t arranging group travel, so a car is the easiest way to come and go. If you do rent, get an <strong>International Driving Permit</strong> from AAA before you leave. It&rsquo;s super easy, costs about $20, and takes less than 30 minutes at a branch. Bring your licence and two passport photos. Book an automatic early, as most rentals in Italy are manual.</p>
+              <p>If you don&rsquo;t rent a car, book a taxi from Fabro-Ficulle in advance. The numbers are above.</p>
+            </div>
+          </details>
+
+          <details className="qa">
+            <summary>Can I take the train?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p>Yes, and we recommend it. Take the train to <strong>Fabro-Ficulle</strong> station, not Orvieto. Most apps will route you to Orvieto, but Fabro-Ficulle is closer to the villa and on the direct line from Rome and Florence.</p>
+              <p>Trains in Italy are easy to understand once you know the basics. See <em>How do trains work in Italy?</em> below for best practices, and schedule a taxi from the station in advance.</p>
+            </div>
+          </details>
+
+          <details className="qa">
+            <summary>How far is the venue from Rome, Naples, Florence and Milan?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p>Times are approximate. Train times are to Fabro-Ficulle station, plus a 15 to 20 minute drive to the villa.</p>
+              <table className="dist">
+                <tbody>
+                  <tr><th>From</th><th>By train</th><th>By car</th></tr>
+                  <tr><td>{AIRPORT}</td><td>About 3 hours, change at Roma Termini or Roma Tiburtina</td><td>About 1 hour 40</td></tr>
+                  <tr><td>Rome (Termini)</td><td>About 1 hour 30, direct Regionale</td><td>About 1 hour 30 (140 km)</td></tr>
+                  <tr><td>Naples</td><td>3.5 to 4 hours, change at Roma Termini</td><td>About 3 hours (340 km)</td></tr>
+                  <tr><td>Florence</td><td>About 2 hours, direct Regionale</td><td>About 1 hour 20 (140 km)</td></tr>
+                  <tr><td>Milan</td><td>4.5 to 5 hours, change at Florence</td><td>About 4 hours (440 km)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details className="qa">
+            <summary>How do trains work in Italy?<span className="plus">+</span></summary>
+            <div className="answer">
+              <p><strong>Types of train.</strong> <span className="phrase">Frecciarossa</span> and <span className="phrase">Frecciargento</span> are Trenitalia&rsquo;s high-speed trains between big cities, and <span className="phrase">Italo</span> is a private company running similar ones. <span className="phrase">Intercity</span> trains are slower and cheaper. <span className="phrase">Regionale</span> and <span className="phrase">Regionale Veloce</span> are the local trains, and these are the ones that stop at Fabro-Ficulle.</p>
+              <p><strong>Buying tickets.</strong> Use <span className="phrase">trenitalia.com</span> or the Trenitalia app, or the machines at any station (they have an English option). Italo sells its own tickets at <span className="phrase">italotreno.com</span>. High-speed tickets come with a reserved seat and get cheaper the earlier you book. Regional tickets are a fixed price, so you can buy them the same day.</p>
+              <p><strong>Validating.</strong> If you buy a regional ticket in the app, it&rsquo;s tied to the train you chose and validates itself at departure. If the app shows a check-in prompt, tap it before you board. If you buy a <strong>paper</strong> regional ticket, you must stamp it in the small green and white machine on the platform before boarding, or you&rsquo;ll be fined.</p>
+              <p><strong>At the station.</strong> Your platform (<span className="phrase">binario</span>) appears on the departures board, usually 10 to 15 minutes before the train leaves. Match the train number on your ticket to the board. On high-speed trains, find your carriage (<span className="phrase">carrozza</span>) number on the ticket. Keep your ticket handy; the conductor checks it on board.</p>
+              <p><strong>Strikes.</strong> Train strikes (<span className="phrase">sciopero</span>) happen and are announced in advance. If you&rsquo;re travelling on a strike day, check Trenitalia for which trains still run.</p>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -464,11 +567,138 @@ function TravelSection() {
 /* ────────────────────────────────────────────────────────────────
    StaySection — invitation-code lookup: villa room, or Fonteverde
 ─────────────────────────────────────────────────────────────────*/
+const ordinal = (n) => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
+// "2027-06-01" → "Tuesday, June 1st"
 const fmtDate = (iso) => {
   if (!iso) return '';
   const d = new Date(iso + 'T12:00:00');
-  return isNaN(d) ? iso : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('en-US', { weekday: 'long' }) + ', ' + d.toLocaleDateString('en-US', { month: 'long' }) + ' ' + ordinal(d.getDate());
 };
+
+const CONTACT_EMAIL = 'samanthaanddevin2027@gmail.com';
+// Fonteverde 10% discount code. Leave empty until we have it; the page then says "coming soon".
+const FONTEVERDE_CODE = '';
+
+function CodeHelp({ style }) {
+  return (
+    <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--umber)', ...style }}>
+      If you can&rsquo;t find your code, please contact us at{' '}
+      <a href={'mailto:' + CONTACT_EMAIL} style={{ color: 'var(--espresso)', borderBottom: '0.5px solid var(--travertine)' }}>{CONTACT_EMAIL}</a>
+    </p>
+  );
+}
+
+/* Room payment for on-site guests. The link is a Stripe Payment Link pasted in Admin. */
+function RoomPayment({ data }) {
+  if (!data.room_price && !data.payment_url) return null;
+  const ref = String(data.code || '').replace(/[^A-Za-z0-9_-]/g, '');
+  const href = data.payment_url
+    ? data.payment_url + (data.payment_url.includes('?') ? '&' : '?') + 'client_reference_id=' + encodeURIComponent(ref)
+    : null;
+  return (
+    <div style={{ marginTop: 36, padding: 'clamp(24px, 4vw, 36px)', border: '0.5px solid var(--hairline)', background: 'rgba(200, 184, 154, 0.16)' }}>
+      <p className="micro" style={{ marginBottom: 10 }}>Your room at San Pietro Aquaeortus</p>
+      {data.room_price && (
+        <p className="serif-italic" style={{ fontSize: 34, margin: 0, color: 'var(--espresso)', lineHeight: 1.1 }}>{data.room_price}</p>
+      )}
+      {data.paid ? (
+        <p style={{ margin: '14px 0 0', fontSize: 15, lineHeight: 1.7, color: 'var(--espresso)', fontWeight: 500 }}>Paid. Thank you!</p>
+      ) : href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className="small-caps" style={{ display: 'inline-block', marginTop: 20, background: 'var(--espresso)', color: 'var(--parchment)', padding: '14px 32px', letterSpacing: '0.28em' }}>
+          Pay for your room &rarr;
+        </a>
+      ) : (
+        <p style={{ margin: '14px 0 0', fontSize: 15, lineHeight: 1.7, color: 'var(--umber)' }}>Payment details are coming soon.</p>
+      )}
+      <p style={{ margin: '16px 0 0', fontSize: 13, lineHeight: 1.7, color: 'var(--umber)', maxWidth: 520 }}>
+        This covers your stay for the wedding nights. Samantha &amp; Devin collect the payment and pay the villa on everyone&rsquo;s behalf.
+      </p>
+    </div>
+  );
+}
+
+/* Passport photo upload for on-site guests: one file per person, sent to a private bucket. */
+function PassportUpload({ code, received }) {
+  const [names, setNames] = useState2(received || []);
+  const [name, setName] = useState2('');
+  const [file, setFile] = useState2(null);
+  const [state, setState] = useState2('idle'); // idle | sending | done | error
+  const [msg, setMsg] = useState2('');
+  const fileRef = useRef2(null);
+
+  const send = async () => {
+    if (!name.trim() || !file) return;
+    if (file.size > 10 * 1024 * 1024) { setState('error'); setMsg('That file is over 10 MB. Please choose a smaller photo.'); return; }
+    setState('sending'); setMsg('');
+    try {
+      const body = new FormData();
+      body.append('code', code);
+      body.append('guest_name', name.trim());
+      body.append('file', file);
+      const res = await fetch(SB_URL + '/functions/v1/upload-passport', {
+        method: 'POST', headers: { apikey: SB_KEY }, body,
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(out.error || 'Something went wrong, please try again.');
+      setNames((n) => [...n, name.trim()]);
+      setName(''); setFile(null);
+      if (fileRef.current) fileRef.current.value = '';
+      setState('done');
+    } catch (e) { setState('error'); setMsg(e.message || 'Something went wrong, please try again.'); }
+  };
+
+  const busy = state === 'sending';
+  const ready = name.trim() && file && !busy;
+  return (
+    <div style={{ marginTop: 36, paddingTop: 32, borderTop: '0.5px solid var(--hairline)' }}>
+      <p className="micro" style={{ marginBottom: 10 }}>For the front desk</p>
+      <h3 className="serif-italic" style={{ fontSize: 28, margin: 0, color: 'var(--espresso)', lineHeight: 1.15 }}>Passport information</h3>
+      <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+        The villa&rsquo;s front desk needs passport information for every guest staying on site. Please upload a clear photo of the
+        photo page of each person&rsquo;s passport, <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>one upload per person</strong>.
+        It is stored privately and only shared with the front desk.
+      </p>
+
+      {names.length > 0 && (
+        <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.7, color: 'var(--espresso)' }}>
+          <strong style={{ fontWeight: 500 }}>Received: </strong>{names.join(', ')}
+        </p>
+      )}
+
+      <div style={{ marginTop: 22, display: 'grid', gap: 20, maxWidth: 460 }}>
+        <label style={{ display: 'block' }}>
+          <span className="micro" style={{ display: 'block', marginBottom: 8 }}>Name on the passport</span>
+          <input type="text" value={name} onChange={(e) => { setName(e.target.value); setState('idle'); }} placeholder="Full name" style={inputStyle} />
+        </label>
+        <label style={{ display: 'block' }}>
+          <span className="micro" style={{ display: 'block', marginBottom: 8 }}>Photo of the passport photo page</span>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/jpeg,image/png,image/heic,image/heif,application/pdf"
+            onChange={(e) => { setFile(e.target.files[0] || null); setState('idle'); }}
+            style={{ fontFamily: 'Jost, sans-serif', fontSize: 14, color: 'var(--espresso)', maxWidth: '100%' }}
+          />
+        </label>
+      </div>
+      {state === 'error' && <p style={{ marginTop: 12, fontSize: 13, lineHeight: 1.6, color: '#9B3A3A' }}>{msg}</p>}
+      {state === 'done' && <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6, color: 'var(--espresso)' }}>Got it, thank you. Add the next person, if there is one.</p>}
+      <button
+        onClick={send}
+        disabled={!ready}
+        className="small-caps"
+        style={{
+          marginTop: 22, background: 'var(--espresso)', color: 'var(--parchment)', border: 'none',
+          padding: '14px 32px', letterSpacing: '0.28em',
+          opacity: ready ? 1 : 0.5, cursor: ready ? 'pointer' : 'not-allowed',
+        }}
+      >
+        {busy ? 'Uploading…' : 'Upload passport →'}
+      </button>
+    </div>
+  );
+}
 
 function StaySection() {
   const ref = useReveal();
@@ -504,6 +734,9 @@ function StaySection() {
           </h1>
           <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '30px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
             Enter the code from your invitation to see where you&rsquo;ll be sleeping and who you&rsquo;re with.
+          </p>
+          <p className="reveal reveal-delay-2" style={{ maxWidth: 560, margin: '14px auto 0', fontSize: 16, lineHeight: 1.8, color: 'var(--umber)' }}>
+            We&rsquo;re in the hills where Tuscany meets Umbria, a secluded and calm corner of Italy.
           </p>
         </div>
       </div>
@@ -547,6 +780,7 @@ function StaySection() {
               >
                 {state === 'loading' ? 'Looking up…' : 'Look up →'}
               </button>
+              <CodeHelp style={{ margin: '26px 0 0' }} />
             </div>
           )}
 
@@ -559,7 +793,7 @@ function StaySection() {
                     You&rsquo;re staying at the villa
                   </h2>
                   <p style={{ marginTop: 18, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
-                    We&rsquo;ve set aside a room for you at {data.property_name || 'San Pietro Aquaeortus'}. Check-in is 2–7pm on 1 June; please try your best to arrive in that window.
+                    We&rsquo;ve set aside a room for you at {data.property_name || 'San Pietro Aquaeortus'}. Check-in is 2–7pm on Tuesday, June 1st; please try your best to arrive in that window.
                   </p>
                   <div style={{ marginTop: 32, padding: '28px 0', borderTop: '0.5px solid var(--hairline)', borderBottom: '0.5px solid var(--hairline)', display: 'grid', gap: 18 }}>
                     {data.room_detail && (
@@ -586,7 +820,13 @@ function StaySection() {
                   <p style={{ marginTop: 18, fontSize: 16, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
                     Rooms at the villa are limited, so for you we recommend <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>Fonteverde</strong>,
                     a thermal spa resort in San Casciano dei Bagni, just over the Tuscan border. It&rsquo;s about 20 km from the villa,
-                    roughly a 25 minute drive, and about the same from Fabro-Ficulle station.
+                    roughly a 20 minute drive, set in the secluded, calm Tuscan hills.
+                  </p>
+                  <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
+                    We have a <strong style={{ fontWeight: 500, color: 'var(--espresso)' }}>10% coupon code</strong> for this location, but you are free to stay wherever you would like.{' '}
+                    {FONTEVERDE_CODE
+                      ? <>Use code <strong style={{ fontWeight: 500, color: 'var(--espresso)', letterSpacing: '0.08em' }}>{FONTEVERDE_CODE}</strong> when you book.</>
+                      : 'The code is coming soon; check back here before you book.'}
                   </p>
                   <p style={{ marginTop: 14, fontSize: 15, lineHeight: 1.8, color: 'var(--umber)', maxWidth: 560 }}>
                     Book directly with the hotel. Località Terme 1, 53040 San Casciano dei Bagni (SI) · <a href="tel:+39057857241" style={{ borderBottom: '0.5px solid var(--travertine)' }}>+39 0578 57241</a>
@@ -604,6 +844,8 @@ function StaySection() {
               {data.notes && (
                 <p style={{ ...row, fontSize: 15, lineHeight: 1.75, color: 'var(--umber)', maxWidth: 560 }}>{data.notes}</p>
               )}
+              {onSite && <RoomPayment data={data} />}
+              {onSite && <PassportUpload code={data.code} received={data.passports || []} />}
               {onSite && data.booking_url && (
                 <a href={data.booking_url} target="_blank" rel="noopener noreferrer" className="small-caps" style={{ display: 'inline-block', marginTop: 24, borderBottom: '0.5px solid var(--travertine)', paddingBottom: 6 }}>
                   Details &rarr;
@@ -853,12 +1095,12 @@ function RSVPModal({ open, onClose }) {
 
             {step === 1 && (
               <div style={{ display: 'grid', gap: 28 }}>
-                <Field label="Dietary restrictions">
+                <Field label="Dietary restrictions. Please do it by name so we know who is allergic to what">
                   <textarea
                     value={data.diet}
                     onChange={(e) => setField('diet', e.target.value)}
                     rows={3}
-                    placeholder="Which guests have dietary restrictions, and what are they?"
+                    placeholder="e.g. Maria: gluten free. John: allergic to shellfish."
                     style={{ ...inputStyle, resize: 'vertical', fontFamily: 'Jost, sans-serif', fontSize: 15, fontStyle: 'normal' }}
                   />
                 </Field>
@@ -1004,7 +1246,7 @@ function Footer({ monogram }) {
           <div>
             <p className="micro" style={{ marginBottom: 8 }}>The Day</p>
             <p className="serif-italic" style={{ fontSize: 22, margin: 0, color: 'var(--espresso)' }}>
-              2 June 2027
+              Wednesday, June 2nd, 2027
             </p>
           </div>
           <div style={{ textAlign: 'center' }}>
